@@ -96,7 +96,7 @@ public class PermissionController extends BaseController{
             permission.setPerName("主目录");
         }
         model.addAttribute("menu", permission);
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 
@@ -201,7 +201,7 @@ public class PermissionController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
 

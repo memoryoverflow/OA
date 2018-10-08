@@ -171,8 +171,7 @@ public class DeptController extends BaseController{
     public AjaxResult addDept(Dept dept)
     {
         dept.setCreateTime(new Date());
-        int insert = iDeptService.insertSelective(dept);
-        return insert > 0 ? success() : error();
+        return  result(iDeptService.insertSelective(dept));
     }
 
 
@@ -216,7 +215,7 @@ public class DeptController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
 

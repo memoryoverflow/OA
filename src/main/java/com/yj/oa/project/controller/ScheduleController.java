@@ -68,8 +68,7 @@ public class ScheduleController extends BaseController{
     public AjaxResult updateComplete(Schedule schedule)
     {
         schedule.setIsComplete(UserConstants.SCHEDULE_YES_COMPLETE);
-        int i = iScheduleService.updateComplete(schedule);
-        return i > 0 ? success() : error();
+        return result(iScheduleService.updateComplete(schedule));
     }
 
 
@@ -172,8 +171,7 @@ public class ScheduleController extends BaseController{
     {
         schedule.setCreateBy(getUserId());
         schedule.setCreateTime(new Date());
-        int i = iScheduleService.insertSelective(schedule, userIds);
-        return i > 0 ? success() : error();
+        return result(iScheduleService.insertSelective(schedule, userIds));
     }
 
     /**
@@ -190,8 +188,7 @@ public class ScheduleController extends BaseController{
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
-        int i = iScheduleService.deleteByPrimaryKeys(ids);
-        return i > 0 ? success() : error();
+        return result(iScheduleService.deleteByPrimaryKeys(ids));
     }
 
 
@@ -244,7 +241,6 @@ public class ScheduleController extends BaseController{
     @ResponseBody
     public AjaxResult editSave(Schedule schedule, String[] userIds)
     {
-        int i = iScheduleService.updateByPrimaryKeySelective(schedule, userIds);
-        return i > 0 ? success() : error();
+        return result(iScheduleService.updateByPrimaryKeySelective(schedule, userIds));
     }
 }

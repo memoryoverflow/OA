@@ -157,7 +157,7 @@ public class RoleController extends BaseController{
         }
         //清空缓存
         ShiroUtils.clearCachedAuthorizationInfo();
-        return insert > 0 ? success() : error();
+        return  result(insert);
     }
 
 

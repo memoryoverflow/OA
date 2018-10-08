@@ -131,8 +131,7 @@ public class MeetRoomController extends BaseController{
     public AjaxResult addMeetingRoom(MeetingRoom meetingRoom)
     {
         meetingRoom.setCreateTime(new Date());
-        int insert = iMeetingRoomService.insertSelective(meetingRoom);
-        return insert > 0 ? success() : error();
+        return result(iMeetingRoomService.insertSelective(meetingRoom));
     }
 
 
@@ -164,8 +163,7 @@ public class MeetRoomController extends BaseController{
     @ResponseBody
     public AjaxResult save(MeetingRoom meetingRoom)
     {
-        int i = iMeetingRoomService.updateByPrimaryKeySelective(meetingRoom);
-        return i > 0 ? success() : error();
+        return result(iMeetingRoomService.updateByPrimaryKeySelective(meetingRoom));
     }
 
 

@@ -24,9 +24,7 @@ import java.util.List;
 @RequestMapping("/hiActi")
 public class ActActiInstController extends BaseController{
 
-    private final static String prefix = "system/actHiActi";
-
-
+    private final static String prefix = "system/actHIActi/";
     @Autowired
     IActHiActInstService iActHiActInstService;
 
@@ -75,6 +73,6 @@ public class ActActiInstController extends BaseController{
         }
 
         model.addAttribute("actHiActinsts", actHiActinsts);
-        return prefix + "/actHiActi";
+        return prefix + "actHiActi";
     }
 }

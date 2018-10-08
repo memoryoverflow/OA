@@ -109,8 +109,7 @@ public class NoteController extends BaseController{
     {
         note.setCreateBy(getUserId());
         note.setCreateTime(new Date());
-        int i = iNoteService.insertSelective(note);
-        return i > 0 ? success() : error();
+        return result(iNoteService.insertSelective(note));
     }
 
     /**
@@ -127,8 +126,7 @@ public class NoteController extends BaseController{
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
-        int i = iNoteService.deleteByPrimaryKeys(ids);
-        return i > 0 ? success() : error();
+        return result(iNoteService.deleteByPrimaryKeys(ids));
     }
 
 
@@ -165,7 +163,6 @@ public class NoteController extends BaseController{
     @ResponseBody
     public AjaxResult editSave(Note note)
     {
-        int i = iNoteService.updateByPrimaryKeySelective(note);
-        return i > 0 ? success() : error();
+        return result(iNoteService.updateByPrimaryKeySelective(note));
     }
 }

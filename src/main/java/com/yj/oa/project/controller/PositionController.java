@@ -135,7 +135,7 @@ public class PositionController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return insert > 0 ? success() : error();
+        return result(insert);
     }
 
 
@@ -176,7 +176,7 @@ public class PositionController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
 

@@ -112,7 +112,7 @@ public class WorkTimeController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
     /**
@@ -138,7 +138,7 @@ public class WorkTimeController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
 
@@ -179,7 +179,7 @@ public class WorkTimeController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i>0 ?success():error();
+        return result(i);
     }
 
 
@@ -206,6 +206,6 @@ public class WorkTimeController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i > 0 ? success() : error();
+        return result(i);
     }
 }

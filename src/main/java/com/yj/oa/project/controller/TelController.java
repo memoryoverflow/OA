@@ -95,8 +95,7 @@ public class TelController extends BaseController{
     @ResponseBody
     public AjaxResult addSave(Tel tel) throws Exception
     {
-        int i = iTelService.insertSelective(tel);
-        return i > 0 ? success() : error();
+        return result(iTelService.insertSelective(tel));
     }
 
     /**
@@ -111,8 +110,7 @@ public class TelController extends BaseController{
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
-        int i = iTelService.deleteByPrimaryKeys(ids);
-        return i > 0 ? success() : error();
+        return result(iTelService.deleteByPrimaryKeys(ids));
     }
 
 
@@ -145,7 +143,6 @@ public class TelController extends BaseController{
     @ResponseBody
     public AjaxResult editSave(Tel tel)
     {
-        int i = iTelService.updateByPrimaryKeySelective(tel);
-        return i > 0 ? success() : error();
+        return result(iTelService.updateByPrimaryKeySelective(tel));
     }
 }

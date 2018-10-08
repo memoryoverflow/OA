@@ -126,8 +126,7 @@ public class MeetController extends BaseController{
 
         meet.setCreateBy(getUserId());
         meet.setCreateTime(new Date());
-        int i = meetService.insertSelective(meet, userIds);
-        return i > 0 ? success() : error();
+        return result(meetService.insertSelective(meet, userIds));
     }
 
     /**
@@ -167,8 +166,7 @@ public class MeetController extends BaseController{
                 return error("非会议负责人，无法操作！");
             }
         }
-        int i = meetService.deleteByPrimaryKeys(ids);
-        return i > 0 ? success() : error();
+        return result(meetService.deleteByPrimaryKeys(ids));
     }
 
 
@@ -206,8 +204,7 @@ public class MeetController extends BaseController{
     @ResponseBody
     public AjaxResult editSave(Meet meet, String[] userIds)
     {
-        int i = meetService.updateByPrimaryKeySelective(meet, userIds);
-        return i > 0 ? success() : error();
+        return result(meetService.updateByPrimaryKeySelective(meet, userIds));
     }
 
     /**

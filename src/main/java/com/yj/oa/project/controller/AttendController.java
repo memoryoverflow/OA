@@ -144,8 +144,7 @@ public class AttendController extends BaseController{
     @ResponseBody
     public AjaxResult edit(Attend attend)
     {
-        int i = iAttendService.updateByPrimaryKey(attend);
-        return i>0 ? success():error();
+        return result(iAttendService.updateByPrimaryKey(attend));
     }
 
 
@@ -172,7 +171,7 @@ public class AttendController extends BaseController{
             return error(e.getMessage());
         }
 
-        return i > 0 ? success() : error();
+        return result(i);
     }
 
 
