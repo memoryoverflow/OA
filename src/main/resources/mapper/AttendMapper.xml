@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.AttendMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Attend">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="userId" property="userId" jdbcType="VARCHAR" />
+        <result column="currDate" property="currDate" jdbcType="DATE" />
+        <result column="week" property="week" jdbcType="VARCHAR" />
+        <result column="attendMorStart" property="attendMorStart" jdbcType="TIME" />
+        <result column="attendMorLeave" property="attendMorLeave" jdbcType="TIME" />
+        <result column="attendNoonStart" property="attendNoonStart" jdbcType="TIME" />
+        <result column="attendNoonLeave" property="attendNoonLeave" jdbcType="TIME" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="isDel" property="isDel" jdbcType="INTEGER" />
+        <association property="user" javaType="User">
+            <result column="name" property="name"/>
+        </association>
+        <association property="dept" javaType="Dept">
+            <result column="deptName" property="deptName"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, userId, currDate, week, attendMorStart, attendMorLeave, attendNoonStart, attendNoonLeave,
+    a.status, a.isDel
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,u.dept,
+        u. NAME,
+        d.deptName
+        FROM
+        t_user u
+        RIGHT JOIN t_attend a ON a.userId = u.uid
+        LEFT JOIN t_dept d ON d.depId = a.deptId
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="selectAttendList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,u.dept,
+        u. NAME,
+        d.deptName
+        FROM
+        t_user u
+        RIGHT JOIN t_attend a ON a.userId = u.uid
+        LEFT JOIN t_dept d ON d.depId = a.deptId
+        <where>
+            <if test="userId !=null and userId !=''">
+                and userId=#{userId}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(currDate, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(currDate, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="week !=null and week !=''">
+                and week=#{week}
+            </if>
+        </where>
+    </select>
+
+
+    <!--
+       查询当天是否已经打了考勤
+    -->
+    <select id="selectSaveDayIsAttend" resultMap="BaseResultMap" parameterType="String">
+        SELECT * FROM t_attend WHERE userId=#{userId} and currDate=CURRENT_DATE()
+    </select>
+
+
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_attend
+        where id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.Attend">
+        insert into t_attend
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="userId != null" >
+                userId,
+            </if>
+
+                currDate,
+
+            <if test="week != null" >
+                week,
+            </if>
+            <if test="attendMorStart != null" >
+                attendMorStart,
+            </if>
+            <if test="attendMorLeave != null" >
+                attendMorLeave,
+            </if>
+            <if test="attendNoonStart != null" >
+                attendNoonStart,
+            </if>
+            <if test="attendNoonLeave != null" >
+                attendNoonLeave,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="isDel != null" >
+                isDel,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            CURRENT_DATE(),
+            <if test="week != null" >
+                #{week,jdbcType=VARCHAR},
+            </if>
+            <if test="attendMorStart != null" >
+                #{attendMorStart,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeave != null" >
+                #{attendMorLeave,jdbcType=TIME},
+            </if>
+            <if test="attendNoonStart != null" >
+                #{attendNoonStart,jdbcType=TIME},
+            </if>
+            <if test="attendNoonLeave != null" >
+                #{attendNoonLeave,jdbcType=TIME},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <!--
+       打卡更新的
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.Attend">
+        update t_attend
+        <set >
+            <if test="userId != null" >
+                userId = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="currDate != null" >
+                currDate = #{currDate,jdbcType=DATE},
+            </if>
+            <if test="week != null" >
+                week = #{week,jdbcType=VARCHAR},
+            </if>
+            <if test="attendMorStart != null" >
+                attendMorStart = #{attendMorStart,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeave != null" >
+                attendMorLeave = #{attendMorLeave,jdbcType=TIME},
+            </if>
+            <if test="attendNoonStart != null" >
+                attendNoonStart = #{attendNoonStart,jdbcType=TIME},
+            </if>
+            <if test="attendNoonLeave != null" >
+                attendNoonLeave = #{attendNoonLeave,jdbcType=TIME},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null" >
+                isDel = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where userId = #{userId,jdbcType=INTEGER}
+        and  currDate= CURRENT_DATE()
+    </update>
+
+    <!--
+      管理员修改打卡记录的
+    -->
+    <update id="updateByPrimaryKey" parameterType="com.yj.oa.project.po.Attend">
+        update t_attend
+        <set >
+            <if test="userId != null" >
+                userId = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="currDate != null" >
+                currDate = #{currDate,jdbcType=DATE},
+            </if>
+            <if test="week != null" >
+                week = #{week,jdbcType=VARCHAR},
+            </if>
+            <if test="attendMorStart != null" >
+                attendMorStart = #{attendMorStart,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeave != null" >
+                attendMorLeave = #{attendMorLeave,jdbcType=TIME},
+            </if>
+            <if test="attendNoonStart != null" >
+                attendNoonStart = #{attendNoonStart,jdbcType=TIME},
+            </if>
+            <if test="attendNoonLeave != null" >
+                attendNoonLeave = #{attendNoonLeave,jdbcType=TIME},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null" >
+                isDel = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <!--
+       按月查询
+    -->
+    <select id="selectByMothAndUserId" parameterType="Attend" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,u.dept,
+        u. NAME,
+        d.deptName
+        FROM
+        t_user u
+        RIGHT JOIN t_attend a ON a.userId = u.uid
+        LEFT JOIN t_dept d ON d.depId = a.deptId
+        <where>
+            <if test="userId !=null and userId !=''">
+                and userId=#{userId}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(currDate, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(currDate, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

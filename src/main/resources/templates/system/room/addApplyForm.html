@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="formId">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">房间名：</label>
+            <div class="col-sm-8">
+                <input name="roomName" readonly="readonly" type="text" th:value="${roomName}"  class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">审批人：</label>
+            <div class="col-sm-8">
+                <!--<input name="roomName" type="text" th:value="${roomName}"  class="form-control"/>-->
+                <select name="agent_Id" class="form-control select2-hidden-accessible">
+                  <option value=""></option>
+                  <option th:each="user:${users}" th:value="${user.uid}" th:text="${user.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">开始时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly" name="useStartTime" class="form-control layui-input" id="useStartTime" type="text" placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">结束时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly" name="useEndTime" class="form-control layui-input" id="useEndTime" type="text" placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">理由</label>
+            <div class="col-sm-8">
+                <textarea  type="text" name="reason" class="form-control"></textarea>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea name="remark" type="text" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script type="text/javascript">
+
+    var prefix = "/applyRoomForm";
+
+    $("#formId").validate({
+        rules:{
+            roomName:{
+                required:true,
+            },
+            useStartTime:{
+                required:true,
+            },
+            useEndTime:{
+                required:true,
+            },
+            agent:{
+                required:true,
+            }
+
+        },
+        submitHandler: function(form) {
+            $.operate.save(prefix + "/submitApply", $('#formId').serialize());
+        }
+    });
+
+
+    layui.use('laydate',function () {
+        var laydate=layui.laydate;
+        //时间选择器
+        laydate.render({
+            elem: '#useStartTime'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#useEndTime'
+            ,type: 'datetime'
+        });
+    })
+
+</script>
+</body>
+</html>

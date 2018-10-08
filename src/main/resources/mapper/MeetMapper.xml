@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.MeetMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Meet">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="create_By" property="createBy" jdbcType="VARCHAR"/>
+        <result column="start_Time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="descr" property="descr" jdbcType="VARCHAR"/>
+        <result column="meet_RoomId" property="meetRoomId" jdbcType="VARCHAR"/>
+        <result column="create_Time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <association property="meetRoom" javaType="MeetingRoom">
+            <result column="meetRoomName" jdbcType="VARCHAR" property="meetRoomName"/>
+            <result column="meetRoomPlace" jdbcType="VARCHAR" property="meetRoomPlace"/>
+            <result column="capacity" jdbcType="VARCHAR" property="capacity"/>
+        </association>
+        <collection property="users" ofType="User">
+            <id column="uid" property="uid" jdbcType="VARCHAR"/>
+            <result column="name" property="name" jdbcType="VARCHAR"/>
+            <result column="dept" property="dept" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    m.id , create_By,title,descr, start_Time, meet_RoomId, create_Time, m.status
+  </sql>
+
+    <!--
+       根据主键查询
+    -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select u.uid,u.name,u.dept,tm.meetRoomName,tm.capacity,
+        <include refid="Base_Column_List"/>
+        from
+        t_meetingroom tm
+        INNER JOIN t_meet m
+        ON tm.id = m.meet_RoomId
+        LEFT JOIN t_user_meet um ON m.id = um.meet_Id
+        LEFT JOIN t_user u ON um.user_Id = u.uid
+        where m.id = #{id,jdbcType=INTEGER}
+    </select>
+
+
+    <!--
+       所有数据，列表
+    -->
+    <select id="selectMyMeetList" resultMap="BaseResultMap" parameterType="String">
+        select us.uid,us.name,us.dept,tm.meetRoomName,tm.capacity,
+        <include refid="Base_Column_List"/>
+        from
+        t_meetingroom tm
+        INNER JOIN t_meet m
+        ON tm.id = m.meet_RoomId
+        LEFT JOIN t_user_meet um ON m.id = um.meet_Id
+        LEFT JOIN t_user us ON um.user_Id = us.uid
+        WHERE um.user_Id=#{uId}
+        ORDER BY start_Time DESC
+    </select>
+
+
+    <!--
+       我的会议 个人会议
+    -->
+    <select id="selectByMeetList" resultMap="BaseResultMap" parameterType="Meet">
+        select u.uid,u.name,u.dept,tm.meetRoomName,tm.capacity,
+        <include refid="Base_Column_List"/>
+        from
+        t_meetingroom tm
+        INNER JOIN t_meet m
+        ON tm.id = m.meet_RoomId
+        LEFT JOIN t_user_meet um ON m.id = um.meet_Id
+        LEFT JOIN t_user u ON um.user_Id = u.uid
+        <where>
+            <if test="id !=null">
+                and m.id=#{id}
+            </if>
+
+            <if test="createBy !=null and createBy !=''">
+                and create_By=#{createBy}
+            </if>
+
+
+            <if test="meetRoom !=null">
+                <if test="meetRoom.id !=null and meetRoom.id !=''">
+                    and meet_RoomId=#{meetRoom.id}
+                </if>
+            </if>
+
+
+
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(create_Time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(create_Time, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+
+            <if test="status !=null">
+                and status=#{status}
+            </if>
+        </where>
+
+    </select>
+
+
+    <!--
+        批量删除
+    -->
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_meet
+        where id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+
+    <!--
+       添加
+    -->
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.Meet" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+        insert into t_meet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="createBy != null">
+                create_By,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="descr != null">
+                descr,
+            </if>
+            <if test="startTime != null">
+                start_Time,
+            </if>
+            <if test="meetRoomId != null">
+                meet_RoomId,
+            </if>
+            <if test="createTime != null">
+                create_Time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="descr != null">
+                #{descr,jdbcType=VARCHAR},
+            </if>
+
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="meetRoomId != null">
+                #{meetRoomId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!--
+        修改
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.Meet">
+        update t_meet
+        <set>
+            <if test="createBy != null">
+                create_By = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title=#{title,jdbcType=VARCHAR},
+            </if>
+            <if test="descr != null">
+                descr=#{descr,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_Time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_Time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+
+<link href="/ajax/libs/jquery-layout/jquery.layout-latest.css"
+      th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-menu-add">
+        <input id="treeId" name="parenId" type="text" hidden="hidden" th:value="${menu.permissionId}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">上级菜单：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" onclick="selectMenuTree()" id="treeName" readonly="true"
+                       th:value="${menu.perName}"/>
+            </div>
+        </div>
+        <div class="form-group menuDiv" style="display: none">
+            <label class="col-sm-3 control-label">菜单权限</label>
+            <div class="col-sm-8">
+                <div id="menuTrees" class="ztree"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单类型：</label>
+            <div class="col-sm-8">
+                <label class="checkbox-inline i-checks"> <input type="radio" name="type" value="1"/> 目录 </label>
+                <label class="checkbox-inline i-checks"> <input type="radio" name="type" value="2"/> 菜单 </label>
+                <label class="checkbox-inline i-checks"> <input type="radio" name="type" value="3"/> 按钮 </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="perName" id="perName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">请求地址：</label>
+            <div class="col-sm-8">
+                <input id="url" name="url" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">权限标识：</label>
+            <div class="col-sm-8">
+                <input id="perms" name="code" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图标：</label>
+            <div class="col-sm-8">
+                <input id="icon" name="icon" class="form-control" type="text" placeholder="选择图标">
+                <div class="ms-parent" style="width: 100%;">
+                    <div class="icon-drop animated flipInX" style="display: none;max-height:200px;overflow-y:auto">
+                        <div data-th-include="system/menu/icon"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-group" id="tip" style="display: none;">
+                <div class="col-sm-8 col-sm-offset-3" style="color: #888">
+                    <span id="tipTxt"></span>
+                </div>
+            </div>
+                  <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/iCheck/icheck.min.js}"></script>
+<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script>
+    var prefix = "/menu"
+    $("#form-menu-add").validate({
+        rules: {
+            perName: {
+                required: true,
+                remote: {
+                    url: prefix + "/checkMenuNameUnique",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        "parenId":function () {
+                            return $.trim($("#treeId").val());
+                        },
+                        "perName": function () {
+                            return $.trim($("#perName").val());
+                        }
+                    },
+                    dataFilter: function (data, type) {
+                        if (data == "0") return true;
+                        else return false;
+                    }
+                }
+            },
+            type:{
+                required: true,
+            }
+        },
+        messages: {
+            "perName": {
+                remote: "菜单已经存在"
+            }
+        },
+        submitHandler: function (form) {
+            $.operate.save(prefix + "/addSave", $('#form-menu-add').serialize());
+        }
+    });
+
+    $(function () {
+
+        $("input[name='icon']").focus(function () {
+            $(".icon-drop").show();
+        });
+        $("#form-menu-add").click(function (event) {
+            var obj = event.srcElement || event.target;
+            if (!$(obj).is("input[name='icon']")) {
+                $(".icon-drop").hide();
+            }
+        });
+        $(".icon-drop").find(".ico-list i").on("click", function () {
+            $('#icon').val($(this).attr('class'));
+        });
+        $('input').on('ifChecked', function (event) {
+            var type = $(event.target).val();
+            if (type == "1") {
+                $("#url").parents(".form-group").hide(); //隐藏url
+                $("#perms").parents(".form-group").hide(); //隐藏权限代码
+                $("#icon").parents(".form-group").show();
+                $("#tip").show();
+                $("#tipTxt").html("* 目录菜单没有url,设置目录后需要设置子菜单跳转方可设置url");
+            } else if (type == "2") {
+                $("#url").parents(".form-group").show();
+                $("#perms").parents(".form-group").show();
+                $("#icon").parents(".form-group").show();
+                $("#tip").show();
+                $('#tipTxt').html("* 需要设置父级菜单");
+            } else if (type == "3") {
+                $("#tip").show();
+                $('#tipTxt').html("* 需要设置父级菜单");
+                $("#url").parents(".form-group").hide();
+                $("#perms").parents(".form-group").show();
+                $("#icon").parents(".form-group").show();
+            }
+        });
+    });
+
+
+    var tree = {
+        initMenuTree: function () {
+            var zTreeObj,
+                setting = {
+                    view: {
+                        selectedMulti: false
+                    },
+                    callback: {
+                        onClick: tree.zTreeOnClick
+                    }
+
+                },
+                zTreeNodes = tree.initDeptData();
+            zTreeObj = $.fn.zTree.init($("#menuTrees"), setting, zTreeNodes);
+
+            //展开所有一级节点
+            var nodes = zTreeObj.getNodes();
+            for (var i = 0; i < nodes.length; i++) { //设置节点展开
+                zTreeObj.expandNode(nodes[i], true, false, true);
+            }
+        },
+        //生成树结构
+        initDeptData: function () {
+            var arr = new Array();
+            $.ajaxSettings.async = false;
+            $.post("/menu/ajaxlist", {}, function (data) {
+                arr=data;
+            })
+            return arr;
+        },
+        zTreeOnClick: function (event, treeId, treeNode) {
+           // alert(treeNode.id)
+            $("#treeName").val(treeNode.name);
+            $("#treeId").val(treeNode.id);
+            $(".menuDiv").hide();
+        }
+    }
+
+
+    /*菜单管理-新增-选择菜单树*/
+    function selectMenuTree() {
+        //如果是可见的
+        if ($(".menuDiv").is(":visible"))
+        {
+            $(".menuDiv").hide();
+        }
+        else
+        {
+            $(".menuDiv").show();
+        }
+        tree.initMenuTree();
+    }
+</script>
+</body>
+</html>

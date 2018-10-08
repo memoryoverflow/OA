@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">角色名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="roleName" id="roleName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <div class="onoffswitch">
+                    <input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="status" name="status">
+                    <label class="onoffswitch-label" for="status">
+                        <span class="onoffswitch-inner"></span>
+                        <span class="onoffswitch-switch"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <input id="remark" name="descr" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">菜单权限</label>
+            <div class="col-sm-8">
+                <div id="menuTrees" class="ztree"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script type="text/javascript">
+    // 树结构初始化加载
+
+    $(function () {
+        btn.treeMenu();
+
+    })
+
+    var btn = {
+        treeMenu: function () {
+            var zTreeObj,
+                setting = {
+                    view: {
+                        selectedMulti: false
+                    },
+                    callback: {
+                        beforeCheck: true,
+                        onCheck: btn.onCheck
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",    //复选框
+                        chkboxType: {"Y": "ps", "N": "ps"}
+                    }
+
+                },
+                zTreeNodes = btn.initDeptData();
+            zTreeObj = $.fn.zTree.init($("#menuTrees"), setting, zTreeNodes);
+        },
+        onCheck: function (e, treeId, treeNode) {
+            var menuIds = [];
+            var treeObj = $.fn.zTree.getZTreeObj("menuTrees"),
+                nodes = treeObj.getCheckedNodes(true),
+                v = "";
+            for (var i = 0; i < nodes.length; i++) {
+                menuIds.push(nodes[i].id);
+            }
+            return menuIds;
+
+        },
+        //请求服务端获取数据
+        initDeptData: function () {
+            var array1;
+            $.ajaxSettings.async = false;
+            $.post("/menu/ajaxlist", {}, function (data) {
+                array1 = data;
+            })
+            return array1;
+        }
+    }
+
+    $("#form-role-add").validate({
+        rules: {
+            roleName: {
+                required: true,
+                remote: {
+                    url: "/role/checkRoleNameUnique",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        "roleName": function () {
+                            return $.trim($("#roleName").val());
+                        }
+                    },
+                    dataFilter: function (data, type) {
+                        if (data == "0") return true;
+                        else return false;
+                    }
+                }
+            },
+            descr: {
+                required: true,
+                maxlength:20
+            }
+        },
+        messages: {
+            "roleName": {
+                remote: "角色已经存在"
+            }
+        },
+        submitHandler: function (form) {
+            var menuIds = btn.onCheck();
+            if (menuIds.length <= 0) {
+                layer.confirm('没有为当前角色赋予权限，继续？', {
+                    btn: ['继续添加', '赋予权限']
+                }, function () {
+                    add(menuIds);
+                }, function () {
+
+                });
+            }
+            else {
+                add(menuIds);
+            }
+
+        }
+    });
+
+
+    function add(menuIds) {
+        var roleName = $("input[name='roleName']").val();
+        var descr = $("input[name='descr']").val();
+        var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/role/addSave",
+            data: {
+                "roleName": roleName,
+                "descr": descr,
+                "status": status,
+                "ids": menuIds
+            },
+            async: false,
+            traditional: true,
+            error: function (request) {
+                $.modal.alertError("系统错误");
+            },
+            success: function (data) {
+                $.operate.saveSuccess(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

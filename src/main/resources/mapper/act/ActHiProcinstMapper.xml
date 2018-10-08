@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.oa.project.mapper.ActHiProcinstMapper">
+  <resultMap id="BaseResultMap" type="com.yj.oa.project.po.ActHiProcinst">
+    <id column="ID_" jdbcType="VARCHAR" property="id" />
+    <result column="PROC_INST_ID_" jdbcType="VARCHAR" property="procInstId" />
+    <result column="BUSINESS_KEY_" jdbcType="VARCHAR" property="businessKey" />
+    <result column="PROC_DEF_ID_" jdbcType="VARCHAR" property="procDefId" />
+    <result column="START_TIME_" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="END_TIME_" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="DURATION_" jdbcType="BIGINT" property="duration" />
+    <result column="START_USER_ID_" jdbcType="VARCHAR" property="startUserId" />
+    <result column="START_ACT_ID_" jdbcType="VARCHAR" property="startActId" />
+    <result column="END_ACT_ID_" jdbcType="VARCHAR" property="endActId" />
+    <result column="SUPER_PROCESS_INSTANCE_ID_" jdbcType="VARCHAR" property="superProcessInstanceId" />
+    <result column="DELETE_REASON_" jdbcType="VARCHAR" property="deleteReason" />
+    <result column="TENANT_ID_" jdbcType="VARCHAR" property="tenantId" />
+    <result column="NAME_" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID_, PROC_INST_ID_, BUSINESS_KEY_, PROC_DEF_ID_, START_TIME_, END_TIME_, DURATION_, 
+    START_USER_ID_, START_ACT_ID_, END_ACT_ID_, SUPER_PROCESS_INSTANCE_ID_, DELETE_REASON_, 
+    TENANT_ID_, NAME_
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_hi_procinst
+    where ID_ = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectByProcInstId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_hi_procinst
+    where PROC_INST_ID_ = #{procInstId,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="selectActHiProcinstList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_hi_procinst
+    <where>
+      <if test="id !=null">
+        and ID_=#{id},
+      </if>
+      <if test="procInstId !=null">
+        and PROC_INST_ID_=#{procInstId},
+      </if>
+
+      <if test="businessKey !=null">
+        and BUSINESS_KEY_ like concat('%',#{businessKey},'%')
+      </if>
+
+
+      <if test="beginTime!=null">
+        and #{beginTime} &lt;= START_TIME_
+      </if>
+      <if test="overTime!=null">
+        and #{overTime} &gt;= START_TIME_
+      </if>
+
+
+      <if test="startUserId !=null">
+        and START_USER_ID_=#{startUserId},
+      </if>
+    </where>
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKeys" parameterType="java.lang.String">
+    delete from act_hi_procinst
+    where ID_ IN
+    <foreach collection="array" open="(" separator="," close=")" item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+
+</mapper>

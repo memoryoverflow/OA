@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-edit" th:object="${note}">
+        <input class="form-control" th:value="*{id}" type="hidden" name="id" id="id"/>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">标题：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:value="*{title}" type="text" name="title" id="title"/>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">说明：</label>
+            <div class="col-sm-8">
+                <textarea rows="7" th:value="*{content}" th:text="*{content}" name="content" type="text" id="content"
+                          class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script type="text/javascript">
+    // 表单校验
+    $("#form-role-edit").validate({
+        rules: {
+            title: {required: true}
+            , content: {required: true}
+        },
+        submitHandler: function (form) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/note/editSave",
+                data: $("form").serializeArray(),
+                async: false,
+                error: function (request) {
+                    $.modal.alertError("系统错误");
+                },
+                success: function (data) {
+                    $.operate.saveSuccess(data);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

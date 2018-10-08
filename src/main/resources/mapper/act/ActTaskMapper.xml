@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.oa.project.mapper.ActTaskMapper">
+  <resultMap id="BaseResultMap" type="com.yj.oa.project.po.ActTask" >
+    <id column="ID_" property="id" jdbcType="VARCHAR" />
+    <result column="REV_" property="rev" jdbcType="INTEGER" />
+    <result column="EXECUTION_ID_" property="executionId" jdbcType="VARCHAR" />
+    <result column="PROC_INST_ID_" property="procInstId" jdbcType="VARCHAR" />
+    <result column="PROC_DEF_ID_" property="procDefId" jdbcType="VARCHAR" />
+    <result column="NAME_" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT_TASK_ID_" property="parentTaskId" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION_" property="description" jdbcType="VARCHAR" />
+    <result column="TASK_DEF_KEY_" property="taskDefKey" jdbcType="VARCHAR" />
+    <result column="OWNER_" property="owner" jdbcType="VARCHAR" />
+    <result column="ASSIGNEE_" property="assignee" jdbcType="VARCHAR" />
+    <result column="DELEGATION_" property="delegation" jdbcType="VARCHAR" />
+    <result column="PRIORITY_" property="priority" jdbcType="INTEGER" />
+    <result column="CREATE_TIME_" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="DUE_DATE_" property="dueDate" jdbcType="TIMESTAMP" />
+    <result column="CATEGORY_" property="category" jdbcType="VARCHAR" />
+    <result column="SUSPENSION_STATE_" property="suspensionState" jdbcType="INTEGER" />
+    <result column="TENANT_ID_" property="tenantId" jdbcType="VARCHAR" />
+    <result column="FORM_KEY_" property="formKey" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectACTTaskList" parameterType="com.yj.oa.project.po.ActTask" resultMap="BaseResultMap">
+    select 
+      *
+    from act_ru_task
+
+    <where>
+      <if test="id !=null and id !=''">
+        and ID_ LIKE concat('%',#{id},'%')
+      </if>
+
+      <if test="name !=null and name !=''">
+        and NAME_ like concat('%',#{name},'%')
+      </if>
+
+      <if test="procInstId !=null and procInstId !=''">
+        and PROC_INST_ID_ like concat('%',#{procInstId},'%')
+      </if>
+
+      <if test="description !=null and description !=''">
+        and DESCRIPTION_ like concat('%',#{description},'%')
+      </if>
+
+      <if test="beginTime !=null">
+        <![CDATA[   and DATE_FORMAT(CREATE_TIME_, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+      </if>
+      <if test="overTime !=null">
+        <![CDATA[  and DATE_FORMAT(CREATE_TIME_, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+      </if>
+      <if test="assignee !=null and assignee!=''">
+        and ASSIGNEE_=#{assignee}
+      </if>
+    </where>
+  </select>
+
+
+  <delete id="deletByProcInstS" parameterType="String">
+    DELETE from act_ru_task
+    WHERE PROC_INST_ID_ IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+</mapper>

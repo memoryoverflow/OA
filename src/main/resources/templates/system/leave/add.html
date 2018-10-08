@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="formId">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">标题：</label>
+            <div class="col-sm-8">
+                <input name="title" class="form-control"  type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">类型：</label>
+            <div class="col-sm-8">
+                <select name="leaveType" class="form-control select2-hidden-accessible">
+                    <option value=""> - - </option>
+                    <option value="0">事假</option>
+                    <option value="1">病假</option>
+                    <option value="2">公假</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">审批人：</label>
+            <div class="col-sm-8">
+                <!--<input name="roomName" type="text" th:value="${roomName}"  class="form-control"/>-->
+                <select name="agent_Id" class="form-control select2-hidden-accessible">
+                    <option value=""> - - </option>
+                    <option th:each="user:${users}" th:value="${user.uid}" th:text="${user.name}"></option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">起始时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly"  name="leaveTime" id="leaveTime" class="form-control" type="text" placeholder="yyyy-MM-DD HH:mm:ss">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">到期时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly"  name="expireTime" id="expireTime" class="form-control" type="text" placeholder="yyyy-MM-DD HH:mm:ss">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">理由：</label>
+            <div class="col-sm-8">
+                <textarea name="leaveContent" type="text"
+                          class="form-control">1</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">确定</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script type="text/javascript">
+
+    var prefix = "/leave";
+
+    $("#formId").validate({
+        rules:{
+            leaveType:{
+                required:true,
+            },
+            leaveTime:{
+                required:true,
+            },
+            expireTime:{
+                required:true,
+            },
+            title:{
+                required:true,
+            },
+            agent_Id:{
+                required:true,
+            },
+            leaveContent:{
+                required:true,
+                maxlength:200,
+            }
+        },
+        submitHandler: function(form) {
+            $.operate.save(prefix + "/addSave", $('#formId').serialize());
+        }
+    });
+
+
+    layui.use('laydate',function () {
+        var laydate=layui.laydate;
+        //时间选择器
+        laydate.render({
+            elem: '#leaveTime'
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: '#expireTime'
+            ,type: 'datetime'
+        });
+    })
+
+
+</script>
+</body>
+</html>

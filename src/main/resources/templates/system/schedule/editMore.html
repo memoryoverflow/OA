@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<style>
+    .descr {
+        text-indent: 2em;
+    }
+
+    .gray-bg {
+        padding: 20px;
+    }
+
+    .layui-card-header p {
+        padding-top: 10px;
+        line-height: 1.5em;
+    }
+
+    .layui-card-header p span:nth-child(2) {
+        float: right;
+    }
+
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <div class="gray-bg">
+        <div class="layui-card" th:each="s:${schedules}">
+            <div class="layui-card-header" style="height: 70px">
+                <p th:text="${s.title} +' ：'"></p>
+                <p style="color:darkgrey;text-indent: 2em">
+                    发布：
+                    <span th:text="${s.user.name} +' ：'"></span>
+                <span>
+                    <span th:text="${#dates.format(s.startTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    &nbsp;到&nbsp;
+                    <span th:text="${#dates.format(s.endTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                </span>
+                </p>
+            </div>
+            <div class="layui-card-body descr" th:text="${s.descr}"></div>
+        </div>
+        <div class="layui-card" th:if="${#lists.isEmpty(schedules)}">
+            <div class="layui-card-header" style="height: 70px">
+                <span style="color: darkgrey">当天没有安排</span>
+            </div>
+            <div class="layui-card-body descr"></div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px">
+        <div class="form-control-static col-sm-offset-9">
+            <button type="button" onclick="addScheduke()" class="btn btn-primary">安排</button>
+            <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+
+<script>
+    function addScheduke() {
+        $.modal.open("安排日程任务","/schedule/toAdd");
+    }
+</script>
+
+
+</body>
+</html>

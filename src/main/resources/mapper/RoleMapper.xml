@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.oa.project.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Role">
+        <result column="roleId" jdbcType="INTEGER" property="roleId"/>
+        <result column="roleName" jdbcType="VARCHAR" property="roleName"/>
+        <result column="descr" jdbcType="VARCHAR" property="descr"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="createTime" property="createTime"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapRoleAndPer" type="Role">
+        <result column="roleId" jdbcType="INTEGER" property="roleId"/>
+        <result column="roleName" jdbcType="VARCHAR" property="roleName"/>
+        <result column="descr" jdbcType="VARCHAR" property="descr"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="createTime" property="createTime"/>
+        <collection property="permissionList" ofType="Permission">
+            <id column="permissionId" property="permissionId" jdbcType="INTEGER"/>
+            <result column="perName" property="perName" jdbcType="VARCHAR"/>
+            <result column="parenId" property="parenId" jdbcType="INTEGER"/>
+            <result column="parentName" property="parentName" jdbcType="VARCHAR"/>
+            <result column="type" property="type" jdbcType="INTEGER"/>
+            <result column="url" property="url" jdbcType="VARCHAR"/>
+            <result column="code" property="code" jdbcType="VARCHAR"/>
+            <result column="icon" property="icon" jdbcType="VARCHAR"/>
+            <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        </collection>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.yj.oa.project.po.Role" useGeneratedKeys="true" keyProperty="roleId"
+            keyColumn="roleId">
+    insert into t_role ( roleName, descr,status,createTime
+      )
+    values (#{roleName,jdbcType=VARCHAR}, #{descr,jdbcType=VARCHAR},
+      #{status},#{createTime})
+  </insert>
+
+
+    <select id="selectRoleList" resultMap="BaseResultMap" parameterType="Role">
+        SELECT * from t_role
+        <where>
+            <if test="roleName !=null and roleName!=''">
+                and roleName=#{roleName}
+            </if>
+            <if test="status !=null and status!=''">
+                and status=#{status}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="Role">
+        update t_role
+        <set>
+            <if test="roleName != null">
+                roleName = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="descr != null">
+                descr = #{descr,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null or status==0">
+                status = #{status},
+            </if>
+        </set>
+        WHERE roleId=#{roleId}
+    </update>
+
+    <!--批量删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="String">
+        DELETE FROM t_role
+        WHERE roleId IN
+        <foreach collection="array" item="id" separator=",">
+            (#{id})
+        </foreach>
+    </delete>
+
+
+    <!--检验名称唯一性-->
+    <select id="checkRoleNameUnique" parameterType="String" resultMap="BaseResultMap">
+        select *
+         from t_role
+        where roleName=#{roleName}
+    </select>
+
+    <!--通过ID查找-->
+    <select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMapRoleAndPer">
+         SELECT
+	      r.*, p.*
+         FROM
+	       t_role r
+         LEFT JOIN t_role_permission rp ON r.roleId = rp.role_Id
+         LEFT JOIN t_permission p ON rp.permission_Id = p.permissionId
+         WHERE r.roleId=#{roleId}
+    </select>
+
+</mapper>

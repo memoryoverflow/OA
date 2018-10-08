@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--360浏览器优先以webkit内核解析-->
+    <title></title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.css}" rel="stylesheet"/>
+    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet"/>
+    <style>
+        ul li .iboxBlock {
+            float: right;
+        }
+
+        ul li .iboxBlock span {
+            margin-right: 10px;
+        }
+
+        ul li {
+            line-height: 2em;
+        }
+
+        .ibox-content {
+            height: 250px;
+        }
+
+        #calendar .layui-laydate-main {
+            width: 100%;
+            height: 297px;
+        }
+
+        #calendar .layui-laydate-content td, #test-n1 .layui-laydate-content th {
+            width: 100px;
+        }
+
+        .calendar {
+            background-color: white;
+            height: 300px;
+        }
+
+        .Note_Main {
+            background-color: rgb(253, 244, 206);
+            width: 100%;
+            height: 100%;
+            -webkit-box-shadow: #666 0px 0px 10px;
+            -moz-box-shadow: #666 0px 0px 10px;
+            box-shadow: #666 0px 0px 10px;
+
+        }
+
+        .Note_Main .Note_title {
+            text-align: center;
+            padding-top: 5px;
+            border-bottom: 1px solid #ebebeb;
+        }
+
+        .Note_Main .Note_content {
+            padding: 15px;
+            text-indent: 25px;
+            color: black;
+            font-size: inherit;
+            line-height: 2em;
+            border-bottom: 1px solid #ebebeb;
+        }
+
+        .Note_Main .Note_footer {
+            padding-top: 10px;
+            padding-right: 30px;
+            text-align: right;
+        }
+
+        /*时间显示*/
+        #currentDate {
+            font-size: 18px;
+            color: white;
+        }
+
+        .lock {
+            text-align: center;
+        }
+
+        .lock img {
+            width: 100px;
+        }
+
+        .lock img:hover {
+            -webkit-box-shadow: #666 0px 0px 2px;
+            -moz-box-shadow: #666 0px 0px 2px;
+            box-shadow: #666 0px 0px 2px;
+            cursor: pointer;
+        }
+
+        .WorkTime {
+            color: white;
+            font-size: 14px;
+        }
+
+        .Attendtips {
+            color: white;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg">
+<!--<div class="row  border-bottom white-bg dashboard-header">-->
+
+<!--</div>-->
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>考勤</h5>
+                </div>
+                <div class="calendar ibox-content" style="background-image: url('/img/attendlock.jpg')">
+                    <!--<div class="row">-->
+                    <!--<div align="center" id="currentDate"></div>-->
+                    <!--</div>-->
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="WorkTime" th:object="${workShif}"><br>
+                                a.m打卡时间：<br><span th:text="*{#dates.format(attendMorStartTime,'HH:mm:ss')}"></span>-
+                                <span th:text="*{#dates.format(attendMorendTime,'HH:mm:ss')}"></span><br>
+                                a.m班时间：<br><span th:text="*{#dates.format(workStartTimeMor,'HH:mm:ss')}"></span>-
+                                <span th:text="*{#dates.format(workEndTimeMor,'HH:mm:ss')}"></span><br>
+                                a.m下班时间：<br><span th:text="*{#dates.format(attendMorLeaveStartTime,'HH:mm:ss')}">-
+                                               <span th:text="*{#dates.format(attendMorLeaveEndTime,'HH:mm:ss')}"></span></span><br>
+                                p.m 打卡时间：<br><span th:text="*{#dates.format(attendAfterNoonStartTime,'HH:mm:ss')}">-
+                                                <span th:text="*{#dates.format(attendAfterNoonendTime,'HH:mm:ss')}"></span></span><br>
+                                p.m 上班时间：<br><span th:text="*{#dates.format(workStartTimeAfterNoon,'HH:mm:ss')}">-
+                                               <span th:text="*{#dates.format(workEndTimeAfterNoon,'HH:mm:ss')}"></span></span><br>
+                                p.m 下班班时间：<br><span th:text="*{#dates.format(attendAfterLeaveStartTime,'HH:mm:ss')}">-
+                                                 <span th:text="*{#dates.format(attendAfterLeaveEndTime,'HH:mm:ss')}"></span></span><br>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div align="center" id="currentDate"></div>
+                            <div class="lock">
+                                <img onclick="attend()" src="/img/lock.png" class="img-circle">
+                            </div>
+                            <div align="center" class="Attendtips">
+                                签到时间：<span  id="attendTime">无</span>
+                            </div>
+                            <div align="center" id="isAttend" class="Attendtips">未签</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>日程表</h5>
+                </div>
+                <div class="calendar">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>便签</h5>
+                </div>
+                <div class="ibox-content Note calendar">
+                    <div class="Note_Main" th:each="note,iterStat:${notes}" th:if="${iterStat.count} <=1">
+                        <div class="Note_title">
+                            <h2 th:text="${note.title}"></h2>
+                        </div>
+                        <div class="Note_content" th:text="${note.content}"></div>
+                        <div class="Note_footer">
+                            <a th:onclick="'javascript:checkNoteMsg('+${note.id}+')'">修改</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>会议通知</h5>
+                </div>
+                <div class="ibox-content">
+                    <ul>
+                        <li th:each="meet,iterStat:${meets}" th:if="${iterStat.count}<=8">
+                            <a href="javascript:;" th:onclick="'javascript:checkMeetMsg('+${meet.id}+')'"
+                               th:text="${#strings.abbreviate(meet.title,10)}"></a>
+                            <div class="iboxBlock">
+                                时间：
+                                <span th:text="${#dates.format(meet.startTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                            </div>
+                        </li>
+                        <li th:if="${#lists.isEmpty(meets)}">暂无会议通知</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>公告内容</h5>
+                </div>
+                <div class="ibox-content">
+                    <ul>
+                        <li th:each="notic,iterStat:${notice}" th:if="${iterStat.count}<=8">
+                            <a href="javascript:;" th:onclick="'javascript:checkNoticeMsg('+${notic.id}+')'"
+                               th:text="${#strings.abbreviate(notic.title,12)}"></a>
+                            <div class="iboxBlock">
+                                <span th:text="${#dates.format(notic.createTime,'yyyy-MM-dd HH:mm')}"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" shiro:hasPermission="task:list">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>我的待办</h5>
+                </div>
+                <div class="ibox-content">
+                    <ul>
+                        <li th:each="task,iterStat:${Task}" th:if="${iterStat.count}<=8">
+                            <a href="javaScript:;"
+                               th:onclick="'javascript:checkTaskMsg('+${task.formKey}+','+${task.procInstId}+','+${task.id}+')'"
+                               th:text="${#strings.abbreviate(task.name,18)}"></a>
+                            <div class="iboxBlock">
+                                <span th:text="${#dates.format(task.createTime,'yyyy-MM-dd HH:mm')}"></span>
+                                <a href="javascript:;"
+                                   th:onclick="'javascript:checkTaskMsg('+${task.formKey}+','+${task.procInstId}+','+${task.id}+')'">查看</a>
+                            </div>
+                        </li>
+                        <li th:if="${#lists.isEmpty(Task)}">暂无待办事项</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<div th:include="include :: footer"></div>
+<script>
+
+    //实时时间
+    window.onload = function () {
+        setInterval(function () {
+            var date = new Date();
+            var year = date.getFullYear(); //获取当前年份
+            var mon = date.getMonth() + 1; //获取当前月份
+            var da = date.getDate(); //获取当前日
+            var day = date.getDay(); //获取当前星期几
+            var h = date.getHours(); //获取小时
+            var m = date.getMinutes(); //获取分钟
+            var s = date.getSeconds(); //获取秒
+            var d = document.getElementById('currentDate');
+            d.innerHTML = year + '年' + mon + '月' + da + '日' + '星期 ' + day + '<br>' + h + ':' + m + ':' + s;
+        }, 1000)
+    }
+
+
+    function isAttend() {
+        $.post("/attend/isAttend", {}, function (data) {
+            if (data != null && JSON.stringify(data).length > 2) {
+                var time = $.common.dateFormat(data);
+                var date = time.substring(10, time.length);
+                $("#attendTime").html(date);
+                $("#isAttend").html('已签到');
+            }
+        })
+    }
+    isAttend();
+
+    //点击打卡
+    function attend() {
+        //判断是否已经签到了
+        $.post("/attend/isAttend", {}, function (data) {
+            layer.confirm("是否签到？", {
+                icon: 3,
+                title: "系统提示",
+                btn: ["确认", "取消"],
+                btnclass: ["btn btn-primary", "btn btn-danger"]
+            }, function (index) {
+                layer.close(index);
+                $.post("/attend/addSave", {}, function (data) {
+                    if (data.code == web_status.SUCCESS) {
+                        layer.msg("已签到", {icon: $.modal.icon('success'), time: 500, shade: [0.1, "#8F8F8F"]})
+                        isAttend();
+                    } else {
+                        $.modal.alertError(data.msg)
+                    }
+                }).error(function (data) {
+                    $.modal.alertError("系统错误！");
+                })
+            })
+        })
+    }
+
+
+    //查看通知信息
+    function checkMeetMsg(id) {
+        $.modal.openFull("会议详情", "/oa/editMeet/" + id);
+    }
+
+    //查看公告
+    function checkNoticeMsg(id) {
+        $.modal.openFull("公告详情", "/oa/editNotice/" + id);
+    }
+
+    //查看任务
+    function checkTaskMsg(formKey, procInstId, taskId) {
+        layer.open({
+            type: 2,
+            area: ["800px", ($(window).height() - 50) + "px"],
+            fix: false,
+            maxmin: true,
+            shade: 0.3,
+            title: "查看申请消息",
+            content: "/task/edit/" + formKey + "/" + procInstId + "/" + taskId
+        })
+    }
+
+    //查看便签
+    function checkNoteMsg(id) {
+        $.modal.open("修改便签", "/note/edit/" + id);
+    }
+
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        //直接嵌套显示
+        laydate.render({
+            elem: '#calendar'
+            , position: 'static'
+            , showBottom: false
+            , type: 'datetime'
+            , format: 'yyyy-MM-dd HH:mm:ss'
+            , calendar: true
+            , theme: 'molv'
+            , mark: getMapDates()
+            , done: function (value, date, enddate) {
+                var url = "/schedule/editMore/" + value;
+                $.modal.open("日程查看", url);
+
+            }
+        });
+
+        function getMapDates() {
+            var map_ = new Map();
+            $.ajaxSettings.async = false;
+            $.post("/schedule/ajaxgetMap", {}, function (data) {
+                map_ = data;
+            })
+            return map_;
+        }
+
+
+    })
+</script>
+</body>
+</html>

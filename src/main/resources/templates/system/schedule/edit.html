@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-edit" th:object="${schedule}">
+        <input class="form-control" th:value="*{id}" type="hidden" name="id" id="id"/>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">标题：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" th:value="*{title}" name="title" id="title"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">开始时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly" value="2016-01-01 12:12:12" name="startTime" id="startTime" class="form-control" type="text" placeholder="yyyy-MM-DD HH:mm:ss">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">结束时间：</label>
+            <div class="col-sm-8">
+                <input readonly="readonly" value="2016-01-02 12:12:12" name="endTime" id="endTime" class="form-control" type="text" placeholder="yyyy-MM-DD HH:mm:ss">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">说明：</label>
+            <div class="col-sm-8">
+                <textarea rows="7" name="content" th:value="*{descr}"  th:text="*{descr}" type="text" id="descr"
+                          class="form-control"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否共享：</label>
+            <div class="col-sm-8">
+                <div id="userTrees" class="ztree"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <label class="checkbox-inline i-checks">
+                    一般： <input name="status" type="radio" th:field="*{status}" value="0">
+                </label>
+                <label class="checkbox-inline i-checks">
+                    重要：<input name="status" type="radio" th:field="*{status}" value="1">
+                </label>
+                <label class="checkbox-inline i-checks">
+                    紧急：<input name="status" type="radio" th:field="*{status}" value="2">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script type="text/javascript">
+    // 表单校验
+    $("#form-role-edit").validate({
+        rules: {
+            title: {required: true}
+            , content: {required: true}
+        },
+        submitHandler: function (form) {
+            btn.save(btn.onCheck());
+        }
+    });
+
+
+    //初始化加载
+    $(function () {
+        //加载数
+        btn.treeUser();
+        //初始化选中，用户回显
+        btn.selectNodes($("#id").val());
+    })
+
+    var btn = {
+        treeUser: function () {
+            var zTreeObj,
+                setting = {
+                    view: {
+                        selectedMulti: false
+                    },
+                    callback: {
+                        beforeCheck: true,
+                        onCheck: btn.onCheck
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",    //复选框
+                        chkboxType: {"Y": "ps", "N": "ps"}
+                    }
+
+                },
+                zTreeNodes = btn.initDeptData();
+            zTreeObj = $.fn.zTree.init($("#userTrees"), setting, zTreeNodes);
+        },
+        onCheck: function (e, treeId, treeNode) {
+            var menuIds = [];
+            //获取选中节点的Id
+            var treeObj = $.fn.zTree.getZTreeObj("userTrees"),
+                nodes = treeObj.getCheckedNodes(true);
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].id != null) {
+                    menuIds.push(nodes[i].id);
+                }
+            }
+            return menuIds;
+
+        },
+        //请求服务端获取数据
+        initDeptData: function () {
+            var array;
+            $.ajaxSettings.async = false;
+            $.post("/dept/getDeptAndUserTreeData", {}, function (data) {
+                array = data;
+            })
+            return array;
+        },
+        //遍历所有节点初始化选中
+        selectNodes: function (scheduleId) {
+            var treeObj = $.fn.zTree.getZTreeObj("userTrees");
+            var node = treeObj.getNodes(); //可以获取所有的节点
+            var nodes = treeObj.transformToArray(node); // 将数据变成简单的 Array 集合
+            $.post("/schedule/selectById/" + scheduleId, {}, function (data) {
+                //从当前条会议中拿出用户信息
+                var users = data.userList;
+                var node2 = "";
+                for (var i = 0; i < users.length; i++) {
+                    for (var j = 0; j < nodes.length; j++) {
+                        if (nodes[j].id != null) {
+                            if (users[i].uid == nodes[j].id) {
+                                node2 = treeObj.getNodeByParam("id", nodes[j].id);//根据ID找到该节点
+                                treeObj.checkNode(node2, true, true);//根据该节点选中
+                                treeObj.expandNode(node2, true, false);//指定选中ID节点展开
+                                treeObj.updateNode(node2);
+                            }
+                        }
+                    }
+                }
+
+            })
+
+
+        },
+        //修改保存
+        save:function (menuIds) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/schedule/editSave",
+                data: {
+                    id:$("#id").val(),
+                    title:$("#title").val(),
+                    startTime:$("#startTime").val(),
+                    endTime:$("#endTime").val(),
+                    descr:$("#descr").val(),
+                    status:$.form.selectRadioCheckeds('status'),
+                    userIds:menuIds
+                },
+                async: false,
+                traditional: true,
+                error: function (request) {
+                    $.modal.alertError("系统错误");
+                },
+                success: function (data) {
+                    $.operate.saveSuccess(data);
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>

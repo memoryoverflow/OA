@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.LeaveFormMapper" >
+  <resultMap id="BaseResultMap" type="com.yj.oa.project.po.LeaveForm" >
+
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="procInstId" property="procInstanId" jdbcType="VARCHAR" />
+    <result column="proposer_Id" property="proposer_Id" jdbcType="VARCHAR" />
+    <result column="agent_Id" property="agent_Id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="leaveType" property="leaveType" jdbcType="VARCHAR" />
+    <result column="leaveContent" property="leaveContent" jdbcType="VARCHAR" />
+    <result column="leaveTime" property="leaveTime" jdbcType="TIMESTAMP" />
+    <result column="expireTime" property="expireTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="reply" property="reply" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="currDate" property="currDate" jdbcType="DATE" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+     *
+  </sql>
+
+
+
+  <!--
+     统计一个月有多少天请假
+  -->
+  <select id="selectByUserIdAndDate" resultMap="BaseResultMap" parameterType="LeaveForm">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_leaveForm t
+    <where>
+
+        <if test="proposer_Id !=null and proposer_Id !=''">
+          and proposer_Id=#{proposer_Id}
+        </if>
+        <if test="beginTime !=null">
+          <![CDATA[   and DATE_FORMAT(currDate, '%Y-%m-%d') >=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+        </if>
+        <if test="overTime !=null">
+          <![CDATA[  and DATE_FORMAT(currDate, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+        </if>
+
+    </where>
+  </select>
+
+
+  <!--查询列表-->
+  <select id="selectLeavFormList" resultMap="BaseResultMap" parameterType="LeaveForm">
+     SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_applyroom t
+    <where>
+      <if test="proposer_Id !null and proposer_Id != ''">
+      and proposer_Id=#{proposer_Id},
+    </if>
+      <if test="procInstanId !null and procInstanId != ''">
+      and procInstan_Id=#{procInstanId},
+    </if>
+      <if test="roomName !=null and roomName != ''">
+        and roomName=#{roomName},
+      </if>
+      <if test="status !=null and status != ''">
+        and status=#{status},
+      </if>
+    </where>
+  </select>
+
+
+  <!--根据主键查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="INTEGER" >
+    select
+    <include refid="Base_Column_List" />
+    from t_leaveForm
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <!--批量删除-->
+  <delete id="deleteByprocInstIds" parameterType="java.lang.Integer" >
+    delete from t_leaveForm
+    WHERE procInstId IN
+    <foreach collection="array" open="(" separator="," close=")" item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--添加-->
+  <insert id="insertSelective" parameterType="com.yj.oa.project.po.LeaveForm" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into t_leaveForm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="proposer_Id != null" >
+        proposer_Id,
+      </if>
+
+      <if test="agent_Id != null" >
+        agent_Id,
+      </if>
+
+      <if test="title !=null ">
+        title,
+      </if>
+
+      <if test="leaveType !=null ">
+        leaveType,
+      </if>
+
+      <if test="leaveContent !=null ">
+        leaveContent,
+      </if>
+
+      <if test="leaveTime != null" >
+        leaveTime,
+      </if>
+
+      <if test="expireTime !=null ">
+        expireTime,
+      </if>
+
+      <if test="createTime != null" >
+        createTime,
+      </if>
+
+      <if test="reply != null" >
+        reply,
+      </if>
+        currDate,
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="proposer_Id != null" >
+        #{proposer_Id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="agent_Id != null" >
+        #{agent_Id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="title !=null and title != ''">
+        #{title},
+      </if>
+
+      <if test="leaveType != null" >
+        #{leaveType,jdbcType=INTEGER},
+      </if>
+
+      <if test="leaveContent != null" >
+        #{leaveContent,jdbcType=VARCHAR},
+      </if>
+
+      <if test="leaveTime != null" >
+        #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="reply != null" >
+        #{reply,jdbcType=VARCHAR},
+      </if>
+      CURRENT_DATE()
+    </trim>
+  </insert>
+
+  <!--修改-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.LeaveForm" >
+    update t_leaveForm
+    <set>
+      <if test="procInstanId != null" >
+        procInstId = #{procInstanId,jdbcType=VARCHAR},
+      </if>
+
+      <if test="proposer_Id != null" >
+        proposer_Id = #{proposer_Id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="agent_Id != null" >
+        agent_Id = #{agent_Id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+
+      <if test="leaveType != null" >
+        leaveType = #{leaveType,jdbcType=VARCHAR},
+      </if>
+
+      <if test="leaveTime != null" >
+        leaveTime = #{leaveTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="expireTime != null" >
+        expireTime = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="leaveContent != null" >
+        leaveContent = #{leaveContent,jdbcType=VARCHAR},
+      </if>
+
+      <if test="reply != null" >
+        reply = #{reply,jdbcType=VARCHAR},
+      </if>
+
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
