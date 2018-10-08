@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.WorkTimeMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.WorkTime">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="attendMorStartTime" property="attendMorStartTime" jdbcType="TIME"/>
+        <result column="attendMorendTime" property="attendMorendTime" jdbcType="TIME"/>
+        <result column="workStartTimeMor" property="workStartTimeMor" jdbcType="TIME"/>
+        <result column="workEndTimeMor" property="workEndTimeMor" jdbcType="TIME"/>
+        <result column="attendMorLeaveStartTime" property="attendMorLeaveStartTime" jdbcType="TIME"/>
+        <result column="attendMorLeaveEndTime" property="attendMorLeaveEndTime" jdbcType="TIME"/>
+        <result column="attendAfterNoonStartTime" property="attendAfterNoonStartTime" jdbcType="TIME"/>
+        <result column="attendAfterNoonendTime" property="attendAfterNoonendTime" jdbcType="TIME"/>
+        <result column="workStartTimeAfterNoon" property="workStartTimeAfterNoon" jdbcType="TIME"/>
+        <result column="workEndTimeAfterNoon" property="workEndTimeAfterNoon" jdbcType="TIME"/>
+        <result column="attendAfterLeaveStartTime" property="attendAfterLeaveStartTime" jdbcType="TIME"/>
+        <result column="attendAfterLeaveEndTime" property="attendAfterLeaveEndTime" jdbcType="TIME"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, attendMorStartTime, attendMorendTime, workStartTimeMor, workEndTimeMor, attendMorLeaveStartTime, 
+    attendMorLeaveEndTime, attendAfterNoonStartTime, attendAfterNoonendTime, workStartTimeAfterNoon, 
+    workEndTimeAfterNoon, attendAfterLeaveStartTime, attendAfterLeaveEndTime, createTime,status
+  </sql>
+    <!--
+      主键查询
+    -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_work_time
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!--
+      删除
+    -->
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_work_time
+        where id IN
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </delete>
+
+    <!--
+       添加
+    -->
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.WorkTime">
+        insert into t_work_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="attendMorStartTime != null">
+                attendMorStartTime,
+            </if>
+            <if test="attendMorendTime != null">
+                attendMorendTime,
+            </if>
+            <if test="workStartTimeMor != null">
+                workStartTimeMor,
+            </if>
+            <if test="workEndTimeMor != null">
+                workEndTimeMor,
+            </if>
+            <if test="attendMorLeaveStartTime != null">
+                attendMorLeaveStartTime,
+            </if>
+            <if test="attendMorLeaveEndTime != null">
+                attendMorLeaveEndTime,
+            </if>
+            <if test="attendAfterNoonStartTime != null">
+                attendAfterNoonStartTime,
+            </if>
+            <if test="attendAfterNoonendTime != null">
+                attendAfterNoonendTime,
+            </if>
+            <if test="workStartTimeAfterNoon != null">
+                workStartTimeAfterNoon,
+            </if>
+            <if test="workEndTimeAfterNoon != null">
+                workEndTimeAfterNoon,
+            </if>
+            <if test="attendAfterLeaveStartTime != null">
+                attendAfterLeaveStartTime,
+            </if>
+            <if test="attendAfterLeaveEndTime != null">
+                attendAfterLeaveEndTime,
+            </if>
+            <if test="createTime !=null">
+                createTime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="attendMorStartTime != null">
+                #{attendMorStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendMorendTime != null">
+                #{attendMorendTime,jdbcType=TIME},
+            </if>
+            <if test="workStartTimeMor != null">
+                #{workStartTimeMor,jdbcType=TIME},
+            </if>
+            <if test="workEndTimeMor != null">
+                #{workEndTimeMor,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeaveStartTime != null">
+                #{attendMorLeaveStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeaveEndTime != null">
+                #{attendMorLeaveEndTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterNoonStartTime != null">
+                #{attendAfterNoonStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterNoonendTime != null">
+                #{attendAfterNoonendTime,jdbcType=TIME},
+            </if>
+            <if test="workStartTimeAfterNoon != null">
+                #{workStartTimeAfterNoon,jdbcType=TIME},
+            </if>
+            <if test="workEndTimeAfterNoon != null">
+                #{workEndTimeAfterNoon,jdbcType=TIME},
+            </if>
+            <if test="attendAfterLeaveStartTime != null">
+                #{attendAfterLeaveStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterLeaveEndTime != null">
+                #{attendAfterLeaveEndTime,jdbcType=TIME},
+            </if>
+            <if test="createTime !=null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <!--
+       修改
+    -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.WorkTime">
+        update t_work_time
+        <set>
+            <if test="attendMorStartTime != null">
+                attendMorStartTime = #{attendMorStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendMorendTime != null">
+                attendMorendTime = #{attendMorendTime,jdbcType=TIME},
+            </if>
+            <if test="workStartTimeMor != null">
+                workStartTimeMor = #{workStartTimeMor,jdbcType=TIME},
+            </if>
+            <if test="workEndTimeMor != null">
+                workEndTimeMor = #{workEndTimeMor,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeaveStartTime != null">
+                attendMorLeaveStartTime = #{attendMorLeaveStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendMorLeaveEndTime != null">
+                attendMorLeaveEndTime = #{attendMorLeaveEndTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterNoonStartTime != null">
+                attendAfterNoonStartTime = #{attendAfterNoonStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterNoonendTime != null">
+                attendAfterNoonendTime = #{attendAfterNoonendTime,jdbcType=TIME},
+            </if>
+            <if test="workStartTimeAfterNoon != null">
+                workStartTimeAfterNoon = #{workStartTimeAfterNoon,jdbcType=TIME},
+            </if>
+            <if test="workEndTimeAfterNoon != null">
+                workEndTimeAfterNoon = #{workEndTimeAfterNoon,jdbcType=TIME},
+            </if>
+            <if test="attendAfterLeaveStartTime != null">
+                attendAfterLeaveStartTime = #{attendAfterLeaveStartTime,jdbcType=TIME},
+            </if>
+            <if test="attendAfterLeaveEndTime != null">
+                attendAfterLeaveEndTime = #{attendAfterLeaveEndTime,jdbcType=TIME},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--
+       查询正在使用的那一条
+    -->
+    <select id="selectUsing" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_work_time
+        where status =0
+    </select>
+
+    <select id="selectWorkTimeList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_work_time
+        <where>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Notice">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content"/>
+        <result column="createBy" property="createBy" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title,content, createBy,type,status, createTime
+    </sql>
+
+    <!--根据主键查询-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_notice
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--根据用户个字段查询-->
+    <select id="selectNoticeList" parameterType="Notice" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_notice
+        <where>
+            <if test="id !=null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="title !=null and title!=''">
+                and title like CONCAT('%',#{title},'%')
+            </if>
+            <if test="createBy !=null and createBy!=''">
+                and createBy like CONCAT('%',#{createBy},'%')
+            </if>
+            <if test="status !=null and status!='' or status==0">
+                and status=#{status}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+
+    <!--根据Id批量删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_notice
+        where id =IN
+        <foreach collection="array" separator="," item="id">
+            (#{id,jdbcType=INTEGER})
+        </foreach>
+
+    </delete>
+
+    <!--插入-->
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.Notice">
+        insert into t_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createBy != null">
+                createBy,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+    <!--修改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.Notice">
+        update t_notice
+        <set>
+            <if test="title != null">
+                title=#{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content= #{content},
+            </if>
+            <if test="createBy != null">
+                createBy=#{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type=#{type,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status=#{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                createTime= #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id= #{id}
+    </update>
+</mapper>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link href="/ajax/libs/iCheck/custom.css" th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-user-edit" th:object="${user}">
+			<input name="userId"  type="hidden"  th:field="*{uid}" />
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">编号：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" readonly="true" th:field="*{uid}"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">部门名称：</label>
+				<div class="col-sm-8">
+					<select name="dept" id="deptNa" class="form-control">
+                        <option th:each="dept:${depts}" th:value="${dept.depId}" th:text="${dept.deptName}" th:selected="*{dept} eq ${dept.depId}"></option>
+                    </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户姓名：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="name" id="userName" th:field="*{name}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">登录名：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="loginName" id="loginName" th:field="*{loginName}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">邮箱：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="email" id="email" th:field="*{email}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">手机：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="tel" id="phonenumber" th:field="*{tel}">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">年龄：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="age" id="age" th:value="*{age}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">性别：</label>
+				<div class="col-sm-8">
+					<select id="sex" class="form-control m-b">
+	                    <option th:value="男" th:field="*{sex}">男</option>
+	                    <option th:value="女" th:field="*{sex}">女</option>
+	                </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<div class="onoffswitch">
+                         <input type="checkbox" th:checked="${user.status eq 0 ? true : false}" class="onoffswitch-checkbox" id="status" name="status">
+                         <label class="onoffswitch-label" for="status">
+                             <span class="onoffswitch-inner"></span>
+                             <span class="onoffswitch-switch"></span>
+                         </label>
+                     </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">岗位：</label>
+				<div class="col-sm-8">
+					<select id="post" name="postion"  class="form-control select2-hidden-accessible">
+						<option th:each="post:${positions}" th:value="${post.positionId}" th:text="${post.positionName}" th:selected="${user.position} == ${post.positionId}"></option>
+					</select>
+					<!---->
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">爱好：</label>
+				<div class="col-sm-8">
+					<textarea name="hobby" class="form-control" rows="5" cols="70" th:value="*{hobby}" th:text="*{hobby}"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">个人介绍：</label>
+				<div class="col-sm-8">
+					<textarea rows="10" cols="70" name="self_introduction" class="form-control" th:value="*{self_introduction}" th:text="*{self_introduction}"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">角色：</label>
+				<div class="col-sm-8">
+					<label th:each="role:${roles}" class="checkbox-inline i-checks">
+						<input name="role_ID" type="radio" th:value="${role.roleId}" th:text="${role.roleName}" th:checked="${user.role_ID} eq ${role.roleId}? true:false">
+					</label>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/iCheck/icheck.min.js}"></script>
+	<script th:src="@{/ajax/libs/select/select2.js}"></script>
+	<script>
+        $("#form-user-edit").validate({
+        	rules:{
+        		name:{
+                    //必填
+        			required:true,
+        		},
+        		dept:{
+                    //必填
+        			required:true,
+        		},
+                age:{
+                    required:false,
+                },
+        		email:{
+                    //必填
+        			required:false,
+                    email:true,
+                    //校验是否唯一
+                    remote: {
+                        url: "/user/checkEmailUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                        	"uid": function() {
+                                return $("input[name='uid']").val();
+                            },
+                			"email": function() {
+                                return $("input[name='email']").val();
+                            }
+                        },
+                        dataFilter: function (data, type) {
+                            if (data == "0") return true;
+                            else return false;
+                        }
+                    }
+        		},
+                loginName:{
+                    //必填
+                    required:true,
+                    //校验是否唯一
+                    remote: {
+                        url: "/user/checkLoginNameUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            "uid": function() {
+                                return $("input[name='uid']").val();
+                            },
+                            "loginName": function() {
+                                return $("input[name='loginName']").val();
+                            }
+                        },
+                        dataFilter: function (data, type) {
+                            if (data == "0") return true;
+                            else return false;
+                        }
+                    }
+                },
+        		tel:{
+        			required:false,
+        			isPhone:true,
+                    remote: {
+                        url: "/user/checkPhoneUnique",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                        	"uid": function() {
+                                return $("input[name='uid']").val();
+                            },
+                			"tel": function() {
+                                return $("input[name='tel']").val();
+                            }
+                        },
+                        dataFilter: function (data, type) {
+                            if (data == "0") return true;
+                            else return false;
+                        }
+                    }
+        		},
+        	},
+        	messages: {
+        		"email": {
+                    remote: "Email已经存在"
+                },
+        		"phonenumber":{
+                	remote: "手机号码已经存在"
+        		}
+            },
+        	submitHandler:function(form){
+        		edit();
+        	}
+        });
+
+        function edit() {
+        	var userId = $("input[name='uid']").val();
+
+        	var userName = $("input[name='name']").val();
+        	var loginName = $("input[name='loginName']").val();
+        	var email = $("input[name='email']").val();
+            var age = $("input[name='age']").val();
+        	var phonenumber = $("input[name='tel']").val();
+        	var sex = $("#sex option:selected").val();
+        	var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
+        	var postIds = $.form.selectSelects("post");
+            var deptId = $.form.selectSelects("deptNa");
+        	var hobby = $("textarea[name='hobby']").val();
+        	var roleId = $.form.selectRadioCheckeds("role_ID");
+        	var self_introduction = $("textarea[name='self_introduction']").val();
+        	$.ajax({
+        		cache : true,
+        		type : "POST",
+        		url : "/user/editSave",
+        		data : {
+        			"uid": userId,
+        			"dept": deptId,
+        			"name": userName,
+        			"email": email,
+        			"tel": phonenumber,
+        			"sex": sex,
+        			"status": status,
+        			"role_ID": roleId,
+        			"position": postIds,
+					"hobby":hobby,
+					"age":age,
+					"loginName":loginName,
+					"self_introduction":self_introduction
+        		},
+        		async : false,
+        		error : function(request) {
+        			$.modal.alertError("系统错误");
+        		},
+        		success : function(data) {
+        			$.operate.saveSuccess(data);
+        		}
+        	});
+        }
+    </script>
+</body>
+</html>

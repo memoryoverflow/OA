@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+      th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-edit" th:object="${Meet}">
+        <input class="form-control" th:value="*{id}" type="hidden" name="id" id="id"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">标题：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:value="*{title}" type="text" name="title" id="title"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">开会房间：</label>
+            <div class="col-sm-8">
+                <select id="meetRoomId" name="meetRoomId" class="form-control select2-hidden-accessible">
+                    <option value=""> - -</option>
+                    <option th:field="*{meetRoomId}" th:each="room:${Rooms}" th:value="${room.id}"
+                            th:text="${room.meetRoomName}+' ( 容纳人数： '+ ${room.capacity} +'/人， 地址：'+${room.meetRoomPlace}+' )'">
+
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">开会时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:value="*{#dates.format(startTime,'yyyy-MM-dd HH:mm:ss')}"
+                       readonly="readonly" type="text"
+                       name="startTime" id="startTime"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">说明：</label>
+            <div class="col-sm-8">
+                <textarea rows="7" name="descr" type="text" id="descr" th:value="*{descr}" th:text="*{descr}"
+                          class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">开会员工：</label>
+            <div class="col-sm-8">
+                <div id="userTrees" class="ztree"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <label class="checkbox-inline i-checks">
+                    <input type="radio" th:field="*{status}" name="status" value="0" checked/>
+                    备议中
+                </label>
+                <label class="checkbox-inline i-checks">
+                    <input type="radio" th:field="*{status}" name="status" value="1"/>
+                    进行中
+                </label>
+                <label class="checkbox-inline i-checks">
+                    <input type="radio" th:field="*{status}" name="status" value="2"/>
+                    会议结束
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group"  shiro:hasPermission="meet:update">
+            <div class="form-control-static col-sm-offset-9">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script type="text/javascript">
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        //时间选择器
+        laydate.render({
+            elem: '#startTime'
+            , type: 'datetime'
+        });
+    })
+
+    // 表单校验
+    $("#form-role-edit").validate({
+        rules: {
+            title: {required: true}
+            , startTime: {required: true}
+            , meetRoomId: {required: true}
+        },
+        submitHandler: function (form) {
+            btn.save(btn.onCheck());
+        }
+    });
+
+    //初始化加载
+    $(function () {
+        //加载数
+        btn.treeUser();
+        //初始化选中，用户回显
+        btn.selectNodes($("#id").val());
+    })
+
+    var btn = {
+        treeUser: function () {
+            var zTreeObj,
+                setting = {
+                    view: {
+                        selectedMulti: false
+                    },
+                    callback: {
+                        beforeCheck: true,
+                        onCheck: btn.onCheck
+                    },
+                    check: {
+                        enable: true,
+                        chkStyle: "checkbox",    //复选框
+                        chkboxType: {"Y": "ps", "N": "ps"}
+                    }
+
+                },
+                zTreeNodes = btn.initDeptData();
+            zTreeObj = $.fn.zTree.init($("#userTrees"), setting, zTreeNodes);
+        },
+        onCheck: function (e, treeId, treeNode) {
+            var menuIds = [];
+            //获取选中节点的Id
+            var treeObj = $.fn.zTree.getZTreeObj("userTrees"),
+                nodes = treeObj.getCheckedNodes(true);
+            for (var i = 0; i < nodes.length; i++) {
+                if (nodes[i].id != null) {
+                    menuIds.push(nodes[i].id);
+                }
+            }
+            return menuIds;
+
+        },
+        //请求服务端获取数据
+        initDeptData: function () {
+            var array;
+            $.ajaxSettings.async = false;
+            $.post("/dept/getDeptAndUserTreeData", {}, function (data) {
+                array = data;
+            })
+            return array;
+        },
+        //遍历所有节点初始化选中
+        selectNodes: function (meetId) {
+            var treeObj = $.fn.zTree.getZTreeObj("userTrees");
+            var node = treeObj.getNodes(); //可以获取所有的节点
+            var nodes = treeObj.transformToArray(node); // 将数据变成简单的 Array 集合
+            $.post("/meet/selectById/" + meetId, {}, function (data) {
+                //从当前条会议中拿出用户信息
+                var users = data.users;
+                var node2 = "";
+                for (var i = 0; i < users.length; i++) {
+                    for (var j = 0; j < nodes.length; j++) {
+                        if (nodes[j].id != null) {
+                            if (users[i].uid == nodes[j].id) {
+                                node2 = treeObj.getNodeByParam("id", nodes[j].id);//根据ID找到该节点
+                                treeObj.checkNode(node2, true, true);//根据该节点选中
+                                treeObj.expandNode(node2, true, false);//指定选中ID节点展开
+                                treeObj.updateNode(node2);
+                            }
+                        }
+                    }
+                }
+
+            })
+
+
+        },
+        //修改保存
+        save:function (menuIds) {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/meet/editSave",
+                data: {
+                    id: $('#id').val(),
+                    title: $('#title').val(),
+                    descr: $('#desce').val(),
+                    meetRoomId: $('#meetRoomId').val(),
+                    startTime: $('#startTime').val(),
+                    status: $.form.selectRadioCheckeds('status'),
+                    userIds: menuIds
+                },
+                async: false,
+                traditional: true,
+                error: function (request) {
+                    $.modal.alertError("系统错误");
+                },
+                success: function (data) {
+                    $.operate.saveSuccess(data);
+                }
+            });
+        }
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Permission">
+        <id column="permissionId" property="permissionId" jdbcType="INTEGER"/>
+        <result column="perName" property="perName" jdbcType="VARCHAR"/>
+        <result column="parenId" property="parenId" jdbcType="INTEGER"/>
+        <result column="parentName" property="parentName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    permissionId, perName, parenId, parentName, type, url, code, icon, p.createTime
+  </sql>
+    <!--主键查询-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_permission p
+        where permissionId = #{permissionId,jdbcType=INTEGER}
+    </select>
+
+    <!--查询列表-->
+    <select id="selectPersissionList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_permission p
+        <where>
+            <if test="perName != null and perName != ''">
+                and perName=#{perName}
+            </if>
+            <if test="parenId != null and parenId != ''">
+                and parenId=#{parenId}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+
+
+    <!--检验名称唯一性-->
+    <select id="checkMenuNameUnique" parameterType="Permission" resultMap="BaseResultMap">
+        select *
+        from t_permission p
+        <where>
+            and parenId=#{parenId} and perName=#{perName}
+        </where>
+    </select>
+
+    <!--批量删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="Integer">
+        delete from t_permission
+        where permissionId IN
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+           #{id}
+        </foreach>
+    </delete>
+
+    <!--添加-->
+    <insert id="insertSelective" parameterType="Permission" useGeneratedKeys="true" keyProperty="permissionId"
+            keyColumn="permissionId">
+        insert into t_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                permissionId,
+            </if>
+            <if test="perName != null">
+                perName,
+            </if>
+            <if test="parenId != null">
+                parenId,
+            </if>
+            <if test="parentName != null">
+                parentName,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="permissionId != null">
+                #{permissionId,jdbcType=INTEGER},
+            </if>
+            <if test="perName != null">
+                #{perName,jdbcType=VARCHAR},
+            </if>
+            <if test="parenId != null">
+                #{parenId,jdbcType=INTEGER},
+            </if>
+            <if test="parentName != null">
+                #{parentName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <!--修改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.Permission">
+        update t_permission p
+        <set>
+            <if test="perName != null">
+                perName = #{perName,jdbcType=VARCHAR},
+            </if>
+            <if test="parenId != null">
+                parenId = #{parenId,jdbcType=INTEGER},
+            </if>
+            <if test="parentName != null">
+                parentName = #{parentName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where permissionId = #{permissionId,jdbcType=INTEGER}
+    </update>
+
+
+    <resultMap id="TreeDataResultMap" type="com.yj.oa.project.po.dto.PermTree">
+        <id column="permissionId" property="id" jdbcType="INTEGER"/>
+        <result column="perName" property="name" jdbcType="VARCHAR"/>
+        <collection column="permissionId" property="children" ofType="com.yj.oa.project.po.dto.PermTree"
+                    select="personTree"></collection>
+    </resultMap>
+
+    <!--
+       查询所有的菜单权限做添加角色时候显示[嵌套查询]
+    -->
+    <select id="selectPermTree" resultMap="TreeDataResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_permission p WHERE parenId =0
+    </select>
+    <select id="personTree" resultMap="TreeDataResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_permission p
+        WHERE parenId=#{permissionId}
+    </select>
+
+    <!--
+       根据用户查询出所拥有的菜单列表[嵌套查询]
+    -->
+    <resultMap id="MenuTreeResultMap" type="com.yj.oa.project.po.dto.MenuTree">
+        <id column="permissionId" property="id" jdbcType="INTEGER"/>
+        <result column="perName" property="name" jdbcType="VARCHAR"/>
+        <result column="parenId" property="pid" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <collection column="{permissionId=permissionId,uid=uid}" property="children"
+                    ofType="com.yj.oa.project.po.dto.MenuTree" select="personMenuTree"></collection>
+    </resultMap>
+    <select id="selectMenuTree" resultMap="MenuTreeResultMap" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,u.uid
+        FROM
+        t_user u,
+        t_role r,
+        t_permission p,
+        t_role_permission rp
+        WHERE
+        u.role_ID=r.roleId
+        AND r.roleId=rp.role_Id
+        AND p.permissionId=rp.permission_Id
+        and u.status &gt;= 0
+        AND u.uId=#{uid}
+        and parenId=0
+    </select>
+    <select id="personMenuTree" resultMap="MenuTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,u.uid
+        FROM
+        t_user u,
+        t_role r,
+        t_permission p,
+        t_role_permission rp
+        WHERE
+        u.role_ID=r.roleId
+        AND r.roleId=rp.role_Id
+        AND p.permissionId=rp.permission_Id
+        and u.status &gt;= 0
+        and type !=3
+        and parenId=#{permissionId}
+        AND u.uId=#{uid}
+    </select>
+
+
+</mapper>

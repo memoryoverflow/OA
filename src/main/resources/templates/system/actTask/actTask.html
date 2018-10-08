@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-info">
+            <form id="operlog-form">
+                <div class="select-list gd">
+                    <ul>
+
+                        <li>
+                            任务Id：<input type="text" name="id"/>
+                        </li>
+                        <li>
+                            任务名称：<input type="text" name="name"/>
+                        </li>
+                        <li>
+                            进程实例Id：<input type="text" name="procInstId"/>
+                        </li>
+                        <li class="select-time">
+                            <label>创建时间： </label>
+                            <input type="text" class="time-input" style="width: 150px" id="beginTime" placeholder="开始时间"
+                                   name="beginTime" lay-key="1">
+                            <span>-</span>
+                            <input type="text" class="time-input" style="width: 150px" id="overTime" placeholder="结束时间"
+                                   name="overTime" lay-key="2">
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm"
+                               onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <!--<a class="btn btn-success btn-rounded btn-sm"-->
+                            <!--onclick="$.table.exportExcel($('form').attr('id'))"><i class="fa fa-download"></i>&nbsp;下载</a>-->
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group hidden-xs" id="toolbar" role="group">
+            <!--<a class="btn btn-outline btn-success btn-rounded" onclick="$.operate.add()" shiro:hasPermission="file:add">-->
+            <!--<i class="fa fa-plus"></i> 新增-->
+            <!--</a>-->
+            <a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.batRemove()"
+               shiro:hasPermission="hitask:del">
+                <i class="fa fa-trash-o"></i> 删除
+            </a>
+        </div>
+        <div class="col-sm-12 select-info order-table">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+
+<script th:inline="javascript">
+    var prefix = "/task";
+    var updatedFlag = [[${@permission.hasPermi('"task:update')}]];
+    var delFlag = [[${@permission.hasPermi('"task:del')}]];
+    $(function () {
+        var options = {
+            url: prefix + "/TableMyTasklList",
+            pictureUrl: prefix + "/flowChart/{id}", //流程图
+            removeUrl: prefix + "/del",
+            sortName: "CREATE_TIME_",  //对应数据库表述中的字段
+            sortOrder: "asc",
+            modalName: "审批",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'procInstId',
+                    title: '实例Id',
+                    visible: true
+                },
+                {
+                    field: 'id',
+                    title: '任务ID'
+                },
+
+                {
+                    field: 'formKey',
+                    title: '表单Id',
+                    visible: false
+                },
+                {
+                    field: 'name',
+                    title: '任务名称'
+                },
+                {
+                    field: 'description',
+                    title: '描述'
+                },
+                {
+                    field: 'assignee',
+                    title: '审批人'
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    formatter: function (value, row, index) {
+                        return $.common.dateFormat(row.createTime)
+                    }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = []; //onclick="fileDown(\''+row.fileId+'\',\''+row.fileName+'\')"
+                        actions.push('<a class="' + updatedFlag + 'btn btn-info btn-xs " href="#" onclick="edit(\'' + row.formKey + '\',\'' + row.procInstId + '\',\'' + row.id + '\')"><i class="fa fa-edit"></i> 查看</a> ');
+                        actions.push('<a class="' + updatedFlag + 'btn btn-warning btn-xs " href="#" onclick="ViewProcess(\'' + row.procInstId + '\')"><i class="fa fa-edit"></i> 过程</a> ');
+                        actions.push('<a class="' + updatedFlag + 'btn btn-success btn-xs " href="#" onclick="$.operate.FlowCharPng(\'' + row.procInstId + '\')"><i class="fa fa-picture-o"></i> 流程图</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    function edit(formId, procInstId, taskId) {
+        layer.open({
+            type: 2,
+            area: ["800px", ($(window).height() - 50) + "px"],
+            fix: false,
+            maxmin: true,
+            shade: 0.3,
+            title: "查看申请消息",
+            content: "/task/edit/" + formId + "/" + procInstId + "/" + taskId
+        })
+    }
+
+    function ViewProcess(procInstId) {
+        $.modal.open("审批流程", "/hiActi/HiProcActiList/" + procInstId);
+    }
+
+</script>
+</body>
+</html>

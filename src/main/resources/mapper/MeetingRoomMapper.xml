@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.oa.project.mapper.MeetingRoomMapper">
+  <resultMap id="BaseResultMap" type="com.yj.oa.project.po.MeetingRoom">
+    <result column="id" property="id" />
+    <result column="meetRoomName" jdbcType="VARCHAR" property="meetRoomName" />
+    <result column="meetRoomPlace" jdbcType="VARCHAR" property="meetRoomPlace" />
+    <result column="capacity" jdbcType="VARCHAR" property="capacity" />
+    <result column="CrateeTime" jdbcType="TIMESTAMP" property="crateeTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+
+  <!--添加-->
+  <insert id="insertSelective" parameterType="MeetingRoom">
+
+    insert into t_meetingroom
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="meetRoomName != null">
+        meetRoomName,
+      </if>
+      <if test="meetRoomPlace != null">
+        meetRoomPlace,
+      </if>
+
+      <if test="capacity != null">
+        capacity,
+      </if>
+
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="meetRoomName != null">
+        #{meetRoomName},
+      </if>
+      <if test="meetRoomPlace != null">
+        #{meetRoomPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null">
+        #{capacity,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <!--删除-->
+  <delete id="deleteByPrimaryKeys" parameterType="Integer">
+    delete from t_meetingroom
+    where id IN
+    <foreach collection="array" open="(" separator="," close=")" item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--修改-->
+  <update id="updateByPrimaryKeySelective" parameterType="MeetingRoom">
+
+    update t_meetingroom
+    <set>
+      <if test="meetRoomName != null">
+        meetRoomName=#{meetRoomName},
+      </if>
+      <if test="meetRoomPlace != null">
+        meetRoomPlace=#{meetRoomPlace},,
+      </if>
+      <if test="capacity != null">
+        capacity=#{capacity},,
+      </if>
+      <if test="createTime != null">
+        createTime=#{createTime},,
+      </if>
+      <if test="status != null">
+        status=#{status},,
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <!--主键查询-->
+  <select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT *
+    FROM
+    t_meetingroom
+    WHERE id=#{id}
+  </select>
+
+
+  <!--主键查询-->
+  <select id="selectByRoomName" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    FROM
+    t_meetingroom
+    WHERE meetRoomName=#{roomName}
+  </select>
+
+
+
+  <!--查询所有-->
+  <select id="selectMeetRoomList" parameterType="MeetingRoom" resultMap="BaseResultMap">
+    SELECT * from t_meetingroom
+    <where>
+      <if test="meetRoomName !=null and meetRoomName!=''">
+        and meetRoomName=#{meetRoomName}
+      </if>
+      <if test="status !=null and status!='' or status==0">
+        and status=#{status}
+      </if>
+      <if test="beginTime !=null">
+        <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+      </if>
+      <if test="overTime !=null">
+        <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+      </if>
+    </where>
+  </select>
+  <!--检验名字一性-->
+  <select id="checkRoomNameUnique" parameterType="String" resultMap="BaseResultMap">
+    select * from t_meetingroom
+    where meetRoomName=#{meetRoomName}
+  </select>
+
+
+  <update id="updateByRoomName" parameterType="MeetingRoom">
+    update t_meetingroom
+    <set>
+      <if test="status != null">
+        status=#{status},
+      </if>
+    </set>
+    where meetRoomName = #{meetRoomName}
+  </update>
+
+</mapper>

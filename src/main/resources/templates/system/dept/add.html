@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/iCheck/custom.css}" rel="stylesheet"/>
+<link href="/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css"
+	  th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal" id="form-dept-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">部门名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="deptName">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">负责人：</label>
+				<div class="col-sm-8">
+					<select id="leader" name="leader" class="form-control">
+						<option value=""></option>
+						<option th:each="user:${users}" th:value="${user.uid}" th:text="${user.name}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">说明：</label>
+				<div class="col-sm-8">
+					<textarea name="introduce" class="form-control" rows="6" cols="70"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<div class="onoffswitch">
+						<input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="status" name="status">
+						<label class="onoffswitch-label" for="status">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">提交</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript">
+		var prefix = "/dept"
+	
+		$("#form-dept-add").validate({
+			rules:{
+				deptName:{
+					required:true,
+					remote: {
+		                url: prefix + "/checkDeptNameUnique",
+		                type: "post",
+		                dataType: "json",
+		                data: {
+		                	"deptName" : function() {
+		                        return $("input[name='deptName']").val();
+		                    }
+		                },
+		                dataFilter: function(data, type) {
+		                    if (data == "0") return true;
+		                    else return false;
+		                }
+		            }
+				},
+				orderNum:{
+					required:true,
+					digits:true
+				},
+				introduce:{
+                    maxlength:50
+				}
+			},
+			messages: {
+		        "deptName": {
+		            remote: "部门已经存在"
+		        }
+		    },
+			submitHandler:function(form){
+				$.operate.save("/dept/addSave",data());
+			}
+
+		});
+
+		function data() {
+            var deptName = $("input[name='deptName']").val();
+            var leader = $("select[name='leader'] option:selected").val();
+            var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
+            var text = $("textarea[name='introduce']").val();
+            return{
+                "deptName":deptName,
+                "leader":leader,
+                "status":status,
+                "introduce":text,
+
+            }
+
+        }
+
+	</script>
+</body>
+</html>
