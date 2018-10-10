@@ -11,7 +11,10 @@
                 <div class="select-list gd">
                     <ul>
                         <li>
-                            员工编号：<input type="text" name="userId"/>
+                            员工姓名：<input type="text" name="userId"/>
+                        </li>
+                        <li>
+                            部门：<input type="text" name="deptId"/>
                         </li>
                         <li>
                             周几：
@@ -27,7 +30,7 @@
                             </select>
                         </li>
                         <li class="select-time">
-                            <label>打卡时间： </label>
+                            <label>打卡日期： </label>
                             <input type="text" class="time-input" style="width: 150px" id="beginTime" placeholder="开始时间"
                                    name="beginTime" lay-key="1">
                             <span>-</span>
@@ -251,6 +254,13 @@
                 title: '员工',
                 formatter: function (value, row) {
                     return row.user.name
+                }
+            },
+            {
+                field: 'deptId',
+                title: '部门',
+                formatter: function (value, row) {
+                    return row.dept.deptName
                 }
             },
             {

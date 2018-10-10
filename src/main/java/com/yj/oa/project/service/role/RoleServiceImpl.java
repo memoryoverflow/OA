@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.role;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.project.mapper.PermissionMapper;
@@ -99,9 +100,9 @@ public class RoleServiceImpl implements IRoleService{
         if (StringUtils.isNotNull(info) && StringUtils.isNotNull(info.getRoleId()) && !info.getRoleId().equals(
                 roleId))
         {
-            return UserConstants.ROLE_NAME_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.ROLE_NAME_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 
 

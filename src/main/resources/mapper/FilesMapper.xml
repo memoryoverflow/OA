@@ -27,10 +27,10 @@
     <include refid="Base_Column_List" />
     from t_file
     <where>
-      <if test="fileName != null">
-        and fileName=#{fileName}
+      <if test="fileName != null and fileName!=null">
+        and fileName LIKE concat('%',#{fileName},'%')
       </if>
-      <if test="uploadUser != null">
+      <if test="uploadUser != null and uploadUser!=''">
         and uploadUser=#{uploadUser}
       </if>
       <if test="beginTime !=null">

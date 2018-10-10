@@ -25,8 +25,20 @@ public class Attend extends BasePo{
 
     private Integer isDel;
 
+    private String deptId;
+
     private User user;
     private Dept dept;
+
+    public String getDeptId()
+    {
+        return deptId;
+    }
+
+    public void setDeptId(String deptId)
+    {
+        this.deptId = deptId;
+    }
 
     public Dept getDept()
     {

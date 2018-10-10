@@ -2,6 +2,7 @@ package com.yj.oa.project.service.ACT.task;
 
 
 import com.yj.oa.project.po.ActTask;
+import com.yj.oa.project.po.ApplyRoomForm;
 import com.yj.oa.project.po.LeaveForm;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public interface IActTaskService{
 
     public void LeaveApproval(LeaveForm leaveForm, String taskId);
 
-
+    public void RoomApproval(ApplyRoomForm applyRoomForm, String taskId) throws Exception;
     /**
      *
      * @描述:  删除任务

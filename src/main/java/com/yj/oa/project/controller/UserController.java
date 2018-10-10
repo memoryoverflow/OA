@@ -1,5 +1,6 @@
 package com.yj.oa.project.controller;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.exception.file.FileNameLengthException;
 import com.yj.oa.common.exception.file.FileSizeException;
@@ -152,7 +153,7 @@ public class UserController extends BaseController{
     public AjaxResult addUser(User user)
     {
         user.setUid(createUID());
-        user.setAvatar(UserConstants.AVATOR);
+        user.setAvatar(CsEnum.avatar.USER_AVATAR.getValue());
         user.setCreateTime(new Date());
         return result(iUserService.insertSelective(user));
     }

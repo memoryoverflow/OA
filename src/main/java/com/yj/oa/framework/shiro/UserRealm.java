@@ -1,5 +1,6 @@
 package com.yj.oa.framework.shiro;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.project.po.Permission;
 import com.yj.oa.project.po.Role;
@@ -52,7 +53,7 @@ public class UserRealm extends AuthorizingRealm{
         }
 
         String status = user.getStatus().toString();
-        if (status.equals(UserConstants.USER_BLOCKED))
+        if (status.equals(CsEnum.user.USER_USER_BLOCKED.getValue()))
         {
             throw new LockedAccountException("用户被锁定！");
         }

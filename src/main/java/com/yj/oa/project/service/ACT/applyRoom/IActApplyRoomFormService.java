@@ -18,14 +18,6 @@ public interface IActApplyRoomFormService{
     public void apply(ApplyRoomForm applyRoom);
 
 
-    /**
-     *
-     * @描述 经理审批
-     *
-     * @date 2018/9/21 21:26
-     */
-    public void completeTask(String taskId,ApplyRoomForm applyRoomForm) throws Exception;
-
 
     /**
      *

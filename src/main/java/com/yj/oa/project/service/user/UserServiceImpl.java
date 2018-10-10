@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.user;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.shiro.Encryption;
@@ -129,9 +130,9 @@ public class UserServiceImpl implements IUserService{
         if (StringUtils.isNotNull(info) && StringUtils.isNotNull(info.getUid())
                 && !info.getUid().equals(userId))
         {
-            return UserConstants.USER_PHONE_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.USER_PHONE_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 
     /**
@@ -153,9 +154,9 @@ public class UserServiceImpl implements IUserService{
         if (StringUtils.isNotNull(info) && StringUtils.isNotNull(info.getUid())
                 && !info.getUid().equals(userId))
         {
-            return UserConstants.USER_PHONE_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.USER_PHONE_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 
     /**
@@ -203,9 +204,9 @@ public class UserServiceImpl implements IUserService{
         if (StringUtils.isNotNull(info) && StringUtils.isNotNull(info.getUid())
                 && !info.getUid().equals(userId))
         {
-            return UserConstants.USER_PHONE_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.USER_PHONE_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 
 }

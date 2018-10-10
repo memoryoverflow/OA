@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.ACT.actUtil;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 
 import java.util.HashMap;
@@ -23,9 +24,9 @@ public class ActUtil{
     {
         Map<String, Object> map = new HashMap<>(2);
         //任务节点代理人
-        map.put(UserConstants.AGENT, uId);
+        map.put(CsEnum.activiti.AGENT.getValue(), uId);
         //下一个代理人
-        map.put(UserConstants.INITIATOR, uId);
+        map.put(CsEnum.activiti.INITIATOR.getValue(), uId);
         return map;
     }
 
@@ -43,9 +44,9 @@ public class ActUtil{
     {
         Map<String, Object> map = new HashMap<>(2);
         //任务节点代理人
-        map.put(UserConstants.AGENT, AgentId);
+        map.put(CsEnum.activiti.AGENT.getValue(), AgentId);
         //下一个代理人
-        map.put(UserConstants.FORMID, formKey);
+        map.put(CsEnum.activiti.FORMID.getValue(), formKey);
         return map;
     }
 

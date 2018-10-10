@@ -95,7 +95,7 @@
   </select>
 
 
-  <!--主键查询-->
+  <!--名字查询-->
   <select id="selectByRoomName" parameterType="String" resultMap="BaseResultMap">
     SELECT *
     FROM
@@ -130,6 +130,7 @@
   </select>
 
 
+  <!--修改房间状态-->
   <update id="updateByRoomName" parameterType="MeetingRoom">
     update t_meetingroom
     <set>

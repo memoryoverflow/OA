@@ -30,6 +30,7 @@
         from t_attendcount
         where id = #{id,jdbcType=INTEGER}
     </select>
+
     <select id="selectAttendCountList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -40,19 +41,19 @@
         <where>
             <if test="user !=null">
                 <if test="user.name !=null and user.name !=''">
-                    and u.name=#{user.name}
+                    and u.name like concat('%',#{user.name},'%')
                 </if>
             </if>
             <if test="dept !=null">
                 <if test="dept.deptName !=null and dept.deptName !=''">
-                    and d.deptName=#{dept.deptName}
+                    and d.deptName like concat('%',#{dept.deptName},'%')
                 </if>
             </if>
             <if test="dateYear !=null and dateYear!=''">
                 and dateYear=#{dateYear}
             </if>
             <if test="dateMoth !=null and dateMoth!=''">
-                and dateMoth=#{dateMoth}
+                and dateMoth like concat('%',#{dateMoth},'%')
             </if>
         </where>
     </select>

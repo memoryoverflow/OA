@@ -43,6 +43,9 @@
             <if test="overTime !=null">
                 <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
             </if>
+            <if test="type !=null and type !=''">
+                and type=#{type}
+            </if>
         </where>
     </select>
 

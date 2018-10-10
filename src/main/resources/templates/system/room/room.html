@@ -14,12 +14,12 @@
                             房间名称：<input type="text" name="meetRoomName"/>
                         </li>
                         <li>
-                            状态：<select name="noticeType">
+                            状态：<select name="status">
                             <option value="">所有</option>
-                            <option th:value="0">空闲</option>
-                            <option th:value="1">预约中</option>
-                            <option th:value="2">使用中</option>
-                            <option th:value="3">停用</option>
+                            <option value="0">空闲</option>
+                            <option value="1">预约中</option>
+                            <option value="2">使用中</option>
+                            <option  value="3">停用</option>
                         </select>
                         </li>
                         <li class="select-time">
@@ -31,6 +31,8 @@
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm"
                                onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm"
+                               onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>

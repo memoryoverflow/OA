@@ -1,5 +1,7 @@
 package com.yj.oa.project.controller;
 
+import com.yj.oa.common.constant.CsEnum;
+import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.json.JsonUtils;
 import com.yj.oa.framework.annotation.Operlog;
@@ -85,14 +87,14 @@ public class PermissionController extends BaseController{
     public String toAdd(@PathVariable("parentId") Integer pId, Model model)
     {
         Permission permission = null;
-        if (0 != pId)
+        if (CsEnum.menu.MENU_PID.getValue() != pId)
         {
             permission = iPermissionService.selectByPrimaryKey(pId);
         }
         else
         {
             permission = new Permission();
-            permission.setPermissionId(0);
+            permission.setPermissionId(CsEnum.menu.MENU_PID.getValue());
             permission.setPerName("主目录");
         }
         model.addAttribute("menu", permission);
@@ -160,7 +162,7 @@ public class PermissionController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return insert > 0 ? success() : error();
+        return result(insert);
     }
 
 

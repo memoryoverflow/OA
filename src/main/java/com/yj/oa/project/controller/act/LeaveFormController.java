@@ -1,5 +1,6 @@
 package com.yj.oa.project.controller.act;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.framework.annotation.Operlog;
 import com.yj.oa.framework.web.controller.BaseController;
@@ -110,7 +111,7 @@ public class LeaveFormController extends BaseController{
      * @date： 2018/9/23 13:28
      */
     @RequestMapping("/editSave")
-    @Operlog(modal = "请假管理",descr = "修改请假表单")
+    @Operlog(modal = "请假管理", descr = "修改请假表单")
     @ResponseBody
     public AjaxResult editSave(LeaveForm leaveForm)
     {
@@ -135,7 +136,7 @@ public class LeaveFormController extends BaseController{
      * @date: 2018/9/26 11:14
      */
     @RequestMapping("/del")
-    @Operlog(modal = "请假管理",descr = "删除请假记录")
+    @Operlog(modal = "请假管理", descr = "删除请假记录")
     @ResponseBody
     public AjaxResult del(String[] ids)
     {
@@ -148,13 +149,14 @@ public class LeaveFormController extends BaseController{
         {
             return error(e.getMessage());
         }
-        return i>0 ?success():error();
+        return result(i);
     }
 
 
     /**
      *
      * @描述: 检测当前任务是不是当前员工的请假任务
+     *   是就显示提交申请
      *
      * @params:
      * @return:
@@ -162,7 +164,7 @@ public class LeaveFormController extends BaseController{
      */
     @RequestMapping("/checkAgent")
     @ResponseBody
-    public String tes(String proceId)
+    public String checkAgent(String proceId)
     {
 
         //任务为空说明当前人的请假任务完成
@@ -171,7 +173,7 @@ public class LeaveFormController extends BaseController{
         {
             String assignee = task.getAssignee();
             //当前登录人 getUserId()
-            if (assignee.equals(getUserId()))
+            if (assignee.equals(getUserId())&&!User.isBoss(getUserId()))
             {
                 return "true";
             }
@@ -206,9 +208,14 @@ public class LeaveFormController extends BaseController{
     public TableDataInfo myLeavRecordHi(ActHiProcinst actHiProcinst)
     {
         startPage();
-        //getUserId()
-        actHiProcinst.setStartActId(getUserId());
-        actHiProcinst.setBusinessKey(UserConstants.BUSINESS_KEY_LEAVE);
+
+        //如果是boss就显示所有
+        if (!User.isBoss(getUserId()))
+        {
+            actHiProcinst.setStartActId(getUserId());
+        }
+
+        actHiProcinst.setBusinessKey(CsEnum.activiti.BUSINESS_KEY_LEAVE.getValue());
         List<ActHiProcinst> actHiProcinsts = iActHiProcinstService.selectActHiProcinstList(actHiProcinst);
         return getDataTable(actHiProcinsts);
     }
@@ -237,7 +244,7 @@ public class LeaveFormController extends BaseController{
      */
 
     @RequestMapping("/addSave")
-    @Operlog(modal = "请假管理",descr = "填写请假表单")
+    @Operlog(modal = "请假管理", descr = "填写请假表单")
     @ResponseBody
     public AjaxResult addSave(LeaveForm leaveForm)
     {
@@ -273,7 +280,7 @@ public class LeaveFormController extends BaseController{
      * @date: 2018/9/24 15:50
      */
     @RequestMapping("/submit")
-    @Operlog(modal = "请假管理",descr = "提交请假申请")
+    @Operlog(modal = "请假管理", descr = "提交请假申请")
     @ResponseBody
     public AjaxResult submit(String procInstId)
     {
@@ -291,7 +298,7 @@ public class LeaveFormController extends BaseController{
      * @date: 2018/9/24 15:50
      */
     @RequestMapping("/giveUp")
-    @Operlog(modal = "请假管理",descr = "放弃请假申请")
+    @Operlog(modal = "请假管理", descr = "放弃请假申请")
     @ResponseBody
     public AjaxResult giveUp(String procInstId)
     {

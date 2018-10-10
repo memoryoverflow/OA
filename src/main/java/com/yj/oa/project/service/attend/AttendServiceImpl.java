@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.attend;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.DateUtils;
 import com.yj.oa.common.utils.StringUtils;
@@ -183,7 +184,7 @@ public class AttendServiceImpl implements IAttendService{
         {
             if (currDate > attendEndMorTime)
             {
-                attend.setStatus(UserConstants.ATTEND_ERROR);
+                attend.setStatus(CsEnum.attend.ATTEND_ERROR.getValue());
             }
         }
 
@@ -201,7 +202,7 @@ public class AttendServiceImpl implements IAttendService{
             if (currDate > morWorkStartTime)
             {
                 //迟到
-                attend.setStatus(UserConstants.ATTEND_ERROR);
+                attend.setStatus(CsEnum.attend.ATTEND_ERROR.getValue());
             }
             attend.setAttendMorStart(date);
         }
@@ -226,7 +227,7 @@ public class AttendServiceImpl implements IAttendService{
             if (currDate > afterNoonStarWorkTime)
             {
                 //迟到
-                attend.setStatus(UserConstants.ATTEND_ERROR);
+                attend.setStatus(CsEnum.attend.ATTEND_ERROR.getValue());
             }
             attend.setAttendNoonStart(date);
         }

@@ -160,7 +160,7 @@ public class ActTaskController extends BaseController{
     {
         try
         {
-            iact_applyRoomFormService.completeTask(taskId, applyRoomForm);
+            iacttaskService.RoomApproval(applyRoomForm, taskId);
         }
         catch (Exception e)
         {
@@ -207,8 +207,7 @@ public class ActTaskController extends BaseController{
     @ResponseBody
     public AjaxResult del(String[] ids)
     {
-        int i = iacttaskService.deletByProcInstS(ids);
-        return i > 0 ? success() : error();
+        return result(iacttaskService.deletByProcInstS(ids));
     }
 
 

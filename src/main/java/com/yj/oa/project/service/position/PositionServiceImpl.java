@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.position;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.project.mapper.PositionMapper;
@@ -127,8 +128,8 @@ public class PositionServiceImpl implements IPositionService{
         Position info = positionMapper.checkPositionNameUnique(position.getPositionName());
         if (StringUtils.isNotNull(info) && !info.getPositionId().equals(postId))
         {
-            return UserConstants.POST_NAME_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.POST_NAME_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 }

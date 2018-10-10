@@ -118,7 +118,7 @@ and ps.positionId =u.position
                 and uid = #{uid}
             </if>
             <if test="name !=null and name !=''">
-                and name = LIKE concat('%',#{name},'%')
+                and name LIKE concat('%',#{name},'%')
             </if>
             <if test="dept !=null and dept !=''">
                 and dept = #{dept}
@@ -134,13 +134,13 @@ and ps.positionId =u.position
                 <![CDATA[  and DATE_FORMAT(u.createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
             </if>
             <if test="tel !=null and tel!=''">
-                and tel=#{tel}
+                and tel LIKE concat('%',#{tel},'%')
             </if>
             <if test="role_ID !=null and role_ID!=''">
                 and role_ID=#{role_ID}
             </if>
             <if test="status !=null and status !=''or status==0">
-                and status = #{status}
+                and u.status = #{status}
             </if>
         </where>
     </select>

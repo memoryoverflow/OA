@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.menu;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.project.mapper.PermissionMapper;
@@ -141,9 +142,9 @@ public class PermissionServiceImpl implements IPermissionService{
         Permission info = permissionMapper.checkMenuNameUnique(permission);
         if (StringUtils.isNotNull(info) && !info.getPermissionId().equals(menuId))
         {
-            return UserConstants.MENU_NAME_NOT_UNIQUE;
+            return CsEnum.unique.NOT_UNIQUE.getValue();
         }
-        return UserConstants.MENU_NAME_UNIQUE;
+        return CsEnum.unique.IS_UNIQUE.getValue();
     }
 
 

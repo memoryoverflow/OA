@@ -1,5 +1,6 @@
 package com.yj.oa.project.controller;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.DateUtils;
 import com.yj.oa.framework.annotation.Operlog;
@@ -67,7 +68,7 @@ public class ScheduleController extends BaseController{
     @ResponseBody
     public AjaxResult updateComplete(Schedule schedule)
     {
-        schedule.setIsComplete(UserConstants.SCHEDULE_YES_COMPLETE);
+        schedule.setIsComplete(CsEnum.scheduled.SCHEDULE_YES_COMPLETE.getValue());
         return result(iScheduleService.updateComplete(schedule));
     }
 
@@ -88,7 +89,7 @@ public class ScheduleController extends BaseController{
         List<Schedule> schedules = iScheduleService.selectScheduleList(new Schedule());
         for (Schedule s : schedules)
         {
-            if (s.getIsComplete() == UserConstants.SCHEDULE_NO_COMPLETE)
+            if (s.getIsComplete() == CsEnum.scheduled.SCHEDULE_NO_COMPLETE.getValue())
             {
                 map.put(DateUtils.DateToSTr(s.getStartTime()).substring(0, 10), s.getTitle());
             }
@@ -112,7 +113,7 @@ public class ScheduleController extends BaseController{
     {
         Schedule schedule = new Schedule();
         //查询未完成的
-        schedule.setIsComplete(UserConstants.SCHEDULE_NO_COMPLETE);
+        schedule.setIsComplete(CsEnum.scheduled.SCHEDULE_NO_COMPLETE.getValue());
         schedule.setStartTime(DateUtils.StrToDate(date));
         System.out.println(DateUtils.DateToSTr(DateUtils.StrToDate(date)));
         List<Schedule> schedules = iScheduleService.selectScheduleList(schedule);

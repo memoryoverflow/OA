@@ -49,7 +49,10 @@
         LEFT JOIN t_dept d ON d.depId = a.deptId
         <where>
             <if test="userId !=null and userId !=''">
-                and userId=#{userId}
+                and userId in (SELECT uid from t_user WHERE name like concat('%',#{userId},'%'))
+            </if>
+            <if test="deptId !=null and deptId !=''">
+                and a.deptId in (SELECT depId from  t_dept WHERE deptName like concat('%',#{deptId},'%'))
             </if>
             <if test="beginTime !=null">
                 <![CDATA[   and DATE_FORMAT(currDate, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>

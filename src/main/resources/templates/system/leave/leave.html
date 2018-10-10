@@ -10,6 +10,12 @@
             <form id="operlog-form">
                 <div class="select-list gd">
                     <ul>
+
+                        <li>
+                            <label>员工： </label>
+                            <input name="user.name">
+                        </li>
+
                         <li class="select-time">
                             <label>创建时间： </label>
                             <input type="text" class="time-input" style="width: 150px" id="beginTime" placeholder="开始时间"
@@ -21,8 +27,8 @@
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm"
                                onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                            <!--<a class="btn btn-success btn-rounded btn-sm"-->
-                            <!--onclick="$.table.exportExcel($('form').attr('id'))"><i class="fa fa-download"></i>&nbsp;下载</a>-->
+                            <a class="btn btn-warning btn-rounded btn-sm"
+                            onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>
@@ -110,7 +116,10 @@
                 },
                 {
                     field: 'startUserId',
-                    title: '申请人编号'
+                    title: '申请人编号',
+                    formatter:function (value,row) {
+                        return row.user.name;
+                    }
                 },
                 {
                     title: '操作',

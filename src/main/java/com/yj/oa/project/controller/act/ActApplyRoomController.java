@@ -1,5 +1,6 @@
 package com.yj.oa.project.controller.act;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.framework.annotation.Operlog;
 import com.yj.oa.framework.web.controller.BaseController;
@@ -137,7 +138,7 @@ public class ActApplyRoomController extends BaseController{
         startPage();
         //getUserId()
         actHiProcinst.setStartActId(getUserId());
-        actHiProcinst.setBusinessKey(UserConstants.BUSINESS_KEY_APPLYROOM);
+        actHiProcinst.setBusinessKey(CsEnum.activiti.BUSINESS_KEY_APPLYROOM.getValue());
         List<ActHiProcinst> actHiProcinsts = iActHiProcinstService.selectActHiProcinstList(actHiProcinst);
         return getDataTable(actHiProcinsts);
     }
@@ -200,7 +201,7 @@ public class ActApplyRoomController extends BaseController{
         //判断房间使用状况
         MeetingRoom meetingRoom = iMeetingRoomService.selectByRoomName(applyRoom.getRoomName());
         Integer status = meetingRoom.getStatus();
-        if (status == UserConstants.MEET_ROOM_STATUS_FREE)
+        if (status == CsEnum.meetRoom.MEET_ROOM_STATUS_FREE.getValue())
         {
             //设置申请人ID  getUserId()
             applyRoom.setProposer_Id(getUserId());
@@ -208,11 +209,11 @@ public class ActApplyRoomController extends BaseController{
             iactapplyService.apply(applyRoom);
             return success();
         }
-        else if (status == UserConstants.MEET_ROOM_STATUS_APPLYING)
+        else if (status == CsEnum.meetRoom.MEET_ROOM_STATUS_APPLYING.getValue())
         {
             return error(" 会议室已预约中！");
         }
-        else if (status == UserConstants.MEET_ROOM_STATUS_USING)
+        else if (status == CsEnum.meetRoom.MEET_ROOM_STATUS_USING.getValue())
         {
             return error(" 会议室使用中！");
         }

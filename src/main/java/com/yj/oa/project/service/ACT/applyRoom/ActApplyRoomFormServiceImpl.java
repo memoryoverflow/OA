@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.ACT.applyRoom;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.project.mapper.ActHiProcinstMapper;
 import com.yj.oa.project.mapper.ActHiTaskInstMapper;
@@ -87,14 +88,14 @@ public class ActApplyRoomFormServiceImpl implements IActApplyRoomFormService{
 
         //提交申请，完成任务。并且指定下一个任务代理人 传递变量参数到下一个节点
         Map<String, Object> map = new HashMap<>(2);
-        map.put(UserConstants.AGENT, uId);
-        map.put(UserConstants.INITIATOR, uId);
+        map.put(CsEnum.activiti.AGENT.getValue(), uId);
+        map.put(CsEnum.activiti.INITIATOR.getValue(), uId);
 
         // 预约表单信息持久化 表单的id 为 任务的formKey编号
         applyRoomFormMapper.insertSelective(applyRoom);
 
         //设置流程实例的FormKey 和表单的 id关联，之后用来查看 历史记录，资源文件。。。
-        String businessKey = UserConstants.BUSINESS_KEY_APPLYROOM + "" + applyRoom.getId();
+        String businessKey = CsEnum.activiti.BUSINESS_KEY_APPLYROOM.getValue() + "" + applyRoom.getId();
         //开启申请流程
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(ProcessInstanceByKey,
                                                                                    businessKey, map);
@@ -116,7 +117,7 @@ public class ActApplyRoomFormServiceImpl implements IActApplyRoomFormService{
 
         //修改房间状态为 预约中
         MeetingRoom meetingRoom = new MeetingRoom();
-        meetingRoom.setStatus(UserConstants.MEET_ROOM_STATUS_APPLYING);
+        meetingRoom.setStatus(CsEnum.meetRoom.MEET_ROOM_STATUS_APPLYING.getValue());
         meetingRoom.setMeetRoomName(applyRoom.getRoomName());
         iMeetingRoomService.updateByRoomName(meetingRoom);
 
@@ -125,53 +126,6 @@ public class ActApplyRoomFormServiceImpl implements IActApplyRoomFormService{
         applyRoomFormMapper.updateByPrimaryKeySelective(applyRoom);
     }
 
-
-    /**
-     *
-     * @描述: 申请会议室任务审批
-     *
-     * @params:  @param taskId:任务ID,isAgree:是否同意 1,2, roomName:房间名 修改该房间状态
-     * @return：
-     * @date： 2018/9/23 14:42
-     */
-    @Override
-    public void completeTask(String taskId, ApplyRoomForm applyRoomForm) throws Exception
-    {
-        //进行任务审批
-        try
-        {
-            taskService.complete(taskId);
-        }
-        catch (Exception e)
-        {
-            throw new Exception("操作失败！");
-        }
-
-
-        //修改预约信息的表单 和 会议室的状态
-
-        /** 0:空闲；1：预约中；2：使用中 */
-        MeetingRoom meetingRoom = new MeetingRoom();
-        meetingRoom.setMeetRoomName(applyRoomForm.getRoomName());
-
-        Integer isAgree = applyRoomForm.getStatus();
-
-
-        if (isAgree == UserConstants.APPLY_STATUS_AGREE)
-        {
-            // 设为使用中 描述 房间状态情况 0：空闲，1：预约中 2：使用中，3停用
-            meetingRoom.setStatus(UserConstants.MEET_ROOM_STATUS_USING);
-        }
-        else
-        {
-            // 不同意 设为0
-            meetingRoom.setStatus(UserConstants.MEET_ROOM_STATUS_FREE);
-        }
-
-        applyRoomForm.setEndTime(new Date());
-        applyRoomFormMapper.updateByPrimaryKeySelective(applyRoomForm);
-        iMeetingRoomService.updateByRoomName(meetingRoom);
-    }
 
 
 

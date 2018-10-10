@@ -37,7 +37,7 @@
                 <div class="select-list gd">
                     <ul>
                         <li>
-                            姓名：<input type="text" name="uid"/>
+                            姓名：<input type="text" name="name"/>
                         </li>
                         <li>
                             手机号码：<input type="text" name="tel"/>
@@ -45,6 +45,9 @@
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm"
                                onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>
+
+                            <a class="btn btn-warning btn-rounded btn-sm"
+                               onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>

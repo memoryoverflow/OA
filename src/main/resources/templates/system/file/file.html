@@ -11,10 +11,10 @@
                 <div class="select-list gd">
                     <ul>
                         <li>
-                            文件名称：<input type="text" name="configName"/>
+                            文件名称：<input type="text" name="fileName"/>
                         </li>
                         <li>
-                            上传人：<input type="text" name="configName"/>
+                            上传人：<input type="text" name="uploadUser"/>
                         </li>
                         <li class="select-time">
                             <label>创建时间： </label>
@@ -27,8 +27,8 @@
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm"
                                onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                            <!--<a class="btn btn-success btn-rounded btn-sm"-->
-                            <!--onclick="$.table.exportExcel($('form').attr('id'))"><i class="fa fa-download"></i>&nbsp;下载</a>-->
+                            <a class="btn btn-warning btn-rounded btn-sm"
+                               onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>

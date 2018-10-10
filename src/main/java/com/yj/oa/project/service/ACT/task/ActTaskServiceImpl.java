@@ -1,6 +1,7 @@
 package com.yj.oa.project.service.ACT.task;
 
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.project.mapper.*;
 import com.yj.oa.project.po.*;
@@ -21,6 +22,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,8 @@ public class ActTaskServiceImpl implements IActTaskService{
 
     @Autowired
     ActHiProcinstMapper actHiProcinstMapper;
-
+    @Autowired
+    MeetingRoomMapper iMeetingRoomService;
 
     /**
      *
@@ -95,10 +98,10 @@ public class ActTaskServiceImpl implements IActTaskService{
         String status = String.valueOf(leaveForm.getStatus());
 
         //同意
-        if (UserConstants.Leave_status_succe.equals(status))
+        if (CsEnum.leavForm.Leave_status_succe.getValue().equals(status))
         {
             Map<String, Object> map = ActUtil.setNextTaskVariable(leaveForm.getAgent_Id(), leaveForm.getId());
-            map.put(UserConstants.Leave_FLAG, UserConstants.Leave_FLAG_TRUE);
+            map.put(CsEnum.activiti.Leave_FLAG.getValue(), CsEnum.activiti.Leave_FLAG_TRUE.getValue());
 
             Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 
@@ -125,7 +128,7 @@ public class ActTaskServiceImpl implements IActTaskService{
         {
             //拒绝请假，结束任务
             Map<String, Object> map = new HashMap<>();
-            map.put(UserConstants.Leave_FLAG, UserConstants.Leave_FLAG_FaLSE);
+            map.put(CsEnum.activiti.Leave_FLAG.getValue(), CsEnum.activiti.Leave_FLAG_FALSE.getValue());
             //拒绝审批
             taskService.complete(taskId, map);
             //修改请假表单状态
@@ -166,7 +169,7 @@ public class ActTaskServiceImpl implements IActTaskService{
                 //删除待审任务，先恢复会议室申请状态
                 ApplyRoomForm applyRoomForm = applyRoomFormMapper.selectByPrimaryKey(ActUtil.getFormKeyFromHi(formkey));
                 meetingRoom.setMeetRoomName(applyRoomForm.getRoomName());
-                meetingRoom.setStatus(UserConstants.MEET_ROOM_STATUS_FREE);
+                meetingRoom.setStatus(CsEnum.meetRoom.MEET_ROOM_STATUS_FREE.getValue());
                 meetingRoomMapper.updateByRoomName(meetingRoom);
 
                 applyRoomFormMapper.deleteByprocInstIds(ids);
@@ -194,9 +197,42 @@ public class ActTaskServiceImpl implements IActTaskService{
      * @date: 2018/9/24 17:21
      */
 
-    public void RoomApproval(ApplyRoomForm applyRoomForm, String taskId)
+    public void RoomApproval(ApplyRoomForm applyRoomForm, String taskId) throws Exception
     {
+        //进行任务审批
+        try
+        {
+            taskService.complete(taskId);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("操作失败！");
+        }
 
+
+        //修改预约信息的表单 和 会议室的状态
+
+        /** 0:空闲；1：预约中；2：使用中 */
+        MeetingRoom meetingRoom = new MeetingRoom();
+        meetingRoom.setMeetRoomName(applyRoomForm.getRoomName());
+
+        Integer isAgree = applyRoomForm.getStatus();
+
+
+        if (isAgree == CsEnum.ApplyRoomForm.APPLY_STATUS_AGREE.getValue())
+        {
+            // 设为使用中 描述 房间状态情况 0：空闲，1：预约中 2：使用中，3停用
+            meetingRoom.setStatus(CsEnum.meetRoom.MEET_ROOM_STATUS_USING.getValue());
+        }
+        else
+        {
+            // 不同意 设为0
+            meetingRoom.setStatus(CsEnum.meetRoom.MEET_ROOM_STATUS_FREE.getValue());
+        }
+
+        applyRoomForm.setEndTime(new Date());
+        applyRoomFormMapper.updateByPrimaryKeySelective(applyRoomForm);
+        iMeetingRoomService.updateByRoomName(meetingRoom);
     }
 
 

@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.leavForm;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.project.mapper.*;
 import com.yj.oa.project.po.ActHiProcinst;
@@ -191,7 +192,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
 
         //3.设置流程实例的FormKey 和表单的 id关联，之后用来查看 历史记录，资源文件。。。
         formId = leaveForm.getId();
-        businessKey = UserConstants.BUSINESS_KEY_LEAVE + "" + formId;
+        businessKey = CsEnum.activiti.BUSINESS_KEY_LEAVE.getValue() + "" + formId;
 
         //4.启动申请流程,设置变量到下一个节点
         ProcessInstance processInstance = runtimeService.
@@ -222,7 +223,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
 
         //下一个任务的代理人还是自己（提交申请请假表单的代理人）
         Map<String, Object> map = ActUtil.setNextTaskVariable(assignee, formKey);
-        map.put(UserConstants.Leave_FLAG, UserConstants.Leave_FLAG_TRUE);
+        map.put(CsEnum.activiti.Leave_FLAG_FALSE.getValue(), CsEnum.activiti.Leave_FLAG_TRUE.getValue());
         //2.完成填写任务
         taskService.complete(task.getId(), map);
 
@@ -239,7 +240,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
         LeaveForm leaveForm = new LeaveForm();
         leaveForm.setId(task.getFormKey());
         //1：代表申请中
-        leaveForm.setStatus(Integer.parseInt(UserConstants.Leave_status_GOING));
+        leaveForm.setStatus(Integer.parseInt(CsEnum.leavForm.Leave_status_GOING.getValue()));
         leaveFormMapper.updateByPrimaryKeySelective(leaveForm);
     }
 
@@ -258,7 +259,8 @@ public class LeavFormServiceImpl implements ILeavFormService{
         //放弃申请
         Task task = taskService.createTaskQuery().processInstanceId(proceId).singleResult();
         Map<String, Object> map = ActUtil.setNextTaskVariable(task.getAssignee(), task.getFormKey());
-        map.put(UserConstants.Leave_FLAG,UserConstants.Leave_FLAG_FaLSE);
+        map.put(CsEnum.activiti.Leave_FLAG_FALSE.getValue(),CsEnum.activiti.Leave_FLAG_FALSE.getValue());
+
         taskService.complete(task.getId(),map);
 
         //结束任务
@@ -269,7 +271,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
         //4：代表放弃请假
         LeaveForm leaveForm = new LeaveForm();
         leaveForm.setId(task.getFormKey());
-        leaveForm.setStatus(Integer.parseInt(UserConstants.Leave_FLAG_giveup));
+        leaveForm.setStatus(Integer.parseInt(CsEnum.leavForm.Leave_FLAG_giveup.getValue()));
         leaveFormMapper.updateByPrimaryKeySelective(leaveForm);
     }
 

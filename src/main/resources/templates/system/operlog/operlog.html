@@ -15,7 +15,7 @@
                             <label>系统模块： </label><input type="text" name="operModal"/>
                         </li>
                         <li>
-                            <label>操作人ID： </label><input type="text" name="operUser"/>
+                            <label>操作人： </label><input type="text" name="operUser"/>
                         </li>
                         <li>
                             <label>操作类型： </label>
@@ -37,6 +37,8 @@
                             <a class="btn btn-primary btn-rounded btn-sm"
                                onclick="$.table.search($('form').attr('id'))"><i
                                 class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm"
+                               onclick="$.form.reset($('form').attr('id'))"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>

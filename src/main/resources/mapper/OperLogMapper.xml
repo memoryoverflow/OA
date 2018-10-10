@@ -63,28 +63,31 @@
         <include refid="Base_Column_List"/>
         u.uid,u.name,d.depId,d.deptName
         from
-        t_operlog ol ,t_dept d ,t_user u
-        where ol.deptId=d.depId
+           t_operlog ol ,t_dept d ,t_user u
+        where
+          ol.deptId=d.depId
         and ol.operUser=u.uid
 
-            <if test="id !=null">
-                and id=#{id}
-            </if>
-            <if test="operUser !=null and operUser !=''">
-                and operUser like concat('%',#{operUser},'%')
-            </if>
-            <if test="operModal !=null and operModal !=''">
-                and operModal  like concat('%',#{operModal},'%')
-            </if>
-            <if test="beginTime!=null">
-                and #{beginTime} &lt;= time
-            </if>
-            <if test="overTime!=null">
-                and #{overTime} &gt;= time
-            </if>
-            <if test="status!=null">
-                and ol.status=#{status}
-            </if>
+        <if test="id !=null">
+            and id=#{id}
+        </if>
+
+        <if test="operUser!=null and operUser !=''">
+           and operUser in (select uid from t_user where name=#{operUser})
+        </if>
+
+        <if test="operModal !=null and operModal !=''">
+            and operModal like concat('%',#{operModal},'%')
+        </if>
+        <if test="beginTime!=null">
+            and #{beginTime} &lt;= time
+        </if>
+        <if test="overTime!=null">
+            and #{overTime} &gt;= time
+        </if>
+        <if test="status!=null">
+            and ol.status=#{status}
+        </if>
 
     </select>
 

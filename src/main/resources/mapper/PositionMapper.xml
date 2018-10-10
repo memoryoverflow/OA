@@ -30,7 +30,7 @@
                 and positionId=#{positionId}
             </if>
             <if test="positionName !=null and positionName!=''">
-                and positionName=#{positionName}
+                and positionName like concat('%',#{positionName},'%')
             </if>
             <if test="status !=null and status!='' or status==0">
                 and status=#{status}

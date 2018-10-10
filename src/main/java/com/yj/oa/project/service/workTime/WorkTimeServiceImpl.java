@@ -1,5 +1,6 @@
 package com.yj.oa.project.service.workTime;
 
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.DateUtils;
 import com.yj.oa.common.utils.StringUtils;
@@ -57,7 +58,7 @@ public class WorkTimeServiceImpl implements IWorkTimeService{
         WorkTime w = workTimeMapper.selectUsing();
         if (StringUtils.isNull(w))
         {
-            workTime.setStatus(UserConstants.WORK_TIME_USIN);
+            workTime.setStatus(CsEnum.worktime.WORK_TIME_USIN.getValue());
         }
 
 
@@ -92,11 +93,11 @@ public class WorkTimeServiceImpl implements IWorkTimeService{
         //将原来使用的那一条设为停用
         WorkTime workTime = workTimeMapper.selectUsing();
         //设为使用
-        if (UserConstants.WORK_TIME_USIN == (int) record.getStatus())
+        if (CsEnum.worktime.WORK_TIME_USIN.getValue() == (int) record.getStatus())
         {
             if (!StringUtils.isNull(workTime))
             {
-                workTime.setStatus(UserConstants.WORK_TIME_FREE);
+                workTime.setStatus(CsEnum.worktime.WORK_TIME_FREE.getValue());
                 workTimeMapper.updateByPrimaryKeySelective(workTime);
                 if (workTime.getId() == record.getId())
                 {

@@ -44,7 +44,7 @@
             <if test="roleName !=null and roleName!=''">
                 and roleName=#{roleName}
             </if>
-            <if test="status !=null and status!=''">
+            <if test="status !=null and status!='' or status==0">
                 and status=#{status}
             </if>
             <if test="beginTime !=null">

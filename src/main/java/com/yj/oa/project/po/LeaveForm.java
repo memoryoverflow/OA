@@ -25,18 +25,14 @@ public class LeaveForm extends BasePo{
     private String leaveType;
 
     /** 审批发起时间 */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**审批完成结束时间*/
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /** 请假生效时间*/
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date leaveTime;
     /**到期时间*/
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expireTime;
 
 
