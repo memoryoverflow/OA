@@ -1,7 +1,6 @@
 package com.yj.oa.project.controller;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.json.JsonUtils;
 import com.yj.oa.framework.annotation.Operlog;

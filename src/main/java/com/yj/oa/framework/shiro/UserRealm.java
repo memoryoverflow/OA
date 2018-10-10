@@ -1,7 +1,6 @@
 package com.yj.oa.framework.shiro;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.project.po.Permission;
 import com.yj.oa.project.po.Role;
 import com.yj.oa.project.po.User;

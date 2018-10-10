@@ -1,6 +1,5 @@
 package com.yj.oa.framework.shiro;
 
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.ServletUtils;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.project.po.User;

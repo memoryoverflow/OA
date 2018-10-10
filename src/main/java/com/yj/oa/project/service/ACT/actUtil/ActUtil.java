@@ -1,7 +1,6 @@
 package com.yj.oa.project.service.ACT.actUtil;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 
 import java.util.HashMap;
 import java.util.Map;

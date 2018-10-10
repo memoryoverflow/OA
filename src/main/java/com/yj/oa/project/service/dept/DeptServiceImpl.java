@@ -1,7 +1,6 @@
 package com.yj.oa.project.service.dept;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.project.mapper.DeptMapper;
 import com.yj.oa.project.mapper.UserMapper;

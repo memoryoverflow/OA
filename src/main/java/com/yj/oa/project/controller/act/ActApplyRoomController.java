@@ -1,7 +1,6 @@
 package com.yj.oa.project.controller.act;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.framework.annotation.Operlog;
 import com.yj.oa.framework.web.controller.BaseController;
 import com.yj.oa.framework.web.page.TableDataInfo;

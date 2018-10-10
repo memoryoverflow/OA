@@ -1,7 +1,6 @@
 package com.yj.oa.project.controller;
 
 import com.yj.oa.common.constant.CsEnum;
-import com.yj.oa.common.constant.UserConstants;
 import com.yj.oa.common.exception.file.FileNameLengthException;
 import com.yj.oa.common.exception.file.FileSizeException;
 import com.yj.oa.common.utils.HttpHeaderUtil;
