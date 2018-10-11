@@ -46,7 +46,7 @@ public class FilterChainDefinitionMapBuider {
         ListMap.put("/oa/logout","logout");
 
         //设置所有资源需要访问权限
-        ListMap.put("/**", "authc");
+        ListMap.put("/**", "sessionExpireFilter,authc");
         return ListMap;
     }
 

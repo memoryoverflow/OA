@@ -57,6 +57,7 @@ public class UserController extends BaseController{
     IPositionService iPositionService;
 
 
+
     /**
      *
      * @描述 跳转到用户页面
@@ -119,7 +120,7 @@ public class UserController extends BaseController{
         {
             return error("不允许修改管理员用户");
         }
-        return  result(iUserService.updateByPrimaryKeySelective(user));
+        return result(iUserService.updateByPrimaryKeySelective(user));
     }
 
 
@@ -318,7 +319,7 @@ public class UserController extends BaseController{
         user.setPwd(Encryption.getMD5(password, getUserId()).toString());
         user.setUid(getUserId());
         int i = iUserService.updateByPrimaryKeySelective(user);
-        if (i>0)
+        if (i > 0)
         {
             //更新shiro中的信息
             ShiroUtils.reloadUser(iUserService.selectByPrimaryKey(getUserId()));
@@ -333,8 +334,8 @@ public class UserController extends BaseController{
     @RequestMapping("/updateAvatar")
     public String toupdateAvatar(Model model)
     {
-        model.addAttribute("user",getUser());
-        return prefix+"profile/avatar";
+        model.addAttribute("user", getUser());
+        return prefix + "profile/avatar";
     }
 
     /**
@@ -342,7 +343,7 @@ public class UserController extends BaseController{
      */
     @RequestMapping("/updateAvatarSave")
     @RequiresPermissions("user:update")
-    @Operlog(modal = "个人信息",descr = "修改头像")
+    @Operlog(modal = "个人信息", descr = "修改头像")
     @ResponseBody
     public AjaxResult toupdateAvatar(MultipartFile file)
     {
@@ -359,7 +360,7 @@ public class UserController extends BaseController{
             user.setUid(getUserId());
             user.setAvatar(imgPath);
             int i = iUserService.updateByPrimaryKeySelective(user);
-            if (i>0)
+            if (i > 0)
             {
                 ShiroUtils.reloadUser(iUserService.selectByPrimaryKey(getUserId()));
             }
@@ -380,8 +381,6 @@ public class UserController extends BaseController{
             return error(e.getMsg());
         }
     }
-
-
 
 
     /**

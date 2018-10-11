@@ -222,7 +222,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
 
         //下一个任务的代理人还是自己（提交申请请假表单的代理人）
         Map<String, Object> map = ActUtil.setNextTaskVariable(assignee, formKey);
-        map.put(CsEnum.activiti.Leave_FLAG_FALSE.getValue(), CsEnum.activiti.Leave_FLAG_TRUE.getValue());
+        map.put(CsEnum.activiti.Leave_FLAG.getValue(), CsEnum.activiti.Leave_FLAG_TRUE.getValue());
         //2.完成填写任务
         taskService.complete(task.getId(), map);
 
@@ -258,7 +258,7 @@ public class LeavFormServiceImpl implements ILeavFormService{
         //放弃申请
         Task task = taskService.createTaskQuery().processInstanceId(proceId).singleResult();
         Map<String, Object> map = ActUtil.setNextTaskVariable(task.getAssignee(), task.getFormKey());
-        map.put(CsEnum.activiti.Leave_FLAG_FALSE.getValue(),CsEnum.activiti.Leave_FLAG_FALSE.getValue());
+        map.put(CsEnum.activiti.Leave_FLAG.getValue(),CsEnum.activiti.Leave_FLAG_FALSE.getValue());
 
         taskService.complete(task.getId(),map);
 

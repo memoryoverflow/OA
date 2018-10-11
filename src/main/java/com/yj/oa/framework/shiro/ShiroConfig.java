@@ -84,6 +84,7 @@ public class ShiroConfig{
         Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
         MyLogoutFilter myLogoutFilter = new MyLogoutFilter();
         myLogoutFilter.setLoginUrl(loginUrl);
+        filters.put("sessionExpireFilter",new MySessionExpiredFilter());
         filters.put("logout", myLogoutFilter);
         shiroFilterFactoryBean.setFilters(filters);
 
