@@ -64,7 +64,7 @@ public class MeetingRoomServiceImpl implements IMeetingRoomService{
     @Override
     public int updateByPrimaryKeySelective(MeetingRoom meetingRoom)
     {
-        return updateByPrimaryKeySelective(meetingRoom);
+        return roomService.updateByPrimaryKeySelective(meetingRoom);
     }
 
     /**

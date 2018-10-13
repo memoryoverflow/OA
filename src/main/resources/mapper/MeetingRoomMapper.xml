@@ -71,16 +71,16 @@
         meetRoomName=#{meetRoomName},
       </if>
       <if test="meetRoomPlace != null">
-        meetRoomPlace=#{meetRoomPlace},,
+        meetRoomPlace=#{meetRoomPlace},
       </if>
       <if test="capacity != null">
-        capacity=#{capacity},,
+        capacity=#{capacity},
       </if>
       <if test="createTime != null">
-        createTime=#{createTime},,
+        createTime=#{createTime},
       </if>
       <if test="status != null">
-        status=#{status},,
+        status=#{status},
       </if>
     </set>
     where id = #{id}

@@ -74,16 +74,17 @@ public class OperLogController extends BaseController{
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
-        try
-        {
-            // 删除前需要判断是否是本人发布的公告或这通知
-            iOperLogService.deleteByPrimaryKeys(ids);
-        }
-        catch (Exception e)
-        {
-            return error(e.getMessage());
-        }
-        return success();
+//        try
+//        {
+//            // 删除前需要判断是否是本人发布的公告或这通知
+//            iOperLogService.deleteByPrimaryKeys(ids);
+//        }
+//        catch (Exception e)
+//        {
+//            return error(e.getMessage());
+//        }
+//        return success();
+        return error("不允许删除！");
     }
 
 

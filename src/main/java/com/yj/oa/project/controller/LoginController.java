@@ -3,6 +3,7 @@ package com.yj.oa.project.controller;
 
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.shiro.ShiroUtils;
+import com.yj.oa.framework.annotation.Operlog;
 import com.yj.oa.framework.shiro.LoginService;
 import com.yj.oa.framework.web.controller.BaseController;
 import com.yj.oa.framework.web.po.AjaxResult;
@@ -50,6 +51,7 @@ public class LoginController extends BaseController{
      * @date: 2018/9/29 21:20
      */
     @RequestMapping("/login")
+    @Operlog(descr = "用户登录",modal = "登录")
     @ResponseBody
     public AjaxResult Logining(User user, String validateCode, Boolean rememberMe)
     {

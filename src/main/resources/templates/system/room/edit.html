@@ -8,7 +8,7 @@
 
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-notice-add" th:object="${room}">
+        <form class="form-horizontal m" id="form-room-edit" th:object="${room}">
             <input id="id" name="id" class="form-control" th:value="*{id}" type="hidden">
             <div class="form-group">
                 <label class="col-sm-3 control-label">房间名：</label>
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">公告状态：</label>
+                <label class="col-sm-3 control-label">会议室状态：</label>
                 <div class="col-sm-8">
                     <label class="checkbox-inline i-checks">
                         <input type="radio" th:field="*{status}" name="status" value="0" checked/>
@@ -62,22 +62,14 @@
     <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
     <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
     <script type="text/javascript">
-	    $(function() {
-		    $('.summernote').summernote({
-				height : '220px',
-				lang : 'zh-CN'
-		    });
-			var content = $("#noticeContent").val();
-		    $('#editor').code(content);
-	    });
-	    
+
 		var prefix =  "/room"
-		$("#form-notice-edit").validate({
+		$("#form-room-edit").validate({
             rules:{
                 meetRoomName:{
                     required:true,
                     remote: {
-                        url: "/user/checkRoomNameUnique",
+                        url: prefix+"/checkRoomNameUnique",
                         type: "post",
                         dataType: "json",
                         data: {
@@ -102,9 +94,7 @@
                 }
             },
 			submitHandler: function(form) {
-				var sHTML = $('.summernote').code();
-				$("#noticeContent").val(sHTML);
-				$.operate.save(prefix + "/editSave", $('#form-notice-edit').serialize());
+				$.operate.save(prefix + "/editSave", $('#form-room-edit').serialize());
 			}
 		});
 	</script>
