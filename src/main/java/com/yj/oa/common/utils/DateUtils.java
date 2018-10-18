@@ -141,7 +141,8 @@ public class DateUtils{
     {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         String dateString = formatter.format(date);
-        return dateString;
+
+        return dateString.equals("00:00:00") ? "12:00:00" : dateString;
     }
 
 

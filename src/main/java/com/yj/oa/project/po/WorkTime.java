@@ -155,4 +155,27 @@ public class WorkTime extends BasePo{
     {
         this.createTime = createTime;
     }
+
+    @Override
+    public String toString()
+    {
+        final StringBuffer sb = new StringBuffer("WorkTime{");
+        sb.append("id=").append(id);
+        sb.append(", attendMorStartTime=").append(attendMorStartTime);
+        sb.append(", attendMorendTime=").append(attendMorendTime);
+        sb.append(", workStartTimeMor=").append(workStartTimeMor);
+        sb.append(", workEndTimeMor=").append(workEndTimeMor);
+        sb.append(", attendMorLeaveStartTime=").append(attendMorLeaveStartTime);
+        sb.append(", attendMorLeaveEndTime=").append(attendMorLeaveEndTime);
+        sb.append(", attendAfterNoonStartTime=").append(attendAfterNoonStartTime);
+        sb.append(", attendAfterNoonendTime=").append(attendAfterNoonendTime);
+        sb.append(", workStartTimeAfterNoon=").append(workStartTimeAfterNoon);
+        sb.append(", workEndTimeAfterNoon=").append(workEndTimeAfterNoon);
+        sb.append(", attendAfterLeaveStartTime=").append(attendAfterLeaveStartTime);
+        sb.append(", attendAfterLeaveEndTime=").append(attendAfterLeaveEndTime);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", status=").append(status);
+        sb.append('}');
+        return sb.toString();
+    }
 }

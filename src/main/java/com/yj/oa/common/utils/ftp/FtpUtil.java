@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;
+
 /**
  *
  * @描述 ftp上传工具
@@ -23,7 +24,7 @@ import java.util.*;
  * @date 2018/9/20 0:35
  */
 public class FtpUtil{
-    private static Logger log= LoggerFactory.getLogger(FtpUtil.class);
+    private static Logger log = LoggerFactory.getLogger(FtpUtil.class);
 
     /**
      * FTP服务器ip
@@ -37,19 +38,18 @@ public class FtpUtil{
      * FTP登录账号
      */
     private static final String username = "ftpuser";
-     /**
+    /**
      * FTP登录密码
      */
     private static final String password = "123";
     /**
-     *FTP服务器基础目录,/home/ftpuser/images 图片上传到这 服务器路径
+     * FTP服务器基础目录,/home/ftpuser/images 图片上传到这 服务器路径
      */
     private static final String basePath = "/home/ftpuser/images";
     /**
      * FTP服务器文件存放路径。例如分日期存放：/2018/05/28。文件的路径为basePath+filePath
      */
-    private static final String filePath = "http://106.14.226.138:7777";
-
+    public static final String filePath = "http://106.14.226.138:7777";
 
 
     /**
@@ -99,7 +99,7 @@ public class FtpUtil{
                 }
                 finally
                 {
-                    log.info( "已成功上传" + (i) + " 个");
+                    log.info("已成功上传" + (i) + " 个");
                 }
             }
         }
@@ -128,7 +128,7 @@ public class FtpUtil{
             {
                 if (ff.getName().equals(fileId))
                 {
-                   log.info("$$$$$ 开始下载", DateUtils.DateToSTr(new Date()));
+                    log.info("$$$$$ 开始下载", DateUtils.DateToSTr(new Date()));
                     InputStream in = null;
                     ByteArrayOutputStream outputStream = null;
                     try
@@ -152,7 +152,7 @@ public class FtpUtil{
                         in.close();
                         outputStream.close();
 
-                        log.info("$$$$$ 下载完成" , DateUtils.DateToSTr(new Date()));
+                        log.info("$$$$$ 下载完成", DateUtils.DateToSTr(new Date()));
                         return new ResponseEntity<byte[]>(bytes, httpHeaders, HttpStatus.OK);
                     }
                     catch (IOException e)
@@ -164,6 +164,32 @@ public class FtpUtil{
         }
         return new ResponseEntity<byte[]>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
+
+    /**
+     * 检查是否有图片名称
+     */
+    public static boolean isHashFile(String filename) throws IOException
+    {
+        FTPClient ftp = new FTPClient();
+        boolean b = false;
+        if (getConnect(ftp))
+        {
+            //拿到服务器的所有文件
+            FTPFile[] fs = ftp.listFiles();
+            for (FTPFile ff : fs)
+            {
+                if (ff.getName().equals(filename))
+                {
+                    return true;
+                }
+            }
+        }
+        closeConnect(ftp);
+        return false;
+
+    }
+
 
     /**
      *
@@ -282,19 +308,19 @@ public class FtpUtil{
      */
     public static String getFileName(String fileName) throws UnsupportedEncodingException
     {
-        String[] IEBrowserKeyWords ={"MSIE","Trident","Edge"};
+        String[] IEBrowserKeyWords = {"MSIE", "Trident", "Edge"};
         //获取请求头代理
         String userAgent = HttpHeaderUtil.getUserAgent();
-        for (String keyWord:IEBrowserKeyWords)
+        for (String keyWord : IEBrowserKeyWords)
         {
             if (userAgent.contains(keyWord))
             {
                 //IE内核统一 UTF-8
-                return URLEncoder.encode(fileName,"UTF-8");
+                return URLEncoder.encode(fileName, "UTF-8");
             }
         }
         //火狐等其他 ISO-8859-1
-        return new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+        return new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
     }
 
 

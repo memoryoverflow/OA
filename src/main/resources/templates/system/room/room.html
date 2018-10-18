@@ -59,9 +59,9 @@
 <script th:inline="javascript">
     var prefix = "/room";
     //thymleaf 表达式 js与后端交互
-    var addFlag = [[${@permission.hasPermi('myApply:add')}]];
-    var updateFlag = [[${@permission.hasPermi('myApply:update')}]];
-    var delFlag = [[${@permission.hasPermi('myApply:del')}]];
+    var addFlag = [[${@permission.hasPermi('meetRoom:add')}]];
+    var updateFlag = [[${@permission.hasPermi('meetRoom:update')}]];
+    var delFlag = [[${@permission.hasPermi('meetRoom:del')}]];
     $(function () {
         var options = {
             url: prefix + "/tableList",

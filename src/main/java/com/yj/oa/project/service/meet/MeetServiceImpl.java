@@ -51,7 +51,6 @@ public class MeetServiceImpl implements IMeetService{
     public int deleteByPrimaryKeys(Integer[] ids)
     {
         //删除中间表信息
-
         userMeetMapper.deleteByMeetIdKeys(ids);
 
         return meetMapper.deleteByPrimaryKeys(ids);

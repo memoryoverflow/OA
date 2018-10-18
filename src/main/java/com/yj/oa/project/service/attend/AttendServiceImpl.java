@@ -60,7 +60,7 @@ public class AttendServiceImpl implements IAttendService{
 
     /**
      *
-     * @描述 添加
+     * @描述 添加 打卡
      *
      * @date 2018/9/18 20:19
      */

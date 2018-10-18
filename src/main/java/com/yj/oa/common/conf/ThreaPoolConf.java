@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class ThreaPoolConf{
     /** 核心线程数*/
-    private static final int  CORE_POOL_SIZE= 1;
+    private static final int  CORE_POOL_SIZE= 2;
     /** 最大线程数*/
     private static final int  MAX_NUM_POOL_SIZE= 10;
     /** 空闲时间*/

@@ -415,7 +415,10 @@ public interface CsEnum{
      * 菜单默认父id
      */
     enum menu{
-        MENU_PID(0, "顶级菜单父Id默认为0");
+        MENU_PID(0, "顶级菜单父Id默认为0"),
+        MENU_TYPE_ONE(1,"根目录，一级菜单"),
+        MENU_TYPE_TWO(2,"菜单，二级菜单"),
+        MENU_TYPE_THREE(3,"按钮");
         private int value;
         private String msg;
 

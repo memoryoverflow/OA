@@ -82,6 +82,7 @@ public class UserController extends BaseController{
     {
         startPage();
         List<User> users = iUserService.selectByUser(user);
+
         return getDataTable(users);
     }
 

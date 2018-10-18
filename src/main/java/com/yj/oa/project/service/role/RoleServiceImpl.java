@@ -107,6 +107,7 @@ public class RoleServiceImpl implements IRoleService{
 
     /**
      * @描述 批量删除
+     * @ Param ids:角色Id
      * @date 2018/9/16 15:58
      */
     @Override
@@ -131,7 +132,6 @@ public class RoleServiceImpl implements IRoleService{
         {
             //删除角色
             int i = roleMapper.deleteByPrimaryKeys(ids);
-
             //删除角色所拥有的权限
             rolePermissionMapper.deleteByRoleIdKeys(ids);
 

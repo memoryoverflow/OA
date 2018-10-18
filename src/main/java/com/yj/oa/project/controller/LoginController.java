@@ -11,9 +11,7 @@ import com.yj.oa.project.po.Permission;
 import com.yj.oa.project.po.User;
 import com.yj.oa.project.service.user.IUserService;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +37,6 @@ public class LoginController extends BaseController{
     IUserService userService;
 
 
-
-
     /**
      *
      * @描述: 执行登录操作
@@ -51,7 +47,7 @@ public class LoginController extends BaseController{
      * @date: 2018/9/29 21:20
      */
     @RequestMapping("/login")
-    @Operlog(descr = "用户登录",modal = "登录")
+    @Operlog(descr = "用户登录", modal = "登录")
     @ResponseBody
     public AjaxResult Logining(User user, String validateCode, Boolean rememberMe)
     {
@@ -70,7 +66,6 @@ public class LoginController extends BaseController{
             return error(e.getMessage());
         }
 
-
         try
         {
             if (!subject.isAuthenticated())
@@ -83,20 +78,26 @@ public class LoginController extends BaseController{
         {
             return error("密码错误！");
         }
+        catch (UnknownAccountException e)
+        {
+            return error(e.getMessage());
+        }
+        catch (LockedAccountException e)
+        {
+            return error(e.getMessage());
+        }
         catch (AuthenticationException e)
         {
-            String msg = "用户名或密码错误！";
-            if (!StringUtils.isEmpty(e.getMessage()))
-            {
-                msg = e.getMessage();
-            }
-            return error(msg);
+//            String msg = "用户名或密码错误！";
+//            if (!StringUtils.isEmpty(e.getMessage()))
+//            {
+//                msg = e.getMessage();
+//            }
+            return error("系统异常！");
         }
 
         return success();
     }
-
-
 
 
     /**

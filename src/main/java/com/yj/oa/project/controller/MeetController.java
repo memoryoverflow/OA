@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,8 +55,8 @@ public class MeetController extends BaseController{
     {
         List<MeetingRoom> meetingRooms = iMeetingRoomService.selectMeetRoomList(new MeetingRoom());
         List<User> users = iUserService.selectByUser(new User());
-        model.addAttribute("Rooms",meetingRooms);
-        model.addAttribute("Users",users);
+        model.addAttribute("Rooms", meetingRooms);
+        model.addAttribute("Users", users);
         return prefix + "/meet";
     }
 
@@ -120,12 +121,23 @@ public class MeetController extends BaseController{
         {
             return error("请选择开会员工！");
         }
-        //把自己带上
-        int length = userIds.length;
-        userIds[length]=getUserId();
 
         meet.setCreateBy(getUserId());
         meet.setCreateTime(new Date());
+
+        //把自己带上
+        boolean contains = Arrays.asList(userIds).contains(getUserId());
+        if (!contains)
+        {
+            String[] arrNew = new String[userIds.length + 1];
+            for (int i=0;i<userIds.length;i++)
+            {
+                arrNew[i]=userIds[i];
+            }
+            arrNew[arrNew.length-1]=getUserId();
+            return result(meetService.insertSelective(meet, arrNew));
+        }
+
         return result(meetService.insertSelective(meet, userIds));
     }
 
@@ -139,7 +151,7 @@ public class MeetController extends BaseController{
      */
     @RequestMapping("/del")
     @RequiresPermissions("meet:del")
-    @Operlog(modal = "会议管理",descr = "删除会议")
+    @Operlog(modal = "会议管理", descr = "删除会议")
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
@@ -200,7 +212,7 @@ public class MeetController extends BaseController{
      */
     @RequestMapping("/editSave")
     @RequiresPermissions("meet:update")
-    @Operlog(modal = "会议管理",descr = "修改会议")
+    @Operlog(modal = "会议管理", descr = "修改会议")
     @ResponseBody
     public AjaxResult editSave(Meet meet, String[] userIds)
     {

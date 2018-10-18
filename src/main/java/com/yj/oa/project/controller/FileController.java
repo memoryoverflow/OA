@@ -75,10 +75,10 @@ public class FileController extends BaseController{
      */
 
     @RequestMapping("/toAdd")
-    @RequiresPermissions("file:add")
+    @RequiresPermissions("file:upload")
     public String toAdd()
     {
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 
@@ -99,7 +99,7 @@ public class FileController extends BaseController{
             return error("请选择文件！");
         }
 
-//        上传
+       // 上传
         String fileId = null;
         try
         {

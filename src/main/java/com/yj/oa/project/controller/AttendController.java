@@ -88,6 +88,10 @@ public class AttendController extends BaseController{
     {
         startPage();
         List<Attend> attends = iAttendService.selectAttendList(attend);
+        for (Attend a:attends)
+        {
+            System.out.println(a);
+        }
         return getDataTable(attends);
     }
 
@@ -160,8 +164,8 @@ public class AttendController extends BaseController{
     public AjaxResult addSave(Attend attend)
     {
         attend.setUserId(getUserId());
+        attend.setDeptId(String.valueOf(getUser().getDept()));
         int i = 0;
-
         try
         {
             i = iAttendService.insertSelective(attend);

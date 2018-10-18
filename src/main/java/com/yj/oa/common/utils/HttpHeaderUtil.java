@@ -29,9 +29,9 @@ public class HttpHeaderUtil{
 //        </dependency>
 
 
-    /*
+    /**
      * 从请求头中获取 操作系统
-     * */
+     */
     public static String getSys(String USER_AGENT)
     {
         UserAgent agent = UserAgent.parseUserAgentString(USER_AGENT);
@@ -39,9 +39,9 @@ public class HttpHeaderUtil{
         return sys.getName();
     }
 
-    /*
+    /**
      * 从请求头中获取 浏览器类型
-     * */
+     */
     public static String getBrowser(String USER_AGENT)
     {
         UserAgent agent = UserAgent.parseUserAgentString(USER_AGENT);
@@ -64,9 +64,9 @@ public class HttpHeaderUtil{
     }
 
 
-    /*
+    /**
      *  获取Ip
-     * */
+     */
     public static String getIpAddr(HttpServletRequest request)
     {
         if (request == null)
@@ -158,8 +158,9 @@ public class HttpHeaderUtil{
             JSONObject json = JSONObject.parseObject(address);
             JSONObject object = json.getObject("data", JSONObject.class);
             String region = object.getString("region");
+            String country = object.getString("country");
             String city = object.getString("city");
-            address = region + " " + city;
+            address =country+" "+ region + " " + city;
         }
         catch (Exception e)
         {

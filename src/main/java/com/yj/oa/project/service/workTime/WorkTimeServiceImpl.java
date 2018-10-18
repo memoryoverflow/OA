@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,9 +67,12 @@ public class WorkTimeServiceImpl implements IWorkTimeService{
          * 例如： 下班时间 不能早于上班时间，
          * 打卡开始时间不能 大于 打卡结束时间
          */
+        //时间点不能设置为临界点 凌晨00:00:00
+        CheckCriticalPoint(workTime);
         checkWorkTimeIsWrong(workTime);
         //上下班打卡时间是否冲突
         checkStartEndTime(workTime);
+
         workTime.setCreateTime(new Date());
         return workTimeMapper.insertSelective(workTime);
     }
@@ -119,9 +123,13 @@ public class WorkTimeServiceImpl implements IWorkTimeService{
          * 例如： 下班时间 不能早于上班时间，
          * 打卡开始时间不能 大于 打卡结束时间
          */
+        //时间点不能设置为临界点 凌晨00:00:00
+        CheckCriticalPoint(workTime);
         checkWorkTimeIsWrong(workTime);
         //上下班打卡时间是否冲突
         checkStartEndTime(workTime);
+
+
         return workTimeMapper.updateByPrimaryKeySelective(workTime);
     }
 
@@ -228,6 +236,45 @@ public class WorkTimeServiceImpl implements IWorkTimeService{
                                                                                                           workTime))
         {
             throw new Exception("下班打卡时间早于结束打卡时间！");
+        }
+
+
+    }
+
+    /**
+     * 结束打卡时间 和结束上班时间临街点判断
+     * @param workTime
+     */
+    public void CheckCriticalPoint(WorkTime workTime) throws Exception
+    {
+        //零界点判断
+        String getAttendMorendTime = DateUtils.DateToSTr(workTime.getAttendMorendTime()).substring(11, DateUtils.DateToSTr(
+                workTime.getAttendMorendTime()).length());
+        String getWorkEndTimeMor = DateUtils.DateToSTr(workTime.getWorkEndTimeMor()).substring(11, DateUtils.DateToSTr(
+                workTime.getWorkEndTimeMor()).length());
+        String getAttendMorLeaveEndTime = DateUtils.DateToSTr(workTime.getAttendMorLeaveEndTime()).substring(11, DateUtils.DateToSTr(
+                workTime.getAttendMorLeaveEndTime()).length());
+        String getAttendAfterNoonendTime = DateUtils.DateToSTr(workTime.getAttendAfterNoonendTime()).substring(11, DateUtils.DateToSTr(
+                workTime.getAttendAfterNoonendTime()).length());
+        String getWorkEndTimeAfterNoon = DateUtils.DateToSTr(workTime.getWorkEndTimeAfterNoon()).substring(11, DateUtils.DateToSTr(
+                workTime.getAttendAfterNoonendTime()).length());
+        String getAttendAfterLeaveEndTime = DateUtils.DateToSTr(workTime.getAttendAfterLeaveEndTime()).substring(11, DateUtils.DateToSTr(
+                workTime.getAttendAfterNoonendTime()).length());
+        List<String> objects = new ArrayList<>();
+
+        objects.add(getAttendMorendTime);
+        objects.add(getWorkEndTimeMor);
+        objects.add(getAttendMorLeaveEndTime);
+        objects.add(getAttendAfterNoonendTime);
+        objects.add(getWorkEndTimeAfterNoon);
+        objects.add(getAttendAfterLeaveEndTime);
+
+        for (String s:objects)
+        {
+            if (s.equals("00:00:00"))
+            {
+                throw new Exception("时间存在零界点！");
+            }
         }
 
 

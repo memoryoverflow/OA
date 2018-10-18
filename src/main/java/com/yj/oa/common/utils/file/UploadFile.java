@@ -19,13 +19,13 @@ public class UploadFile{
 
     public static final String basepath = "http://106.14.226.138:7777/";
     /**
-     * 默认大小 50M
+     * 默认大小 10M
      */
-    public static final long DEFAULT_MAX_SIZE = 52428800; //字节
+    public static final long DEFAULT_MAX_SIZE = 10485760; //字节
     /**
      * 默认的文件名最大长度
      */
-    public static final int DEFAULT_FILE_NAME_LENGTH = 200;
+    public static final int DEFAULT_FILE_NAME_LENGTH = 100;
 
 
     /**
@@ -50,23 +50,19 @@ public class UploadFile{
         Map<String, InputStream> fileMap = new HashMap<>();
         fileMap.put(name, input);
         //调用方法执行上传
-        boolean b = FtpUtil.uploadFile(fileMap);
-        if (b)
-        {
-            return name;
-        }
-        return null;
+        return FtpUtil.uploadFile(fileMap) ? name : null;
     }
 
 
     /**
-     *  头像上传
+     * 头像上传
+     *
      * @param file 图片文件
-     * @return
      */
-    public static String uploadUserImg(MultipartFile file) throws FileNameLengthException, FileSizeException, IOException
+    public static String uploadUserImg(
+            MultipartFile file) throws FileNameLengthException, FileSizeException, IOException
     {
-        return basepath+upload(file);
+        return basepath + upload(file);
     }
 
 

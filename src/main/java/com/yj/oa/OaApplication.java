@@ -30,27 +30,59 @@ public class OaApplication {
         SpringApplication.run(OaApplication.class, args);
 
         //部署工作流程
-//        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+       // ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+
+
+        //InputStream inputStream = new OaApplication().getClass().getClassLoader().getResourceAsStream("processes/leave.zip");
+        //ZipInputStream zipInputStream = new ZipInputStream(inputStream);
 //
-//
-//        InputStream inputStream = new OaApplication().getClass().getClassLoader().getResourceAsStream("processes/leave.zip");
-//        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
-////
 ////
 //        Deployment deployment = defaultProcessEngine.getRepositoryService()
-                //部署对象
+//                //部署对象
 //                .createDeployment()
-                //部署名称
-//                .name("请假申请流程")
-                //加载文件，一次只能加载一个 可以加载zip
-//                .addClasspathResource("processes/leave.bpmn")
-//                .addClasspathResource("processes/leave.png")
+//                //部署名称
+//                .name("会议室申请流程")
+//                //加载文件，一次只能加载一个 可以加载zip
+////                .addClasspathResource("processes/leave.bpmn")
+////                .addClasspathResource("processes/leave.png")
 //                .addClasspathResource("processes/apply.bpmn")
 //                .addClasspathResource("processes/apply.png")
-//        .addZipInputStream(zipInputStream)
+//        //.addZipInputStream(zipInputStream)
 //                .deploy();
 //        System.out.println("$$$$$ 部署流程");
 //        System.out.println("部署ID:" + deployment.getId());
 //        System.out.println("部署名称：" + deployment.getName());
+
+//        initApplyProcess();
+//        initLeaveProcess();
+
+    }
+
+    private static void initLeaveProcess(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        InputStream inputStream = new OaApplication().getClass().getClassLoader().getResourceAsStream("processes/leave.zip");
+        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+        Deployment deployment = defaultProcessEngine.getRepositoryService()
+                //部署对象
+                .createDeployment()
+                //部署名称
+                .name("请假申请流程")
+                //加载文件，一次只能加载一个 可以加载zip
+                .addZipInputStream(zipInputStream)
+                .deploy();
+    }
+
+    private static void initApplyProcess(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        InputStream inputStream = new OaApplication().getClass().getClassLoader().getResourceAsStream("processes/apply.zip");
+        ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+        Deployment deployment = defaultProcessEngine.getRepositoryService()
+                //部署对象
+                .createDeployment()
+                //部署名称
+                .name("会议室申请流程")
+                //加载文件，一次只能加载一个 可以加载zip
+                .addZipInputStream(zipInputStream)
+                .deploy();
     }
 }

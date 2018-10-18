@@ -17,109 +17,107 @@ import java.util.Map;
  */
 public class WorkTimeUtils{
 
-    private static String srt = "yyyy-MM-dd ";
-    private static SimpleDateFormat dateTimeformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 获取早上班时间
      */
-    public static long MorWorkStartTime(Date date,WorkTime workTime)
+    public static long MorWorkStartTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getWorkStartTimeMor()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getWorkStartTimeMor()));
     }
 
     /**
      * 早上下班时间
      */
-    public static long MorWorkEndTime(Date date,WorkTime workTime)
+    public static long MorWorkEndTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getWorkEndTimeMor()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getWorkEndTimeMor()));
     }
 
 
     /**
      * 早上打卡开始时间
      */
-    public static long attendStartMorTime(Date date,WorkTime workTime)
+    public static long attendStartMorTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendMorStartTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendMorStartTime()));
     }
 
     /**
      * 早上打卡结束时间
      */
-    public static long attendEndMorTime(Date date,WorkTime workTime)
+    public static long attendEndMorTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendMorendTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendMorendTime()));
     }
 
     /**
      * 早上下班打卡开始时间
      */
-    public static long leaveMorStartTime(Date date,WorkTime workTime)
+    public static long leaveMorStartTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendMorLeaveStartTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendMorLeaveStartTime()));
     }
 
 
     /**
      * 早上下班打卡时间
      */
-    public static long leaveMorEnddate(Date date,WorkTime workTime)
+    public static long leaveMorEnddate(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendMorLeaveEndTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendMorLeaveEndTime()));
     }
 
 
     /**
      * 下午上班打卡开始时间
      */
-    public static long attendAfterNoonStatrTime(Date date,WorkTime workTime)
+    public static long attendAfterNoonStatrTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendAfterNoonStartTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendAfterNoonStartTime()));
     }
 
     /**
      * 下午上班打卡结束时间
      */
-    public static long attendAfterNoonEndTime(Date date,WorkTime workTime)
+    public static long attendAfterNoonEndTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendAfterNoonendTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendAfterNoonendTime()));
     }
 
 
     /**
      * 下午上班时间
      */
-    public static long AfterNoonStarWorkTime(Date date,WorkTime workTime)
+    public static long AfterNoonStarWorkTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getWorkStartTimeAfterNoon()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getWorkStartTimeAfterNoon()));
 
     }
 
     /**
      * 下午上班 结束时间
      */
-    public static long AfterNonEndWorkTime(Date date,WorkTime workTime)
+    public static long AfterNonEndWorkTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getWorkEndTimeAfterNoon()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getWorkEndTimeAfterNoon()));
     }
 
 
     /**
      * 下午下班结束开始打卡时间
      */
-    public static long AttendAfterNoonLeaveStartTime(Date date,WorkTime workTime)
+    public static long AttendAfterNoonLeaveStartTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendAfterLeaveStartTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendAfterLeaveStartTime()));
     }
 
     /**
      * 下午下班班结结束打卡时间
      */
-    public static long AttendAfterNoonLeaveEndTime(Date date,WorkTime workTime)
+    public static long AttendAfterNoonLeaveEndTime(Date date, WorkTime workTime)
     {
-        return dateFormat(date,DateUtils.getTimeShort(workTime.getAttendAfterLeaveEndTime()));
+        return dateFormat(date, DateUtils.getTimeShort(workTime.getAttendAfterLeaveEndTime()));
     }
 
 
@@ -128,21 +126,16 @@ public class WorkTimeUtils{
      *
      * @param strDate 字符窜
      */
-    private static long dateFormat(Date date,String strDate)
+    private static long dateFormat(Date date, String strDate)
     {
         long time = 0;
-        try
-        {
-            //获取当前日期
-            String s = DateUtils.DateToSTr2(date) + " ";
-            String dateStr = s + strDate;
-            time = dateTimeformat.parse(dateStr).getTime();
 
-        }
-        catch (ParseException e)
-        {
-            System.out.println("日期格式化错" + e);
-        }
+        //获取当前日期
+        String s = DateUtils.DateToSTr2(date) + " ";
+        String dateStr = s + strDate;
+        time = DateUtils.StrToDate(dateStr).getTime();
+
+
         return time;
     }
 
@@ -173,7 +166,7 @@ public class WorkTimeUtils{
             Long attendMorLeave = attend.getAttendMorLeave().getTime();
 
             // 大于0 说明 早退
-            Long timeRang = DateUtils.getTimeRang(attendMorLeave,workEndTime);
+            Long timeRang = DateUtils.getTimeRang(attendMorLeave, workEndTime);
             map.put("morleave", timeRang);
         }
 
@@ -196,7 +189,7 @@ public class WorkTimeUtils{
         {
             // 大于0 说明 早退
             Long attendNoonleave = attend.getAttendNoonLeave().getTime();
-            Long timeRang = DateUtils.getTimeRang(attendNoonleave,workNoonEndTime);
+            Long timeRang = DateUtils.getTimeRang(attendNoonleave, workNoonEndTime);
             map.put("noonleave", timeRang);
         }
         return map;

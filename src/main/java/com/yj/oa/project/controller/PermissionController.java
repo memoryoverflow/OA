@@ -110,7 +110,7 @@ public class PermissionController extends BaseController{
     @RequestMapping("/selectMenuTree")
     public String tree()
     {
-        return prefix+"tree";
+        return prefix + "tree";
     }
 
 
@@ -122,7 +122,7 @@ public class PermissionController extends BaseController{
      */
     @RequestMapping("/del")
     @RequiresPermissions("menu:del")
-    @Operlog(modal = "菜单管理",descr = "删除菜单")
+    @Operlog(modal = "菜单管理", descr = "删除菜单")
     @ResponseBody
     public AjaxResult del(Integer[] ids)
     {
@@ -147,11 +147,20 @@ public class PermissionController extends BaseController{
 
     @RequestMapping("/addSave")
     @RequiresPermissions("menu:add")
-    @Operlog(modal = "菜单管理",descr = "添加菜单")
+    @Operlog(modal = "菜单管理", descr = "添加菜单")
     @ResponseBody
     public AjaxResult addRole(Permission permission)
     {
         permission.setCreateTime(new Date());
+
+        //添加按钮需要添加父级菜单
+        if (permission.getType() ==
+                CsEnum.menu.MENU_TYPE_THREE.getValue() && permission.getParenId() == CsEnum.menu.MENU_PID.getValue())
+        {
+            return error("请选择父级菜单！");
+        }
+
+
         int insert = 0;
         try
         {
@@ -189,7 +198,7 @@ public class PermissionController extends BaseController{
      */
     @RequestMapping("/editSave")
     @RequiresPermissions("menu:update")
-    @Operlog(modal = "菜单管理",descr = "修改菜单")
+    @Operlog(modal = "菜单管理", descr = "修改菜单")
     @ResponseBody
     public AjaxResult save(Permission permission)
     {

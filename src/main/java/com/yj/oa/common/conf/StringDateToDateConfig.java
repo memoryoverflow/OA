@@ -21,8 +21,8 @@ public class StringDateToDateConfig implements Converter<String, Date>{
     {
         formarts.add("yyyy-MM");
         formarts.add("yyyy-MM-dd");
-        formarts.add("yyyy-MM-dd hh:mm");
-        formarts.add("yyyy-MM-dd hh:mm:ss");
+        formarts.add("yyyy-MM-dd HH:mm");
+        formarts.add("yyyy-MM-dd HH:mm:ss");
     }
 
     @Override
@@ -68,6 +68,7 @@ public class StringDateToDateConfig implements Converter<String, Date>{
         Date date = null;
         try
         {
+
             DateFormat dateFormat = new SimpleDateFormat(format);
             date = dateFormat.parse(dateStr);
         }

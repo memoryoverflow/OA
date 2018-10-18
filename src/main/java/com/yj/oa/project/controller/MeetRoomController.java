@@ -89,7 +89,7 @@ public class MeetRoomController extends BaseController{
     @RequiresPermissions("meetRoom:list")
     public String toAdd()
     {
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 
