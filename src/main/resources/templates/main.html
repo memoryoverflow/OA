@@ -126,18 +126,17 @@
 
                         <div class="col-sm-5">
                             <div class="WorkTime" th:object="${workShif}"><br>
-                                a.m打卡时间：<br><span th:text="*{#dates.format(attendMorStartTime,'HH:mm:ss')}"></span>-
+                                a.m 上班打卡时间：<br><span th:text="*{#dates.format(attendMorStartTime,'HH:mm:ss')}"></span>-
                                 <span th:text="*{#dates.format(attendMorendTime,'HH:mm:ss')}"></span><br>
-                                a.m班时间：<br><span th:text="*{#dates.format(workStartTimeMor,'HH:mm:ss')}"></span>-
-                                <span th:text="*{#dates.format(workEndTimeMor,'HH:mm:ss')}"></span><br>
-                                a.m下班时间：<br><span th:text="*{#dates.format(attendMorLeaveStartTime,'HH:mm:ss')}">-
-                                               <span th:text="*{#dates.format(attendMorLeaveEndTime,'HH:mm:ss')}"></span></span><br>
-                                p.m 打卡时间：<br><span th:text="*{#dates.format(attendAfterNoonStartTime,'HH:mm:ss')}">-
-                                                <span th:text="*{#dates.format(attendAfterNoonendTime,'HH:mm:ss')}"></span></span><br>
-                                p.m 上班时间：<br><span th:text="*{#dates.format(workStartTimeAfterNoon,'HH:mm:ss')}">-
-                                               <span th:text="*{#dates.format(workEndTimeAfterNoon,'HH:mm:ss')}"></span></span><br>
-                                p.m 下班班时间：<br><span th:text="*{#dates.format(attendAfterLeaveStartTime,'HH:mm:ss')}">-
-                                                 <span th:text="*{#dates.format(attendAfterLeaveEndTime,'HH:mm:ss')}"></span></span><br>
+
+
+                                a.m下班打卡时间：<br><span th:text="*{#dates.format(attendMorLeaveStartTime,'HH:mm:ss')}"></span>-
+                                               <span th:text="*{#dates.format(attendMorLeaveEndTime,'HH:mm:ss')}"></span><br>
+
+                                p.m 上班打卡时间：<br><span th:text="*{#dates.format(attendAfterNoonStartTime,'HH:mm:ss')}"></span>-
+                                                <span th:text="*{#dates.format(attendAfterNoonendTime,'HH:mm:ss')}"></span><br>
+                                p.m 下班打卡时间：<br><span th:text="*{#dates.format(attendAfterLeaveStartTime,'HH:mm:ss')}"></span>-
+                                                 <span th:text="*{#dates.format(attendAfterLeaveEndTime,'HH:mm:ss')}"></span><br>
                             </div>
                         </div>
                         <div class="col-sm-7">
@@ -247,9 +246,6 @@
         </div>
     </div>
 </div>
-<script th:src="@{/js/jquery.min.js}"></script>
-<script th:src="@{/js/bootstrap.min.js}"></script>
-
 <div th:include="include :: footer"></div>
 <script>
 

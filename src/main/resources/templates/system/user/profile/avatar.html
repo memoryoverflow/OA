@@ -49,18 +49,24 @@
                 reader.readAsDataURL(this.files[0]);
             })
         $('#blobSubmit').on('click', function () {
-
             var formdata = new FormData($("#uploadForm")[0]);
-            $.ajax({
-                url: "/user/updateAvatarSave",
-                data: formdata,
-                type: "post",
-                processData: false,
-                contentType: false,
-                success: function (result) {
-                    $.operate.saveSuccess(result);
-                }
-            })
+            if ($("#avatar").val() == null || $("#avatar").val() == '') {
+                $.modal.msgError("请选择图片！")
+            } else {
+
+                $.modal.loading('处理中');
+
+                $.ajax({
+                    url: "/user/updateAvatarSave",
+                    data: formdata,
+                    type: "post",
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $.operate.saveSuccess(result);
+                    }
+                })
+            }
         })
         $('#btnCrop').on('click', function () {
             var img = cropper.getDataURL();

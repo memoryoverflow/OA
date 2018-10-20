@@ -59,16 +59,14 @@
                 and createBy =#{createBy}
             </if>
 
-            <if test=" startTime!= null">
-                and DATE_FORMAT(startTime, '%Y-%m-%D') = DATE_FORMAT(#{startTime}, '%Y-%m-%D')
+
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(s.createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(s.createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
             </if>
 
-            <if test="beginTime!=null">
-                and #{beginTime} &lt;= createTime
-            </if>
-            <if test="overTime!=null">
-                and #{overTime} &gt;= createTime
-            </if>
             <if test="isComplete!=null">
                 and  isComplete = #{isComplete}
             </if>

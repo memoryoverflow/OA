@@ -15,7 +15,7 @@ $.validator.setDefaults({
 });
 
 function login() {
-	$.modal.loading($("#btnSubmit").data("loading"));
+	$.modal.loginloading($("#btnSubmit").data("loading"));
 	var username = $("input[name='loginName']").val().trim();
     var password = $("input[name='pwd']").val().trim();
     var validateCode = $("input[name='validateCode']").val();

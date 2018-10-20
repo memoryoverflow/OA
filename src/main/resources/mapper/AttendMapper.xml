@@ -91,9 +91,10 @@
             <if test="userId != null" >
                 userId,
             </if>
-
+            <if test="deptId != null" >
+                deptId,
+            </if>
                 currDate,
-
             <if test="week != null" >
                 week,
             </if>
@@ -122,6 +123,9 @@
             </if>
             <if test="userId != null" >
                 #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null" >
+                #{deptId,jdbcType=VARCHAR},
             </if>
             CURRENT_DATE(),
             <if test="week != null" >

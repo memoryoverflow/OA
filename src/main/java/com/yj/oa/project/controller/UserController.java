@@ -351,7 +351,6 @@ public class UserController extends BaseController{
         try
         {
             String imgPath = UploadFile.uploadUserImg(file);
-
             if (StringUtils.isEmpty(imgPath))
             {
                 return error("图片上传失败，稍后再试！");

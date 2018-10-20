@@ -19,8 +19,8 @@
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
-        <result column="status" property="status" jdbcType="INTEGER"/>
-        <result column="role_ID" property="role_ID" jdbcType="INTEGER"/>
+        <result column="ustatus" property="status" jdbcType="INTEGER"/>
+        <result column="uroleId" property="role_ID" jdbcType="INTEGER"/>
         <result column="isdel" property="isdel" jdbcType="INTEGER"/>
         <association property="role" javaType="Role">
             <id property="roleId" column="roleId"/>
@@ -42,13 +42,11 @@
             <id column="depId" jdbcType="VARCHAR" property="depId"/>
             <result column="deptName" jdbcType="VARCHAR" property="deptName"/>
             <result column="introduce" jdbcType="VARCHAR" property="introduce"/>
-            <result column="status" jdbcType="INTEGER" property="status"/>
             <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
         </association>
         <association property="positionPo" javaType="Position">
             <id column="positionId" property="positionId" jdbcType="INTEGER"/>
             <result column="positionName" property="positionName" jdbcType="VARCHAR"/>
-            <result column="status" property="status" jdbcType="INTEGER"/>
             <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
         </association>
     </resultMap>
@@ -58,15 +56,15 @@
     -->
     <sql id="Base_Column_List">
         uid, pwd,loginName,name, sex, age, dept, position, self_introduction,hobby, tel, email, u.createTime as uctime,
-        avatar,
-        u.status as ustatus, role_ID,isdel
+        avatar,u.status as ustatus, u.role_ID as uroleId,isdel
     </sql>
 
 
     <!--根据主键查询 登录调用此方法-->
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="String">
     SELECT
-    u.*,r.*,p.*,ps.positionName,d.deptName
+    <include refid="Base_Column_List"/>
+    ,r.*,p.*,ps.positionName,d.deptName
     FROM
     t_user u,
     t_role r,
@@ -88,7 +86,8 @@
     <!--根据主键查询 登录调用此方法-->
     <select id="login" resultMap="BaseResultMap" parameterType="String">
        SELECT
-	u.*, r.*,p.*,d.depId,d.deptName,ps.positionName
+        <include refid="Base_Column_List"/>
+	, r.*,p.*,d.depId,d.deptName,ps.positionName
 FROM
 	t_user u,
 	t_role r,
@@ -142,13 +141,14 @@ and ps.positionId =u.position
             <if test="status !=null and status !=''or status==0">
                 and u.status = #{status}
             </if>
+            and u.status &gt;= 0
         </where>
     </select>
 
 
     <!--批量删除-->
     <delete id="deleteByPrimaryKeys" parameterType="String">
-        UPDATE
+        UPDA TE
         t_user
         set status = -1
         WHERE uid IN

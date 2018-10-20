@@ -126,7 +126,7 @@
                     formatter: function (value, row, index) {
                         var actions = []; //onclick="fileDown(\''+row.fileId+'\',\''+row.fileName+'\')"
                         actions.push('<a class="btn btn-info btn-xs " href="#" onclick="$.operate.edit(\''+row.procInstId+'\')"><i class="fa fa-edit"></i> 查看</a> ');
-                        actions.push('<a class="btn btn-warning btn-xs " href="#" onclick="ViewProcess(\'' +row.procInstId+ '\')"><i class="fa fa-edit"></i> 过程</a> ');
+                        actions.push('<a class="btn btn-warning btn-xs " href="#" onclick="ViewProcess(\'' +row.procInstId+ '\')"><i class="fa fa-edit"></i> 进度</a> ');
                         actions.push('<a class="btn btn-success btn-xs " href="#" onclick="$.operate.FlowCharPng(\'' + row.procInstId + '\')"><i class="fa fa-picture-o"></i> 流程图</a>');
                         return actions.join('');
                     }

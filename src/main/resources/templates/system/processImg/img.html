@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+
+</style>
+<body>
+<div th:if="${img} == null" align="center">
+    <h3>查看图片失败</h3>
+</div>
+<div th:th:unless="${img} == null "  align="center">
+    <img th:src="@{${img}}">
+</div>
+</body>
+</html>

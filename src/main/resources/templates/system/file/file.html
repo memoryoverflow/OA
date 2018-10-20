@@ -36,8 +36,8 @@
         </div>
 
         <div class="btn-group hidden-xs" id="toolbar" role="group">
-            <a class="btn btn-outline btn-success btn-rounded" onclick="$.operate.add()" shiro:hasPermission="file:add">
-                <i class="fa fa-plus"></i> 新增
+            <a class="btn btn-outline btn-success btn-rounded" onclick="$.operate.add()" shiro:hasPermission="file:upload">
+                <i class="fa fa-plus"></i> 文件上传
             </a>
             <a class="btn btn-outline btn-danger btn-rounded" onclick="$.operate.batRemove()"
                shiro:hasPermission="file:del">
@@ -52,8 +52,8 @@
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
     var prefix = "/file";
-    var downloadFlag = [[${@permission.hasPermi('"file:download')}]];
-    var delFlag = [[${@permission.hasPermi('"file:del')}]];
+    var downloadFlag = [[${@permission.hasPermi('file:download')}]];
+    var delFlag = [[${@permission.hasPermi('file:del')}]];
     $(function () {
         var options = {
             url: prefix + "/tableList",
