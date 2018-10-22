@@ -13,15 +13,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+/**
+ * @author 永健
+ * 上传工具类封装
+ */
 public class UploadFile{
 
     private static Logger Log = LoggerFactory.getLogger(UploadFile.class);
 
     public static final String basepath = "http://106.14.226.138:7777/";
     /**
-     * 默认大小 10M
+     * 默认大小 10M //字节
      */
-    public static final long DEFAULT_MAX_SIZE = 10485760; //字节
+    public static final long DEFAULT_MAX_SIZE = 10485760;
     /**
      * 默认的文件名最大长度
      */

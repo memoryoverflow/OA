@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * @author 永健
+ * 配置日期
  */
 @Configuration
 public class webConfig{

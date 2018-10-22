@@ -12,6 +12,7 @@ import java.util.*;
 
 /**
  * @author 永健
+ * 线程 分批处理月底队员工的考勤统计
  */
 public class MyAttendCountThread implements Runnable{
     private Logger log = LoggerFactory.getLogger(MyAttendCountThread.class);

@@ -21,9 +21,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author  永健
+ * 登录验证reaml
+ */
 @Component("uReaml")
 public class UserRealm extends AuthorizingRealm{
     private final static Logger logger = LoggerFactory.getLogger(UserRealm.class);
+
     @Autowired
     IUserService loginService;
 

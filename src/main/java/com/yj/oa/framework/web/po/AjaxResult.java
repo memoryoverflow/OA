@@ -3,9 +3,8 @@ package com.yj.oa.framework.web.po;
 import java.util.HashMap;
 
 /**
- * 操作消息提醒
- * 
- * @author ruoyi
+ * @author 永健
+ * 统一返回结果对象
  */
 public class AjaxResult extends HashMap<String, Object>
 {

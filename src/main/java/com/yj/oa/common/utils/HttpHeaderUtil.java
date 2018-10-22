@@ -15,6 +15,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ *  @author 永健
+ *
+ *  http请求头处理工具
+ */
 public class HttpHeaderUtil{
     private static Logger logger = LoggerFactory.getLogger(HttpHeaderUtil.class);
 

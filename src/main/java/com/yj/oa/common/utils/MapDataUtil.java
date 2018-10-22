@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * @author 永健
  * Map通用处理方法
  * 
- * @author ruoyi
  */
 public class MapDataUtil
 {

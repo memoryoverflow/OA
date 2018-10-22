@@ -30,8 +30,6 @@ import java.util.Map;
 
 /**
  * web层通用数据处理
- *
- * @author ruoyi
  */
 public class BaseController{
 

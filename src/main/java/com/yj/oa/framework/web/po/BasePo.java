@@ -3,6 +3,9 @@ package com.yj.oa.framework.web.po;
 
 import java.util.Date;
 
+/**
+ * 公共字段，时间查询
+ */
 public class BasePo {
 
     private Date beginTime;

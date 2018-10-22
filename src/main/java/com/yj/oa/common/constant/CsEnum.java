@@ -1,6 +1,7 @@
 package com.yj.oa.common.constant;
 
 /**
+ * 枚举常量
  * @author 永健
  */
 public interface CsEnum{

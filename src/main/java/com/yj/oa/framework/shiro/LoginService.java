@@ -16,6 +16,7 @@ import static com.yj.oa.project.po.VerificationCode.ValidateCodeUtil.RANDOMCODEK
 
 /**
  * @author 永健
+ * 登录验证用户的还在那个号密码以及验证码 是否为空
  */
 @Component
 public class LoginService{

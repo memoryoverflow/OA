@@ -1,9 +1,9 @@
 package com.yj.oa.common.utils;
 
 /**
+ * @author 永健
  * 字符串格式化
  * 
- * @author ruoyi
  */
 public class StrFormatter
 {

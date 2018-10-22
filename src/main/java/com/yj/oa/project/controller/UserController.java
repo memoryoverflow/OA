@@ -6,7 +6,6 @@ import com.yj.oa.common.exception.file.FileSizeException;
 import com.yj.oa.common.utils.HttpHeaderUtil;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.file.UploadFile;
-import com.yj.oa.common.utils.json.JsonResult;
 import com.yj.oa.common.utils.shiro.Encryption;
 import com.yj.oa.common.utils.shiro.ShiroUtils;
 import com.yj.oa.framework.annotation.Operlog;

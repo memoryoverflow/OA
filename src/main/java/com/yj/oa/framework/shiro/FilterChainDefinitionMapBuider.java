@@ -5,7 +5,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 
-
+/**
+ * @author 永健
+ *
+ * 配置shrio 拦截url
+ *
+ */
 @Component
 public class FilterChainDefinitionMapBuider {
     public LinkedHashMap<String, String> BuiderFilterChainDefinitionMap() {
