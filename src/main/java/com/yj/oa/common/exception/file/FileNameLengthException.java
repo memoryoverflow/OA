@@ -9,9 +9,12 @@ import org.apache.commons.fileupload.FileUploadException;
 public class FileNameLengthException extends FileUploadException{
 
     private String msg;
-    private String fileName; //文件名
-    private int length;     //文件长度
-    private int limitLength; //最大文件长度
+    //文件名
+    private String fileName;
+    //文件长度
+    private int length;
+    //最大文件长度
+    private int limitLength;
 
     public FileNameLengthException(String msg,String filename, int length, int maxLength)
     {

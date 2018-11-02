@@ -1,4 +1,4 @@
-package com.yj.oa.common.utils.ftp;
+﻿package com.yj.oa.common.utils.ftp;
 
 import com.yj.oa.common.utils.DateUtils;
 import com.yj.oa.common.utils.HttpHeaderUtil;
@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
- *
+ * @author 永健
  * @描述 ftp上传工具
  *
  * @date 2018/9/20 0:35
@@ -41,7 +41,7 @@ public class FtpUtil{
     /**
      * FTP登录密码
      */
-    private static final String password = "123";
+    private static final String password = "";
     /**
      * FTP服务器基础目录,/home/ftpuser/images 图片上传到这 服务器路径
      */
@@ -126,6 +126,7 @@ public class FtpUtil{
             FTPFile[] fs = ftp.listFiles();
             for (FTPFile ff : fs)
             {
+                //比较名字相同的就下载
                 if (ff.getName().equals(fileId))
                 {
                     log.info("$$$$$ 开始下载", DateUtils.DateToSTr(new Date()));
@@ -148,9 +149,6 @@ public class FtpUtil{
                         httpHeaders.setContentDispositionFormData("attachment", getFileName(fileName));
                         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
-                        closeConnect(ftp);
-                        in.close();
-                        outputStream.close();
 
                         log.info("$$$$$ 下载完成", DateUtils.DateToSTr(new Date()));
                         return new ResponseEntity<byte[]>(bytes, httpHeaders, HttpStatus.OK);
@@ -158,6 +156,11 @@ public class FtpUtil{
                     catch (IOException e)
                     {
                         e.printStackTrace();
+                    }finally
+                    {
+                        closeConnect(ftp);
+                        in.close();
+                        outputStream.close();
                     }
                 }
             }

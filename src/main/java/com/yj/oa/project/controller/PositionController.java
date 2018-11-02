@@ -83,7 +83,7 @@ public class PositionController extends BaseController{
     @RequiresPermissions("position:add")
     public String toAdd()
     {
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 

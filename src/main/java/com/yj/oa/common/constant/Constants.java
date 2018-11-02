@@ -12,6 +12,13 @@ public class Constants
      */
     public static String PAGENUM = "pageNum";
 
+
+    /**
+     * 登录失败
+     */
+    public static String LOGIN_ERROR="login_error";
+
+
     /**
      * 每页显示记录数
      */
@@ -26,5 +33,12 @@ public class Constants
      * 排序的方向 "desc" 或者 "asc".
      */
     public static String ISASC = "isAsc";
+
+
+    /**
+     * session存储菜单的key
+     */
+    public static String MENU_SESSION="menu-session";
+
 
 }

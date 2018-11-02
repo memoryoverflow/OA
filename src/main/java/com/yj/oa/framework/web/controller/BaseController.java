@@ -3,7 +3,10 @@ package com.yj.oa.framework.web.controller;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yj.oa.common.constant.Constants;
 import com.yj.oa.common.utils.DateUtils;
+import com.yj.oa.common.utils.HttpHeaderUtil;
+import com.yj.oa.common.utils.ServletUtils;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.shiro.ShiroUtils;
 import com.yj.oa.framework.web.page.PageDomain;
@@ -11,6 +14,8 @@ import com.yj.oa.framework.web.page.TableDataInfo;
 import com.yj.oa.framework.web.page.TableSupport;
 import com.yj.oa.framework.web.po.AjaxResult;
 import com.yj.oa.project.po.User;
+import com.yj.oa.project.po.dto.MenuTree;
+import com.yj.oa.project.service.menu.IPermissionService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -134,6 +139,16 @@ public class BaseController{
     public String getRoleId()
     {
         return getUser().getRole_ID().toString();
+    }
+
+
+    /**
+     * 更新菜单信息
+     */
+    public void updateMenuSession(IPermissionService iPermissionService)
+    {
+        List<MenuTree> menuTreeList = iPermissionService.selectMenuTree(getUserId());
+        ServletUtils.getSession().setAttribute(Constants.MENU_SESSION, menuTreeList);
     }
 
 

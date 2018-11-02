@@ -56,7 +56,6 @@ public class UserController extends BaseController{
     IPositionService iPositionService;
 
 
-
     /**
      *
      * @描述 跳转到用户页面

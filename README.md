@@ -14,13 +14,21 @@
 
    用户模块 日志模块 考勤模块 工作流模块 请假 岗位 会议申请 菜单 。。。 定时任务月末统计考勤状况 等功能
 
+   前端页面出致于：若依管理系统（https://github.com/WuJunJie521/RuoYiu）
+
    ##### 在线体验
 
    地址：<http://106.14.226.138:8880/OA/> 管理员 账号：admin 密码：admin
 
+   领导角色演示账号/密码：manager、123456
+
+   员工角色演示账号密码：employee /123456
+
    本人学生 希望浏览者能给点意见
 
    截图：
+
+   ![](F:\win桌面文件\Desktop\TIM截图20181020215618.png)
 
    ![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160612_c1838f04_1950427.png)
 
@@ -29,6 +37,8 @@
    ![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160623_ebb47b4c_1950427.png)![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160630_3e20f629_1950427.png)
 
    ![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160639_3e04cc7d_1950427.png)
+
+   ​
 
    ![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160647_06e351a8_1950427.png)![输入图片说明](https://images.gitee.com/uploads/images/2018/1009/160652_86ac4442_1950427.png)
 

@@ -81,7 +81,7 @@ public class NoticeController extends BaseController{
     @RequiresPermissions("notice:add")
     public String toAdd()
     {
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 

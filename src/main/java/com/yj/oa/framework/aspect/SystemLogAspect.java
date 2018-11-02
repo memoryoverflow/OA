@@ -1,6 +1,9 @@
 package com.yj.oa.framework.aspect;
 
+import com.yj.oa.common.constant.Constants;
+import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.utils.HttpHeaderUtil;
+import com.yj.oa.common.utils.ServletUtils;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.common.utils.shiro.ShiroUtils;
 import com.yj.oa.framework.aspect.enums.OperLogStatusEnum;
@@ -9,6 +12,8 @@ import com.yj.oa.project.po.OperLog;
 import com.yj.oa.framework.annotation.Operlog;
 import com.yj.oa.project.po.User;
 import com.yj.oa.project.service.operlog.IOperLogService;
+import com.yj.oa.project.service.user.IUserService;
+import org.apache.shiro.web.session.HttpServletSession;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -20,8 +25,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -40,8 +47,10 @@ public class SystemLogAspect{
     IOperLogService logServerce;
 
     @Autowired
-    private ThreadPoolExecutor threadPoolTaskExecutor;
+    IUserService userService;
 
+    @Autowired
+    private ThreadPoolExecutor threadPoolTaskExecutor;
 
     /**
      * 方法规则拦截
@@ -63,7 +72,6 @@ public class SystemLogAspect{
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         this.HandelLog(joinPoint, request, null);
-
     }
 
 
@@ -150,7 +158,7 @@ public class SystemLogAspect{
         {
             operLog.setOperUser(user.getUid());
             Integer deptId = user.getDept();
-            if (deptId!=null)
+            if (deptId != null)
             {
                 //用户部门
                 operLog.setDeptId(String.valueOf(deptId));
@@ -174,6 +182,7 @@ public class SystemLogAspect{
 
         //请求参数
         Map<String, String[]> params = request.getParameterMap();
+
         operLog.setParams(operLog.getMapToParams(params));
 
 
@@ -187,9 +196,67 @@ public class SystemLogAspect{
             operLog.setErrorMsg(e.getMessage());
         }
 
+        //是否登录操作
+        if (isLoginOperate(joinPoint))
+        {
+            String loginName = getLoginName(joinPoint, params);
+            if (!StringUtils.isEmpty(loginName))
+            {
+                //根据登录id获取用户名
+                User u = userService.login(loginName);
+                if (u!=null)
+                {
+                    operLog.setOperUser(u.getUid());
+                }else{
+                    operLog.setOperUser(loginName);
+                }
+            }
 
-        threadPoolTaskExecutor.execute(new SaveLogThread(operLog, logServerce));
+        }
 
+        if (!ip.equals("127.0.0.1"))
+        {
+            HttpSession session = ServletUtils.getSession();
+            String s = (String) session.getAttribute(Constants.LOGIN_ERROR);
+
+            if (!StringUtils.isEmpty(s))
+            {
+                operLog.setStatus(OperLogStatusEnum.ERROR_STATUS.getValue());
+                operLog.setType(OperLogTypeEnum.ERROR_TYPE.getValue());
+                operLog.setErrorMsg(s);
+            }
+            threadPoolTaskExecutor.execute(new SaveLogThread(operLog, logServerce));
+            session.removeAttribute(Constants.LOGIN_ERROR);
+        }
+    }
+
+
+    /**
+     * 判断是否登录操作
+     */
+    public static boolean isLoginOperate(JoinPoint joinPoint)
+    {
+        // 获得注解
+        Operlog operlog = getControllerMethodDescription2(joinPoint);
+        //描述
+        String descr = operlog.descr();
+
+        if (descr.indexOf("登录") >= 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取登录账号
+     */
+    public static String getLoginName(JoinPoint joinPoint, Map<String, String[]> params)
+    {
+
+        String[] strings = params.get("name");
+        return strings[0];
     }
 
 

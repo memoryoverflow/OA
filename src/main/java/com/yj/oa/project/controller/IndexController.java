@@ -1,5 +1,7 @@
 package com.yj.oa.project.controller;
 
+import com.yj.oa.common.constant.Constants;
+import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.framework.web.controller.BaseController;
 import com.yj.oa.framework.web.page.TableDataInfo;
 import com.yj.oa.framework.web.service.PermissionService;
@@ -14,12 +16,15 @@ import com.yj.oa.project.service.note.INoteService;
 import com.yj.oa.project.service.notice.INoticeService;
 import com.yj.oa.project.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +58,7 @@ public class IndexController extends BaseController{
     WorkTimeMapper workShifMapper;
 
     @Autowired
-    IPermissionService  iPermissionService;
+    IPermissionService iPermissionService;
 
 
     /**
@@ -68,15 +73,19 @@ public class IndexController extends BaseController{
 
     /**
      * 首页跳转 登录成功进入此页面，加载左侧菜单
-     * @param model
-     * @return
      */
     @RequestMapping("/index")
-    public String index(Model model)
+    public String index(Model model, HttpSession session)
     {
-        List<MenuTree> menuTrees = iPermissionService.selectMenuTree(getUserId());
-        model.addAttribute("menus",menuTrees);
-        model.addAttribute("user",getUser());
+        List<MenuTree> menuTreeList = (List<MenuTree>) session.getAttribute(Constants.MENU_SESSION);
+        if (StringUtils.isEmpty(menuTreeList))
+        {
+            menuTreeList = iPermissionService.selectMenuTree(getUserId());
+            session.setAttribute(Constants.MENU_SESSION,menuTreeList);
+        }
+        model.addAttribute("menus", menuTreeList);
+
+        model.addAttribute("user", getUser());
         return "index";
     }
 

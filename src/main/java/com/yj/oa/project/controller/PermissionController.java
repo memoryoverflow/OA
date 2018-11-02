@@ -1,5 +1,6 @@
 package com.yj.oa.project.controller;
 
+import com.yj.oa.common.constant.Constants;
 import com.yj.oa.common.constant.CsEnum;
 import com.yj.oa.common.utils.StringUtils;
 import com.yj.oa.framework.annotation.Operlog;
@@ -184,6 +185,7 @@ public class PermissionController extends BaseController{
     public String edit(@PathVariable("id") Integer id, Model model)
     {
         Permission permission = iPermissionService.selectByPrimaryKey(id);
+
         model.addAttribute("permission", permission);
         return prefix + "edit";
     }
@@ -210,6 +212,8 @@ public class PermissionController extends BaseController{
         {
             return error(e.getMessage());
         }
+        //更新session
+        updateMenuSession(iPermissionService);
         return result(i);
     }
 
@@ -221,7 +225,6 @@ public class PermissionController extends BaseController{
     @ResponseBody
     public String checkMenuNameUnique(Permission permission)
     {
-        System.out.println(permission);
         String uniqueFlag = "0";
         if (permission != null)
         {

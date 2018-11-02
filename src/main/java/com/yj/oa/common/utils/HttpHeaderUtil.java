@@ -171,7 +171,7 @@ public class HttpHeaderUtil{
         {
             logger.error("根据IP获取所在位置----------错误消息：[{}]" , e.getMessage());
         }
-        return address;
+        return address==null?"获取地址失败":address;
     }
 
 }

@@ -50,6 +50,7 @@ public class OperLogServiceImpl implements IOperLogService{
     @Override
     public int insertSelective(OperLog record)
     {
+        System.out.println(record);
         return operLogMapper.insertSelective(record);
     }
 

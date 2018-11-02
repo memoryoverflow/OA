@@ -90,7 +90,7 @@ public class DeptController extends BaseController{
     {
         List<User> users = iUserService.selectByUser(new User());
         model.addAttribute("users", users);
-        return prefix + "/add";
+        return prefix + "add";
     }
 
 
