@@ -18,7 +18,7 @@
 
    ##### 在线体验
 
-   地址：<http://106.14.226.138:8880/OA/> 管理员 账号：admin 密码：admin
+   地址：<https://memoryoverflow.cn/#/> 管理员 账号：admin 密码：admin
 
    领导角色演示账号/密码：manager、123456
 
