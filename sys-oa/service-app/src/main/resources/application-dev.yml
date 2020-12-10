@@ -1,0 +1,26 @@
+
+# 数据源
+spring:
+  activiti:
+    databaseSchemaUpdate: true
+    process-definition-location-prefix: / # 修改默认的 processes
+  #数据源
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/oa_db?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: tiger
+    driver-class-name: com.mysql.jdbc.Driver
+    ddl-auto: update
+
+  ########## 日期格式化输出 #########
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
+  redis:
+    port: 6379
+    timeout: 0
+    host: memoryoverflow.cn
+    database: 0
+    password: redis123!..

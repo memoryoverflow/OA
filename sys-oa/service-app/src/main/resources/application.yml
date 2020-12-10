@@ -1,0 +1,38 @@
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: utf-8
+    max-http-header-size: 102400
+
+  # 项目访问路径
+  servlet:
+    context-path: /oa
+
+
+spring:
+  profiles: dev
+
+
+  # 处理404 异常，关闭资源映射，不让Mvc 自己跳转到 error 请求，直接抛出NoHandlerFoundException 异常，在全局异常捕获
+#  mvc:
+#    throw-exception-if-no-handler-found: false
+#  resources:
+#    add-mappings: true
+
+
+mybatis:
+  configuration:
+    typeAliasesPackage: cn.yj.user.entity.po
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:/mapper/**.xml
+
+pagehelper:
+  helper-dialect: mysql
+  mapper-package: com.example.demo.core.mapper
+  reasonable: false # true:当默认值为pageNum<=0时，自动配置为1，pageSize>pages时候，默认为最后一页
+  supportMethodsArguments: false # 不支持参数接口分页
+
+
+
+

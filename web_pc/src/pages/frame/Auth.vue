@@ -1,0 +1,44 @@
+<template>
+  <span v-if="show">
+    <slot name="auth"></slot>
+  </span>
+</template>
+<script>
+let _this = {};
+export default {
+  data() {
+    return {
+      show: true,
+      url: {
+        checkAuth: "/auth/check",
+      },
+    };
+  },
+  props: ["code"],
+
+  mounted() {},
+  created() {
+    console.log(this.code)
+    let user = this.$getUser();
+    if (
+      user == null ||
+      user == undefined ||
+      user == "null" ||
+      user == "undefined"
+    ) {
+      return;
+    }
+
+    // let arr = user.permission;
+    // if (arr.indexOf(this.code) > -1) {
+    //   this.show = true;
+    // }
+
+    // this.$post(this.url.checkAuth + "?code=" + this.code, {}).then((res) => {
+    //   if (res.R) {
+    //     this.show = res.data;
+    //   }
+    // });
+  },
+};
+</script>

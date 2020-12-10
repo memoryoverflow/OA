@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+
+    <groupId>cn.yj</groupId>
+    <artifactId>ao</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>sys-oa</name>
+
+    <packaging>pom</packaging>
+
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <java.version>1.8</java.version>
+        <tools-utils-v>0.0.3</tools-utils-v>
+        <annotation-pagehelper>0.0.1-SNAPSHOT</annotation-pagehelper>
+        <tools-exception>0.0.1-SNAPSHOT</tools-exception>
+        <http-utils>0.0.9</http-utils>
+        <yj-aop>0.0.1-SNAPSHOT</yj-aop>
+        <service-params-check>0.0.1-SNAPSHOT</service-params-check>
+        <read-config>0.0.1</read-config>
+        <redis-client>2.9.0</redis-client>
+        <druid.version>1.1.17</druid.version>
+    </properties>
+
+
+    <modules>
+        <module>service-activiti</module>
+        <module>service-user</module>
+        <module>service-app</module>
+        <module>service-common</module>
+    </modules>
+
+
+    <dependencies>
+
+        <!-- druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${redis-client}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>cn.yj.tools</groupId>
+            <artifactId>tools-http</artifactId>
+            <version>${http-utils}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.yj</groupId>
+            <artifactId>service-params-check</artifactId>
+            <version>${service-params-check}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.yj</groupId>
+            <artifactId>yj-aop</artifactId>
+            <version>${yj-aop}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.yj</groupId>
+            <artifactId>annotation-pagehelper</artifactId>
+            <version>${annotation-pagehelper}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>lyj</groupId>
+            <artifactId>forward-generation-starter</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>cn.yj</groupId>
+            <artifactId>tools-exception</artifactId>
+            <version>${tools-exception}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>cn.yj.tools</groupId>
+            <artifactId>tools-common-utils</artifactId>
+            <version>${tools-utils-v}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.yj.tools</groupId>
+            <artifactId>tools-read-config</artifactId>
+            <version>${read-config}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
