@@ -35,6 +35,11 @@
             <el-input v-model="form.email"></el-input>
           </el-form-item>
 
+
+          <el-form-item label="编号" prop="empCode">
+            <el-input v-model="form.empCode"></el-input>
+          </el-form-item>
+
           <el-form-item prop="deptId" label="选择部门">
 
             <el-select
@@ -228,6 +233,7 @@
                 </el-table-column>
                 <el-table-column prop="loginName" label="登陆账户"></el-table-column>
                 <el-table-column prop="phone" label="电话"></el-table-column>
+                <el-table-column prop="empCode" label="编号"></el-table-column>
                 <el-table-column prop="email" label="邮箱"></el-table-column>
                 <el-table-column prop="dept" label="部门">
                   <template slot-scope="obj">
@@ -380,6 +386,7 @@
           name: "",
           loginName: "",
           deptId: "",
+          empCode: "",
           deptName: "",
           email: "",
           phone: "",
@@ -413,6 +420,7 @@
             {min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: "blur"},
           ],
           phone: [{required: true, message: "请输入登陆名", trigger: "blur"}],
+          empCode: [{required: true, message: "请输入编号", trigger: "blur"}],
           email: [{required: true, message: "请输入邮件", trigger: "blur"}, {
             min: 1,
             max: 50,
@@ -622,7 +630,7 @@
       save() {
         let params = _this.form;
         let tempRole = this.form.roleIds;
-        this.params.roleIds = tempRole.toString();
+        params['roleIds'] = tempRole.toString();
         this.$postJson(this.URL.save, params).then((res) => {
           if (res.R) {
             this.reqResult(res);
@@ -632,7 +640,7 @@
       update() {
         let params = _this.form;
         let tempRole = this.form.roleIds;
-        this.params.roleIds = tempRole.toString();
+        params['roleIds'] = tempRole.toString();
         this.$put(this.URL.update, params).then((res) => {
           if (res.R) {
             this.reqResult(res);

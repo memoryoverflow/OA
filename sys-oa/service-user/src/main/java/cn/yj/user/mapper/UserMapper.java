@@ -37,7 +37,10 @@ public interface UserMapper extends BaseMapper<User>
     @Select("select id,name,login_name,password,token,status from tb_user where login_name=#{loginName}")
     User selectByLoginName(String loginName);
 
+    @Select("select id,name,emp_code,login_name,password,token,status from tb_user where emp_code=#{empCode}")
+    User selectByEmpCode(String empCode);
 
-    @Select("select id,name as userName from tb_user")
+
+    @Select("select id,name as userName,emp_code as empCode from tb_user")
     List<Map<String, String>> listIdName();
 }

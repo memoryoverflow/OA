@@ -3,6 +3,8 @@ package cn.yj.user.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lyj.forward.generation.annotation.LTable;
+import lyj.forward.generation.annotation.LTableId;
+import lyj.forward.generation.enums.Type;
 
 import java.io.Serializable;
 
@@ -21,6 +23,7 @@ public class UserRole implements Serializable
 
 
     @TableId(type = IdType.AUTO)
+    @LTableId(type = Type.AUTO)
     private Integer id;
 
 

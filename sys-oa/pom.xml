@@ -104,7 +104,7 @@
         <dependency>
             <groupId>lyj</groupId>
             <artifactId>forward-generation-starter</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
 

@@ -4,7 +4,9 @@
 
 const path = require('path')
 let CONFIG = require('../src/config').config
+
 let server = "http://127.0.0.1:8080";
+let contentPath = "";
 
 
 function init() {
@@ -12,9 +14,11 @@ function init() {
   const active = CONFIG.active;
   if (active == "dev") {
     server = CONFIG.server.dev.address;
+    contentPath=CONFIG.server.dev.context_path
     return;
   }
   server = CONFIG.server.prod.address;
+  contentPath=CONFIG.server.prod.context_path
 }
 
 init();
@@ -32,6 +36,7 @@ let proxyTable = {
 }
 module.exports = {
   domain: proxyTable['/'].target,
+  serverContextPath: contentPath,
   dev: {
 
     // Paths

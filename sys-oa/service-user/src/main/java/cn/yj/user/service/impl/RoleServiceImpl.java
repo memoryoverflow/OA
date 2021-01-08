@@ -39,15 +39,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     RolePermissionMapper rolePermissionMapper;
 
     @Autowired
-    RoleMapper roleMapper;
-
-    @Autowired
     UserRoleMapper userRoleMapper;
 
     @Override
     public Page<Role> findList(Map<String, Object> map, Page<Role> page)
     {
-        return page.setRows(roleMapper.findList(map, page));
+        return page.setRows(baseMapper.findList(map, page));
     }
 
 
@@ -75,13 +72,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public boolean updateById(Role entity)
     {
-        Role role = roleMapper.selectByName(entity.getRoleName());
+        Role role = baseMapper.selectByName(entity.getRoleName());
         if (StringUtils.isNotNull(role) && !role.getId().equals(entity.getId()))
         {
             throw new ServiceException(entity.getRoleName() + "已经存在");
         }
 
-        role = roleMapper.selectByCode(entity.getCode());
+        role = baseMapper.selectByCode(entity.getCode());
         if (StringUtils.isNotNull(role) && !role.getId().equals(entity.getId()))
         {
             throw new ServiceException(entity.getCode() + "已经存在");
@@ -93,7 +90,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public Role selectByName(String name)
     {
-        return roleMapper.selectByName(name);
+        return baseMapper.selectByName(name);
     }
 
 
@@ -102,31 +99,31 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     public boolean insert(Role role)
     {
         String name = role.getRoleName();
-        if (StringUtils.isNotNull(roleMapper.selectByName(name)))
+        if (StringUtils.isNotNull(baseMapper.selectByName(name)))
         {
             throw new ServiceException("名称：" + role.getRoleName() + "已经存在");
         }
 
-        if (StringUtils.isNotNull(roleMapper.selectByCode(role.getCode())))
+        if (StringUtils.isNotNull(baseMapper.selectByCode(role.getCode())))
         {
             throw new ServiceException("编码：" + role.getRoleName() + "已经存在");
         }
         role.setId(UUIdUtils.getUUId32());
         role.setUpdateTime(new Date());
         role.setCreateTime(new Date());
-        return roleMapper.insert(role) > 0;
+        return baseMapper.insert(role) > 0;
     }
 
     @Override
     public List<Map<String, Object>> listIdNameAll()
     {
-        return roleMapper.listIdNameAll();
+        return baseMapper.listIdNameAll();
     }
 
     @Override
     public List<Map<String, Object>> selectRolesNameCodeIdByUserId(String userId)
     {
-        return roleMapper.selectRolesNameCodeIdByUserId(userId);
+        return baseMapper.selectRolesNameCodeIdByUserId(userId);
     }
 
     @Override

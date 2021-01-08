@@ -8,7 +8,7 @@ import cn.yj.commons.utils.StringUtils;
 import cn.yj.entity.R;
 import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.ConsVal;
-import cn.yj.user.Status;
+import cn.yj.common.Status;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.service.IUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

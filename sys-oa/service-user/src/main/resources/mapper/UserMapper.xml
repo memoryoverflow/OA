@@ -12,6 +12,7 @@
         <result column="password" property="password"/>
         <result column="phone" property="phone"/>
         <result column="status" property="status"/>
+        <result column="emp_code" property="empCode"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
         <result column="deleted" property="deleted"/>
@@ -53,6 +54,9 @@
             </if>
             <if test="name !=null and name !=''">
                 name,
+            </if>
+            <if test="empCode !=null and empCode !=''">
+                emp_code,
             </if>
 
             <if test="loginName !=null and loginName !=''">
@@ -102,6 +106,10 @@
 
             <if test="name !=null and name !=''">
                 #{name},
+            </if>
+
+            <if test="empCode !=null and empCode !=''">
+                #{empCode},
             </if>
 
             <if test="loginName !=null and loginName !=''">
@@ -156,6 +164,11 @@
             <if test="loginName !=null and loginName !=''">
                 login_name=#{loginName},
             </if>
+
+            <if test="empCode !=null and empCode !=''">
+                emp_code=#{empCode},
+            </if>
+
 
             <if test="password !=null and password !=''">
                 password=#{password},
@@ -244,7 +257,8 @@
         u.email,
         u.dept_id,
         u.position_id,
-        u.token
+        u.token,
+        u.emp_code
     </sql>
 
     <select id="login" resultType="string" resultMap="BaseResultMap">
@@ -266,6 +280,9 @@
             </if>
             <if test="map.name !=null and map.name !=''">
                 AND u.name like concat('%',#{map.name},'%')
+            </if>
+            <if test="map.empCode !=null and map.empCode !=''">
+                AND u.emp_code like concat('%',#{map.empCode},'%')
             </if>
             <if test="map.loginName !=null and map.loginName !=''">
                 AND login_name like concat('%',#{map.loginName},'%')

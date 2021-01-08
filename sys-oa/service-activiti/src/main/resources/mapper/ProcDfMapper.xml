@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.activity.mapper.ProcDfExtendMapper">
+
+    <insert id="insert">
+        insert into act_re_procdef_extend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                id,
+            </if>
+            <if test="useRole !=null and useRole !=''">
+                use_role,
+            </if>
+
+            <if test="remark !=null and remark !=''">
+                remark,
+            </if>
+
+
+            <if test="type !=null and type">
+                type,
+            </if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="id !=null and id !=''">
+                #{id},
+            </if>
+            <if test="useRole !=null and useRole !=''">
+                #{useRole},
+            </if>
+
+            <if test="remark !=null and remark !=''">
+                #{remark},
+            </if>
+
+
+            <if test="type !=null and type">
+                #{type},
+            </if>
+
+        </trim>
+
+    </insert>
+
+
+    <update id="updateById">
+        update act_re_procdef_extend
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="useRole !=null and useRole !=''">
+                use_role=#{useRole},
+            </if>
+
+            <if test="remark !=null and remark !=''">
+                remark= #{remark},
+            </if>
+            <if test="type !=null and type">
+                type= #{type},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <update id="removeByIds">
+        delete from act_re_procdef_extend where id in
+        <foreach collection="array" index="isx" item="id" close=")" open="(" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

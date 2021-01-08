@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Notification} from "element-ui";
 import router from "./router";
-import {removeToken, getToken} from '@/token';
+import {removeToken, getToken} from '@/cookie';
 
 let CONFIG = require('./config').config
 
@@ -15,7 +15,6 @@ function init() {
   }
   basePath = CONFIG.server.prod.context_path;
 }
-
 init();
 
 
@@ -87,7 +86,9 @@ function checkResult(response) {
   } else if (code == CONFIG.res_success_code) {
     response.data['R'] = true;
   } else {
-    Notification.error(msg);
+    if(CONFIG.autoAlertErrorMsg){
+      Notification.error(msg);
+    }
     response.data['R'] = false;
   }
 }
@@ -149,7 +150,7 @@ export const uploadRequest = (url, formData) => {
     method: "post",
     url: basePath + url,
     data: formData,
-    headers: {'token': token, "Content-Type": 'application/json'}
+    headers: {'token': token, "Content-Type": 'multipart/form-data'}
   });
 };
 

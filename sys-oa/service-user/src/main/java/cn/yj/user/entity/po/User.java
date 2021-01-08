@@ -1,6 +1,6 @@
 package cn.yj.user.entity.po;
 
-import cn.yj.user.BaseEntity;
+import cn.yj.common.BaseEntity;
 import lyj.forward.generation.annotation.LNotTableField;
 import lyj.forward.generation.annotation.LTable;
 
@@ -20,7 +20,6 @@ public class User extends BaseEntity implements Serializable
     private static final long serialVersionUID = 1L;
 
 
-
     public User()
     {
     }
@@ -30,7 +29,7 @@ public class User extends BaseEntity implements Serializable
         this.setId(id);
     }
 
-    public User(String id,String token)
+    public User(String id, String token)
     {
         super.setId(id);
         this.token = token;
@@ -48,6 +47,9 @@ public class User extends BaseEntity implements Serializable
 
 
     private String token;
+
+    @NotBlank(message = "编号不能为空")
+    private String empCode;
 
 
     @NotBlank(message = "登陆名不允许为空")
@@ -196,6 +198,17 @@ public class User extends BaseEntity implements Serializable
     public User setPositionId(String positionId)
     {
         this.positionId = positionId;
+        return this;
+    }
+
+    public String getEmpCode()
+    {
+        return empCode;
+    }
+
+    public User setEmpCode(String empCode)
+    {
+        this.empCode = empCode;
         return this;
     }
 }

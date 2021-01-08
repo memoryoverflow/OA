@@ -1,6 +1,6 @@
 package cn.yj.user.entity.po;
 
-import cn.yj.user.BaseEntity;
+import cn.yj.common.BaseEntity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

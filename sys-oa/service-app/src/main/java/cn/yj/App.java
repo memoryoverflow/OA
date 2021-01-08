@@ -2,8 +2,8 @@ package cn.yj;
 
 import cn.yj.activity.web.modeler.ModelSaveRestResource;
 import cn.yj.aop.EnableAopLog;
-import cn.yj.params.check.EnableCheckMethodParams;
 import cn.yj.tools.readconfig.EnableReadConfig;
+import lyj.forward.generation.annotation.EnableAutoForwardGeneration;
 import org.activiti.rest.editor.main.StencilsetRestResource;
 import org.activiti.rest.editor.model.ModelEditorJsonRestResource;
 import org.activiti.spring.boot.DataSourceProcessEngineAutoConfiguration;
@@ -29,11 +29,11 @@ import org.springframework.context.annotation.Import;
 // 开启activity
 @Import(value = {DataSourceProcessEngineAutoConfiguration.class, ModelSaveRestResource.class, ModelEditorJsonRestResource.class, StencilsetRestResource.class})
 
-@MapperScan("cn.yj.user.mapper")
+@MapperScan(basePackages = {"cn.yj.**.mapper"})
 @EnableReadConfig(classLoader = App.class)
 @EnableAopLog(targetPackage = "cn.yj")
-@EnableCheckMethodParams(targetPackage = "com.example.demo.core.service")
-//@EnableAutoForwardGeneration(entityPackages = "cn.yj.user.entity.po", OnOff = false)
+//@EnableCheckMethodParams(targetPackage = "cn.yj.activity")
+@EnableAutoForwardGeneration(entityPackages = "cn.yj.user.entity.po", OnOff = true)
 //@EnableGlobalException
 public class App
 {

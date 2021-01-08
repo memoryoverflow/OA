@@ -2,6 +2,7 @@ package cn.yj.common;
 
 import cn.yj.commons.enums.LPATTERM;
 import cn.yj.commons.utils.DateTimeUtils;
+import cn.yj.commons.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -25,6 +26,9 @@ public class StringToDateDeSerializer extends JsonDeserializer<Date>
     @Override
     public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException
     {
+        if(StringUtils.isBlank(p.getText())){
+            return null;
+        }
         return DateTimeUtils.format(p.getText(), LPATTERM.YYMMDDMMSS);
     }
 }

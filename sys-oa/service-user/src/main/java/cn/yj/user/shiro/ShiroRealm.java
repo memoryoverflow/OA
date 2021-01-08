@@ -1,7 +1,7 @@
 package cn.yj.user.shiro;
 
 import cn.yj.common.LoginUser;
-import cn.yj.user.Status;
+import cn.yj.common.Status;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.service.IPermissionService;
 import cn.yj.user.service.IRoleService;

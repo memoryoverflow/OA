@@ -40,15 +40,15 @@
 ### 1、新版本功能：
 
 - 1、基本的用户管理模块
-     - 权限管理
-     - 用户管理
-     - 部门管理
-     - 岗位管理
-     - 角色管理
+     - 权限管理 ☑️
+     - 用户管理 ☑️
+     - 部门管理 ☑️
+     - 岗位管理 ☑️
+     - 角色管理 ☑️
 
 - 2、工作流
-     - 在线设计模型
-     - 模型部署
+     - 在线设计模型 ☑️
+     - 模型部署 ☑️
      - 我的代办
      - 历史任务
      - 申请提交
@@ -88,18 +88,15 @@
 
 ### 新版本图片
 
-![输入图片说明](https://images.gitee.com/uploads/images/2020/1210/173449_bdf06a63_1950427.png "0.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/175008_2673c96c_1950427.png "1.png")
 
-![用户管理](https://images.gitee.com/uploads/images/2020/1210/173303_92716c77_1950427.png "1.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/175022_02cc274e_1950427.png "2.png")
 
-![用户添加](https://images.gitee.com/uploads/images/2020/1210/173322_69881443_1950427.png "2.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/175034_044cd44c_1950427.png "3.png")
 
-![菜单管理](https://images.gitee.com/uploads/images/2020/1210/173340_1cf3ec15_1950427.png "3.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/175041_e9ba04b3_1950427.png "4.png")
 
-![菜单添加](https://images.gitee.com/uploads/images/2020/1210/173357_bd2ba3e5_1950427.png "4.png")
-
-![部门添加](https://images.gitee.com/uploads/images/2020/1210/173411_a0d67f0e_1950427.png "5.png")
-
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0108/175049_aeec52d7_1950427.png "5.png")
 
 <br>
 

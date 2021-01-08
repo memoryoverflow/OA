@@ -114,6 +114,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         {
             throw new ServiceException("该登陆名已经存在");
         }
+        if (StringUtils.isNotNull(baseMapper.selectByEmpCode(entity.getEmpCode())))
+        {
+            throw new ServiceException("该用户编码已经存在");
+        }
 
         if (!CheckUtils.isEmail(entity.getEmail()))
         {
@@ -149,6 +153,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         {
             throw new ServiceException("该登陆名已经存在");
         }
+        User user1 = baseMapper.selectByEmpCode(entity.getEmpCode());
+
+
+        if (StringUtils.isNotNull(user1) && !user1.getId().equals(entity.getId()))
+        {
+            throw new ServiceException("该用户编码已经存在");
+        }
+
+        if (!CheckUtils.isEmail(entity.getEmail()))
+        {
+            throw new ServiceException("邮箱格式不正确");
+        }
+
         entity.setUpdateTime(new Date());
         baseMapper.updateById(entity);
 

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.quartz-scheduler:quartz:1.8.4">
+    <CLASSES>
+      <root url="jar:///usr/local/maven/repo/org/quartz-scheduler/quartz/1.8.4/quartz-1.8.4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar:///usr/local/maven/repo/org/quartz-scheduler/quartz/1.8.4/quartz-1.8.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar:///usr/local/maven/repo/org/quartz-scheduler/quartz/1.8.4/quartz-1.8.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

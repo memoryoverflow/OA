@@ -10,7 +10,8 @@ server:
 
 
 spring:
-  profiles: dev
+  profiles:
+    active: dev
 
 
   # 处理404 异常，关闭资源映射，不让Mvc 自己跳转到 error 请求，直接抛出NoHandlerFoundException 异常，在全局异常捕获
@@ -25,7 +26,7 @@ mybatis:
     typeAliasesPackage: cn.yj.user.entity.po
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-  mapper-locations: classpath:/mapper/**.xml
+  mapper-locations: classpath*:mapper/**.xml
 
 pagehelper:
   helper-dialect: mysql

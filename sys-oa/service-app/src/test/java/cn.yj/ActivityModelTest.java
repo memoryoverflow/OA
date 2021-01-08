@@ -49,6 +49,6 @@ public class ActivityModelTest
         // 1、设置发起人
         //identityService.setUserInfo();
 
-        //runtimeService.startProcessInstanceById();
+        runtimeService.startProcessInstanceById("请假流程:1:30005");
     }
 }

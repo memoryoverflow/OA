@@ -25,6 +25,9 @@ public abstract class ActivityBaseService extends AbstractController
     @Autowired
     protected RuntimeService runtimeService;
 
+    @Autowired
+    protected IdentityService identityService;
+
 
     @Autowired
     protected ProcessEngineConfiguration processEngineConfiguration;

@@ -22,6 +22,7 @@ public class LoginUser implements Serializable
     private String token;
 
     private List<Map<String, Object>> roles;
+
     private Set<String> permissions;
 
     public String getId()

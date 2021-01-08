@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import router from './router'
 import config from '../config/index'
+import CONDFIG from './config' // 自定义配置
 import App from './App'
 // element-ui
 import ElementUI from 'element-ui';
@@ -12,10 +13,13 @@ import commUtils from "@/utils/CommonUtils.js";
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 // 弹窗提示
-import { success, info, warning, error } from '@/utils/alertUtils';
+import {success, info, warning, error} from '@/utils/alertUtils';
 
 // token
-import { removeToken, saveToken, getToken,saveUser,getUser,vueCookies} from '@/token';
+import {removeToken, saveToken, getToken, saveUser, getUser, vueCookies} from '@/cookie';
+
+
+
 Vue.prototype.$removeToken = removeToken;
 Vue.prototype.$saveToken = saveToken;
 Vue.prototype.$getToken = getToken;
@@ -33,7 +37,6 @@ import {
   uploadRequest,
   postRequestJSON
 } from "./HttpRequest";
-
 
 
 Vue.config.productionTip = false
@@ -62,12 +65,14 @@ Vue.prototype.$warning = warning
 
 
 Vue.prototype.$doMain = config.domain;
+Vue.prototype.$serverContextPath = config.serverContextPath;
 
 
 import ListFrame from "@/pages/frame/ListFrame.vue";
 import MainFrame from "@/pages/frame/MainFrame.vue";
 import Dialog from "@/pages/frame/Dialog.vue";
 import Auth from "@/pages/frame/Auth.vue";
+
 Vue.component("table-frame", ListFrame);
 Vue.component("main-frame", MainFrame);
 Vue.component("yj-dialog", Dialog);
@@ -75,10 +80,13 @@ Vue.component("auth", Auth);
 
 
 /* eslint-disable no-new */
+
+Vue.prototype.$EventBus=new Vue();
+
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })
 

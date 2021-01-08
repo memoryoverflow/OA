@@ -3,6 +3,7 @@ package com.yj.oa.framework.aspect.enums;
 /**
  * @author 永健
  */
+
 public enum OperLogStatusEnum{
     SUCCESS_STATUS(0,"正常"),ERROR_STATUS(1,"异常");
 

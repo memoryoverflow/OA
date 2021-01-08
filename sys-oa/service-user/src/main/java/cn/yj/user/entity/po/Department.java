@@ -1,6 +1,6 @@
 package cn.yj.user.entity.po;
 
-import cn.yj.user.BaseEntity;
+import cn.yj.common.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;

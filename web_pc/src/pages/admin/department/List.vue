@@ -339,7 +339,9 @@
           for (const key in row) {
             if (row.hasOwnProperty(key)) {
               const element = row[key];
-              this.form[key] = element;
+              if (this.form.hasOwnProperty(key)) {
+                this.form[key] = element;
+              }
             }
           }
         } else {

@@ -1,9 +1,13 @@
 package cn.yj.activity.service;
 
 
+import cn.yj.activity.entity.Nodes;
+import cn.yj.activity.entity.po.ProcDfExtend;
 import cn.yj.annotation.pagehelper.page.Page;
+import org.activiti.bpmn.model.UserTask;
 
-import java.util.List;
+import java.io.InputStream;
+import java.util.LinkedList;
 
 /**
  * <br>
@@ -28,4 +32,15 @@ public interface IProcessDef
      * @param processDefinitionId
      */
     void suspendProcessDefinitionById(String processDefinitionId);
+
+    InputStream getResourceImgStream(String deployId);
+
+    void editExtendUpdate(ProcDfExtend procDfExtend);
+
+    /**
+     * 获取流程的各个节点
+     * @return
+     */
+    LinkedList<Nodes> getProcDefNodesByProcDefId(String procDefId);
+    UserTask getProcDefFirstUserTask(String procDefId);
 }

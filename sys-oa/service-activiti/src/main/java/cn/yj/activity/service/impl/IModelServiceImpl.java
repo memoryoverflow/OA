@@ -17,6 +17,7 @@ import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
 import org.activiti.engine.repository.ModelQuery;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -53,8 +54,13 @@ public class IModelServiceImpl extends ActivityBaseService implements IModelServ
         {
             modelQuery.modelNameLike(modelName);
         }
-
-        return page.setRows(modelQuery.listPage(page.getPageNum() - 1, page.getPageSize()));
+        int pageSize = page.getPageSize();
+        long count = modelQuery.count();
+        page.setRows(modelQuery.listPage(page.getPageNum() - 1, pageSize));
+        page.setTotal(count);
+        page.setPageSize(pageSize);
+        page.setPages((int) ((count % pageSize == 0) ? (count / pageSize) : ((count / pageSize) + 1)));
+        return page;
     }
 
     @CheckObjectValue(keyValue = {@KeyValue(type = ModelVo.class, name = {"modelName", "modelKey"})})
@@ -134,6 +140,10 @@ public class IModelServiceImpl extends ActivityBaseService implements IModelServ
                 .name(model.getName())
                 .addString(processName, new String(bpmnBytes, "UTF-8"))
                 .deploy();
+
+        // 默认挂起流程
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.getId());
+        repositoryService.suspendProcessDefinitionById(processDefinitionQuery.deploymentId(deployment.getId()).singleResult().getId());
 
         // 更新 Model deploymentId
         model.setDeploymentId(deployment.getId());
