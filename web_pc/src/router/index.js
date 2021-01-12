@@ -12,8 +12,16 @@ import Model from '@/pages/admin/activiti/model/List'
 import Form from '@/pages/admin/activiti/form/List'
 import DeployMent from '@/pages/admin/activiti/process/List'
 import NodeSetting from '@/pages/admin/activiti/process/NodeSetting'
+import SysLog from '@/pages/admin/syslog/list'
 
 Vue.use(Router)
+
+//获取原型对象上的push函数
+const originalPush = Router.prototype.push
+//修改原型对象中的push方法
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default new Router({
   routes: [
     {
@@ -48,7 +56,7 @@ export default new Router({
         },
         {
           path: 'admin/menu/list',
-          name: '权限列表',
+          name: '菜单列表',
           component: Menu,
         },
         {
@@ -75,6 +83,11 @@ export default new Router({
           path: 'admin/activiti/process/list',
           name: '已发布流程',
           component: DeployMent
+        },
+        {
+          path: 'admin/syslog/list',
+          name: '操作日志',
+          component: SysLog
         }
       ]
     },

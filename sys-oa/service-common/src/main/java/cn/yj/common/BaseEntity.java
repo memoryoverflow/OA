@@ -1,7 +1,6 @@
 package cn.yj.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lyj.forward.generation.annotation.LTableId;
 
 import java.util.Date;
 
@@ -13,7 +12,6 @@ import java.util.Date;
  */
 public class BaseEntity
 {
-    @LTableId
     private String id;
 
     @JsonDeserialize(using = StringToDateDeSerializer.class)

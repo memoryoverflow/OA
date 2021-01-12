@@ -1,12 +1,13 @@
 <template>
   <el-dialog
     :title="title"
-    :show-close="false"
-    :close-on-press-escape="false"
-    :close-on-click-modal="false"
+    :show-close="showClose"
+    :close-on-press-escape="true"
+    :close-on-click-modal="true"
     :visible.sync="dialogVisible"
     :modal="modal"
     :width="width"
+    @close="closeDialog"
   >
     <slot name="dialog-content"></slot>
   </el-dialog>
@@ -14,18 +15,56 @@
 <script>
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   watch: {
-    showClose: {
+
+    dialogVisible: {
       handler(newVal, oldVal) {
-        console.log(newVal);
-        console.log(oldVal);
+        this.dialogVisible=newVal;
       }
     }
   },
-  props: ["dialogCom", "dialogVisible","modal" ,"title", "width", "showClose"],
-  created() {}
+  props1: ["dialogVisible", "modal", "title", "width", "showClose", "closeFun"],
+  props: {
+    closeFun: {
+      required:false,
+      type: Function,
+      default: () => {
+        return Function;
+      }
+    },
+    dialogVisible: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
+    modal: {
+      required: false,
+      type: Boolean,
+      default: true,
+    },
+    title: {
+      required: true,
+      default: ""
+    },
+    width: {
+      required: false,
+      default: '40%'
+    },
+    showClose: {
+      required: false,
+      type: Boolean,
+      default: false
+    }
+  },
+  created() {
+  },
+  methods:{
+    closeDialog() {
+      this.dialogVisible=false
+      this.closeFun();
+    },
+  }
 };
 </script>

@@ -1,6 +1,7 @@
 package cn.yj.activity.web;
 
 import cn.yj.activity.service.IProcInstService;
+import cn.yj.common.OperateLog;
 import cn.yj.commons.utils.MapUtils;
 import cn.yj.entity.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class ProcInstController extends ActivityBaseController
     @Autowired
     private IProcInstService iProcInstService;
 
+    @OperateLog(describe = "启动流程实例")
     @PostMapping("/start")
     public R startProcInstId(@RequestBody Map<String, Object> params)
     {

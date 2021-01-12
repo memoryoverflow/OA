@@ -1,9 +1,6 @@
 package cn.yj.user.entity.po;
 
 import lombok.Data;
-import lyj.forward.generation.annotation.LTable;
-import lyj.forward.generation.annotation.LTableId;
-import lyj.forward.generation.enums.Type;
 
 import java.io.Serializable;
 
@@ -16,12 +13,10 @@ import java.io.Serializable;
  * @since 2020-04-04 03:15
  */
 @Data
-@LTable
 public class RolePermission implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    @LTableId(type = Type.AUTO)
     private Integer id;
 
     private String roleId;

@@ -1,16 +1,12 @@
 package cn.yj.user.controller;
 
 
-import cn.yj.annotation.pagehelper.page.OrderBy;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.Department;
-import cn.yj.user.entity.po.Position;
-import cn.yj.user.entity.po.Role;
 import cn.yj.user.service.IDepartmentService;
-import cn.yj.user.service.IRoleService;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * <p>
@@ -39,6 +34,7 @@ public class DepartmentController extends AbstractController<Department>
 
     //@RequiresPermissions(value = {"dept:list"})
     @GetMapping("/treeData")
+    @OperateLog(describe = "查看部门列表")
     public R treeData()
     {
         return success(thisService.treeData());
@@ -59,6 +55,7 @@ public class DepartmentController extends AbstractController<Department>
     @RequiresPermissions(value = {"dept:add"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PostMapping("/save")
+    @OperateLog(describe = "添加部门")
     public R insertSave(@Valid @RequestBody Department entity)
     {
         return result(thisService.insert(entity));
@@ -68,6 +65,7 @@ public class DepartmentController extends AbstractController<Department>
     @RequiresPermissions(value = {"dept:update"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/update")
+    @OperateLog(describe = "修改部门")
     public R editSave(@Valid @RequestBody Department entity)
     {
         return result(thisService.updateById(entity));
@@ -75,6 +73,7 @@ public class DepartmentController extends AbstractController<Department>
 
 
     @DeleteMapping("/remove/{ids}")
+    @OperateLog(describe = "删除部门")
     public R removeByIds(@PathVariable("ids") Serializable[] ids)
     {
         return success(thisService.removeByIds(ids));

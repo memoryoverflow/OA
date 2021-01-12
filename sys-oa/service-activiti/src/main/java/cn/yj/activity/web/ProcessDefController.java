@@ -2,6 +2,7 @@ package cn.yj.activity.web;
 
 import cn.yj.activity.entity.po.ProcDfExtend;
 import cn.yj.activity.service.IProcessDef;
+import cn.yj.common.OperateLog;
 import cn.yj.commons.utils.StringUtils;
 import cn.yj.entity.R;
 import cn.yj.tools.exception.ServiceException;
@@ -60,6 +61,7 @@ public class ProcessDefController extends ActivityBaseController
      * @return 结果
      */
     @PostMapping("/active/{id}/{status}")
+    @OperateLog(describe = "挂起/激活流程定义")
     public R create(@PathVariable("id") String processId, @PathVariable("status") int status)
     {
         if (SuspensionState.ACTIVE.getStateCode() == status)
@@ -78,6 +80,7 @@ public class ProcessDefController extends ActivityBaseController
      * @return 结果
      */
     @GetMapping("/checkImg/{deployId}")
+    @OperateLog(describe = "查看流程图")
     public void create(@PathVariable("deployId") String deployId, HttpServletResponse response) throws IOException
     {
         //获取图片的输入流
@@ -91,6 +94,7 @@ public class ProcessDefController extends ActivityBaseController
         ImageIO.write(bi, "png", response.getOutputStream());
     }
 
+    @OperateLog(describe = "查看流程图")
     @GetMapping("/checkImgByProcDefId/{procDefId}")
     public void checkImgByProcDefId(@PathVariable("procDefId") String procDefId, HttpServletResponse response) throws IOException
     {

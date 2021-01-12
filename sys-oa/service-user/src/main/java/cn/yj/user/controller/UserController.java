@@ -3,12 +3,13 @@ package cn.yj.user.controller;
 
 import cn.yj.annotation.pagehelper.page.OrderBy;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
+import cn.yj.common.Status;
 import cn.yj.commons.utils.MapUtils;
 import cn.yj.commons.utils.StringUtils;
 import cn.yj.entity.R;
 import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.ConsVal;
-import cn.yj.common.Status;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.service.IUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,6 +38,7 @@ public class UserController extends AbstractController<User>
     IUserService thisService;
 
 
+    @OperateLog(describe = "用户列表")
     @RequiresPermissions(value = {"user:list"})
     @GetMapping("/list")
     public R list(@RequestParam Map<String, Object> param)
@@ -55,6 +57,7 @@ public class UserController extends AbstractController<User>
         return success(thisService.listIdName());
     }
 
+    @OperateLog(describe = "新增用户")
     @RequiresPermissions(value = {"user:save"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PostMapping("/save")
@@ -64,6 +67,7 @@ public class UserController extends AbstractController<User>
     }
 
 
+    @OperateLog(describe = "修改用户")
     @RequiresPermissions(value = {"user:update"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/update")
@@ -78,6 +82,7 @@ public class UserController extends AbstractController<User>
      * @param param key: id password
      * @return
      */
+    @OperateLog(describe = "重置密码")
     @PutMapping("/reloadPwd")
     public R reloadPwd(@RequestBody Map<String, Object> param)
     {
@@ -94,6 +99,7 @@ public class UserController extends AbstractController<User>
         return result(thisService.reloadPassword(id, password));
     }
 
+    @OperateLog(describe = "禁用/激活用户")
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/toBlack/{id}/{status}")
     public R toBlack(@PathVariable("id") String id, @PathVariable("status") Integer status)
@@ -105,7 +111,7 @@ public class UserController extends AbstractController<User>
         return result(thisService.updateUserInfoById(new User(id).setStatus(status)));
     }
 
-
+    @OperateLog(describe = "删除用户")
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @RequiresPermissions(value = {"user:del"})
     @DeleteMapping("/remove/{ids}")

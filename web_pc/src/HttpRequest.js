@@ -193,6 +193,9 @@ function filterParamsIsEmpty(params) {
   for (const key in params) {
     if (params.hasOwnProperty(key)) {
       const element = params[key];
+      if (element==0){
+        continue;
+      }
       if (element == "" || element == null) {
         delete params[key];
       }

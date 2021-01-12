@@ -63,7 +63,7 @@
                   @current-change="handleCurrentChange"
                   :current-page="currentPage"
                   :page-sizes="[15, 30, 50, 100]"
-                  :page-size="pagesize"
+                  :page-size="pageSize"
                   layout="total, sizes, prev, pager, next, jumper"
                   :total="total"
                 ></el-pagination>
@@ -90,10 +90,10 @@ export default {
       total: 0, // 列表内所有数据的长度
       currentPage: 1, // 初始页 0 jpa是0
       index: 0, // jpa请求分页参数
-      pagesize: 15, // 当前页面内的列表行数
+      pageSize: 15, // 当前页面内的列表行数
       tableLoading: true,
       checkRowList: [], // 当前选中的数据
-      tempIsPage: this.isPage,
+      tempIsPage: true,
       resParam: {
         rows: [],
         searchParam: {}
@@ -102,7 +102,7 @@ export default {
     };
   },
   // 数据列表，位置，是否显示搜索模块，搜索组建，刷新列表（修改或者删除时候） 是否显示 表格上面的操作栏 ,是否显示删除按钮
-  props: [
+  props1: [
     "getDataUrl",
     "removeUrl",
     "location",
@@ -110,10 +110,54 @@ export default {
     "searchModel",
     "reloadTable",
     "operateShow",
-    "colunmsCount",
     "showDelBtn",
     "isPage"
   ],
+  props: {
+    getDataUrl: {  // 必须提供字段
+      required: true,
+      type: String,
+    },
+    removeUrl: {   // 可选字段，有默认值
+      required: false,
+      type: String,
+    },
+    location: {   // 可选字段，有默认值
+      required: false,
+      type: String,
+    },
+    searchShow: {   // 可选字段，有默认值
+      required: false,
+      type: Boolean,
+      default:false,
+    },
+    searchModel: {   // 可选字段，有默认值
+      required: false,
+      type: Object,
+      default: false,
+    },
+    reloadTable: {   // 可选字段，有默认值
+      required: true,
+      type: Boolean,
+      default:false,
+    },
+    operateShow: {   // 可选字段，有默认值
+      required: false,
+      type: Boolean,
+      default:true,
+    },
+    showDelBtn: {   // 可选字段，有默认值
+      required: true,
+      type: Boolean,
+      default:false,
+    },
+    isPage: {   // 可选字段，有默认值
+      required: false,
+      type: Boolean,
+      default:true,
+    },
+  },
+
   mounted() {
     this.initData(this.searchParam());
   },
@@ -299,8 +343,8 @@ export default {
       }
     }, // 初始页page、初始每页数据数pagesize和数据data
     // 更换每页列内不同的行数：更新列表数据
-    handleSizeChange: function(pagesize) {
-      this.pagesize = pagesize;
+    handleSizeChange: function(pageSize) {
+      this.pageSize = pageSize;
       this.currentPage = 1;
       _this.initData({});
     },
@@ -315,7 +359,7 @@ export default {
 <style scoped>
 .main-frame-content{
   background: white;
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
 }
 .pageNation {
   margin: 25px 0;
@@ -328,7 +372,7 @@ export default {
   border-radius: 5px;
   padding-top: 20px;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .search .el-form,.search div{
   display: flex;

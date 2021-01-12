@@ -1,6 +1,6 @@
 <template>
   <div class="main-frame">
-    <div class="lactions">
+    <div class="locations">
       <div
         @click="jumpTo(tab)"
         class="tab_item"
@@ -10,7 +10,7 @@
         :key="idx"
       >
         <div :class="{ activity: activity == tab.name }" class="text">{{ tab.name }}</div>
-        <div class="cancel">x</div>
+        <div class="cancel" @click="closeTab(tab)" v-if="tab.name!='首页'">x</div>
       </div>
     </div>
     <el-container
@@ -44,60 +44,104 @@ export default {
       },
       activity: "",
       tabs: [],
+      IndexMenu: {name: "首页", path: "/admin/index", isHome: true}
     };
   },
   props: ["location"],
   created() {
-    this.$EventBus.$on(this.menCookieKey.tab, (data) => {
-      this.getTabs();
-      this.activity = this.$cookies.get(this.menCookieKey.defaultActive);
-    });
+    this.listenerTabMenus();
+    this.listenerDefault();
   },
   mounted() {
-    this.getTabs();
+    // 取缓存
+    this.getTabMenus();
     this.activity = this.$cookies.get(this.menCookieKey.defaultActive);
-    this.getWindownHeight();
+
+    // 计算表格高度
+    this.getWindowHeight();
     window.onresize = () => {
       return (() => {
-        this.getWindownHeight();
+        this.getWindowHeight();
       })();
     };
   },
   methods: {
+    listenerTabMenus() {
+      this.$EventBus.$on(this.menCookieKey.tab, (data) => {
+        this.getTabMenus();
+        this.activity = this.$cookies.get(this.menCookieKey.defaultActive);
+      });
+    },
+    listenerDefault() {
+      this.$EventBus.$on(this.menCookieKey.defaultActive, (data) => {
+        this.activity = data;
+      });
+    },
+
+    closeTab(tab) {
+      if (tab.name === "首页") {
+        return;
+      }
+
+      let tabs = JSON.parse(this.$cookies.get(this.menCookieKey.tab));
+      let preTab = '';
+      let newTabs = [];
+      for (const key in tabs) {
+        let ta = tabs[key];
+        if (ta.name !== tab.name) {
+          newTabs.push(ta);
+          preTab = ta
+        }
+      }
+      this.tabs = newTabs;
+      if (preTab == "") {
+        preTab = this.IndexMenu;
+      }
+      this.$cookies.set(this.menCookieKey.tab, JSON.stringify(newTabs));
+      this.$cookies.remove(this.menCookieKey.defaultActive);
+      setTimeout(() => {
+        this.jumpTo(preTab);
+      }, 50)
+    },
+    // 点击tab栏的时候
     jumpTo(tab) {
+      // 更新缓存
       this.$cookies.set(this.menCookieKey.defaultActive, tab.name, "30d");
+
       this.activity = tab.name;
-      let defaultOpeneIds = [];
 
+      let defaultOpenIds = [];
+
+      // 找到要展开的菜单
       getMenus((menuList) => {
-
         if (menuList != null && menuList != undefined) {
           A: for (const m of menuList) {
             if (m.perName == tab.name) {
-              defaultOpeneIds.push(tab.name);
+              defaultOpenIds.push(tab.name);
             } else {
-              let childs = m.children;
-              for (const c of childs) {
+              let children = m.children;
+              for (const c of children) {
                 if (c.perName == tab.name) {
-                  defaultOpeneIds.push(m.perName);
-                  defaultOpeneIds.push(tab.name);
+                  defaultOpenIds.push(m.perName);
+                  defaultOpenIds.push(tab.name);
                   break A;
                 }
               }
             }
           }
+          // 更新展开的菜单缓存
           this.$cookies.set(
             this.menCookieKey.defaultOpeneIds,
-            defaultOpeneIds.join(","),
+            defaultOpenIds.join(","),
             "30d"
           );
-          this.$EventBus.$emit(this.menCookieKey.defaultOpeneIdsEvent, defaultOpeneIds);
+          // 通知左侧菜单要展开的
+          this.$EventBus.$emit(this.menCookieKey.defaultOpeneIdsEvent, defaultOpenIds);
         }
-
         this.$router.push(tab.path);
       });
     },
-    getTabs() {
+    getTabMenus() {
       let tab = this.$cookies.get(this.menCookieKey.tab);
       let arr = [null, undefined, ""];
       let tabList = [];
@@ -112,7 +156,7 @@ export default {
         this.tabs = tabList;
       }
     },
-    getWindownHeight() {
+    getWindowHeight() {
       let winHeight = document.body.clientHeight;
       let contentHeight = winHeight - 35 - 70;
       this.contentHeight = contentHeight;
@@ -136,11 +180,10 @@ export default {
   color: #1890ff;
 }
 
-.lactions {
+.locations {
   text-align: left;
   //background-color: rgb(248, 244, 244) !important;
   line-height: 20px;
-  font-size: 12px;
   padding: 4px 8px;
   margin: 0 auto;
   color: rgb(137, 154, 178);
@@ -153,20 +196,23 @@ export default {
   /* padding: 10px 0; */
 }
 
-.lactions .tab_item {
+.locations .tab_item {
   display: flex;
-  border: 1px solid #c3c9d6;
+  border: 1px solid #c4c9d4;
   flex-direction: row;
   padding: 2px 5px;
   color: #000000a6;
-  font-size: 14px;
-  border-radius: 2px;
   margin: 0 3px;
+
 }
 
 .tab_item .cancel {
   padding-left: 5px;
   text-align: right;
+}
+
+.tab_item .text {
+  font-size: 10px !important;
 }
 
 .cancel:hover {

@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import router from './router'
 import config from '../config/index'
-import CONDFIG from './config' // 自定义配置
 import App from './App'
 // element-ui
 import ElementUI from 'element-ui';
@@ -13,11 +12,15 @@ import commUtils from "@/utils/CommonUtils.js";
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 // 弹窗提示
-import {success, info, warning, error} from '@/utils/alertUtils';
+import {error, info, success, warning} from '@/utils/alertUtils';
 
 // token
-import {removeToken, saveToken, getToken, saveUser, getUser, vueCookies} from '@/cookie';
-
+import {getToken, getUser, removeToken, saveToken, saveUser, vueCookies} from '@/cookie';
+import {deleteRequest, getRequest, postRequest, postRequestJSON, putRequest, uploadRequest} from "./HttpRequest";
+import ListFrame from "@/pages/frame/ListFrame.vue";
+import MainFrame from "@/pages/frame/MainFrame.vue";
+import Dialog from "@/pages/frame/Dialog.vue";
+import Auth from "@/pages/frame/Auth.vue";
 
 
 Vue.prototype.$removeToken = removeToken;
@@ -27,16 +30,6 @@ Vue.prototype.$getUser = getUser;
 Vue.prototype.$saveUser = saveUser;
 
 Vue.config.devtools = true;
-
-
-import {
-  deleteRequest,
-  postRequest,
-  putRequest,
-  getRequest,
-  uploadRequest,
-  postRequestJSON
-} from "./HttpRequest";
 
 
 Vue.config.productionTip = false
@@ -68,11 +61,6 @@ Vue.prototype.$doMain = config.domain;
 Vue.prototype.$serverContextPath = config.serverContextPath;
 
 
-import ListFrame from "@/pages/frame/ListFrame.vue";
-import MainFrame from "@/pages/frame/MainFrame.vue";
-import Dialog from "@/pages/frame/Dialog.vue";
-import Auth from "@/pages/frame/Auth.vue";
-
 Vue.component("table-frame", ListFrame);
 Vue.component("main-frame", MainFrame);
 Vue.component("yj-dialog", Dialog);
@@ -80,8 +68,14 @@ Vue.component("auth", Auth);
 
 
 /* eslint-disable no-new */
+Vue.prototype.$EventBus = new Vue();
 
-Vue.prototype.$EventBus=new Vue();
+/** 投机取巧 修改父组建的值 不让它报错 */
+Vue.config.warnHandler = function (msg) {
+  if (!msg.includes('Avoid mutating a prop directly since the value will be overwritten whenever the parent component re-renders.')) { // uniApp bug: https://ask.dcloud.net.cn/question/71966
+    return console.warn && console.warn(msg)
+  }
+}
 
 new Vue({
   el: '#app',

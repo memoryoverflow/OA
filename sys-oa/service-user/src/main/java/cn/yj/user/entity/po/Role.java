@@ -2,7 +2,6 @@ package cn.yj.user.entity.po;
 
 import cn.yj.common.BaseEntity;
 import lombok.Data;
-import lyj.forward.generation.annotation.LTable;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -15,7 +14,6 @@ import java.io.Serializable;
  * @author 永健
  * @since 2020-04-04 03:15
  */
-@LTable
 @Data
 public class Role extends BaseEntity implements Serializable
 {

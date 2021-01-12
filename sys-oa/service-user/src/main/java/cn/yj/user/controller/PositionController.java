@@ -3,6 +3,7 @@ package cn.yj.user.controller;
 
 import cn.yj.annotation.pagehelper.page.OrderBy;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.Position;
@@ -33,13 +34,14 @@ public class PositionController extends AbstractController<Position>
     @Autowired
     IPositionService thisService;
 
-
+    @OperateLog(describe = "岗位列表")
     @RequiresPermissions(value = {"post:list"})
     @GetMapping("/list")
     public R list(@RequestParam Map<String, Object> param)
     {
         return success(thisService.findList(param, page(new OrderBy(OrderBy.Direction.ASC, "create_time"))));
     }
+
 
     @RequiresPermissions(value = {"post:list"})
     @GetMapping("/listIdAndNameCode")
@@ -48,6 +50,7 @@ public class PositionController extends AbstractController<Position>
         return success(thisService.listIdAndNameCode());
     }
 
+    @OperateLog(describe = "新增岗位")
     @RequiresPermissions(value = {"post:add"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PostMapping("/save")
@@ -56,7 +59,7 @@ public class PositionController extends AbstractController<Position>
         return result(thisService.insert(entity));
     }
 
-
+    @OperateLog(describe = "修改岗位")
     @RequiresPermissions(value = {"post:update"})
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/update")
@@ -65,7 +68,7 @@ public class PositionController extends AbstractController<Position>
         return result(thisService.updateById(entity));
     }
 
-
+    @OperateLog(describe = "删除岗位")
     @DeleteMapping("/remove/{ids}")
     @RequiresPermissions(value = {"post:del"})
     public R removeByIds(@PathVariable("ids") Serializable[] ids)

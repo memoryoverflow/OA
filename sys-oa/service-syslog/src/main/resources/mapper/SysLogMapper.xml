@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.syslog.mapper.SysLogMapper">
+
+
+    <insert id="insert">
+        insert into tb_sys_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                id,
+            </if>
+
+            <if test="type !=null and type !=''">
+                type,
+            </if>
+            <if test="descr !=null and descr !=''">
+                descr,
+            </if>
+            <if test="host !=null and host !=''">
+                host,
+            </if>
+
+            <if test="ipAddress !=null and ipAddress !=''">
+                ip_address,
+            </if>
+
+            <if test="url !=null and url !=''">
+                url,
+            </if>
+
+            <if test="method !=null and method !=''">
+                method,
+            </if>
+
+            <if test="params !=null and params!='' ">
+                params,
+            </if>
+
+            <if test="errorMsg !=null and errorMsg!='' ">
+                error_msg,
+            </if>
+
+            <if test="operUser !=null and operUser!='' ">
+                oper_user,
+            </if>
+            <if test="browser !=null and browser!='' ">
+                browser,
+            </if>
+
+            <if test="sys !=null and sys!='' ">
+                sys,
+            </if>
+
+            <if test="updateTime !=null">
+                update_time,
+            </if>
+
+            <if test="createTime !=null ">
+                create_time,
+            </if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="id !=null and id !=''">
+                #{id},
+            </if>
+
+            <if test="type !=null and type !=''">
+                #{type},
+            </if>
+            <if test="descr !=null and descr !=''">
+                #{descr},
+            </if>
+            <if test="host !=null and host !=''">
+                #{host},
+            </if>
+
+            <if test="ipAddress !=null and ipAddress !=''">
+                #{ipAddress},
+            </if>
+
+            <if test="url !=null and url !=''">
+                #{url},
+            </if>
+
+            <if test="method !=null and method !=''">
+                #{method},
+            </if>
+
+            <if test="params !=null and params!='' ">
+                #{params},
+            </if>
+
+            <if test="errorMsg !=null and errorMsg!='' ">
+                #{errorMsg},
+            </if>
+
+            <if test="operUser !=null and operUser!='' ">
+                #{operUser},
+            </if>
+            <if test="browser !=null and browser!='' ">
+                #{browser},
+            </if>
+
+            <if test="sys !=null and sys!='' ">
+                #{sys},
+            </if>
+
+            <if test="updateTime !=null">
+                #{updateTime},
+            </if>
+
+            <if test="createTime !=null ">
+                #{createTime},
+            </if>
+        </trim>
+
+    </insert>
+
+
+    <select id="findList" parameterType="map" resultType="cn.yj.syslog.entity.SysLog">
+        select
+        *
+        from tb_sys_log u
+        <where>
+            <if test="map.type !=null and map.type !=''">
+                AND u.type=#{map.type}
+            </if>
+            <if test="map.host !=null and map.host !=''">
+                AND u.host=#{map.host}
+            </if>
+            <if test="map.operUser !=null and map.operUser !=''">
+                AND u.oper_user=#{map.operUser}
+            </if>
+            <if test="map.createTime !=null ">
+                <![CDATA[   and DATE_FORMAT(cc.date, '%Y-%m-%d') =  DATE_FORMAT(#{map.createTime}, '%Y-%m-%d')   ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

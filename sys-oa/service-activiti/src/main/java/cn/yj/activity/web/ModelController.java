@@ -3,6 +3,7 @@ package cn.yj.activity.web;
 import cn.yj.activity.entity.ModelVo;
 import cn.yj.activity.service.IModelService;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class ModelController extends AbstractController
      * @return 结果
      */
     @PostMapping("/create")
+    @OperateLog(describe = "创建模型")
     public R create(@RequestBody @Valid ModelVo modelVo)
     {
         return success(modelService.crateModel(modelVo));
@@ -61,6 +63,7 @@ public class ModelController extends AbstractController
      * @return 结果
      */
     @DeleteMapping("/delete/{modelId}")
+    @OperateLog(describe = "删除模型")
     public R create(@PathVariable("modelId") String modelId)
     {
         modelService.deleteByModelId(modelId);
@@ -74,6 +77,7 @@ public class ModelController extends AbstractController
      * @return 结果
      */
     @PostMapping("/deploy/{modelId}")
+    @OperateLog(describe = "部署模型")
     public R modelDeploy(@PathVariable("modelId") String modelId) throws IOException
     {
         modelService.modelDeploy(modelId);

@@ -1,8 +1,6 @@
 package cn.yj.common;
 
-import cn.yj.annotation.pagehelper.StartPage;
 import cn.yj.annotation.pagehelper.page.Page;
-import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.util.Map;

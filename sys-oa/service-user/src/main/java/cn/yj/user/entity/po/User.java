@@ -1,8 +1,6 @@
 package cn.yj.user.entity.po;
 
 import cn.yj.common.BaseEntity;
-import lyj.forward.generation.annotation.LNotTableField;
-import lyj.forward.generation.annotation.LTable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,7 +12,6 @@ import java.io.Serializable;
  * @author 永健
  * @since 2020-11-28 21:23
  */
-@LTable
 public class User extends BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -67,7 +64,6 @@ public class User extends BaseEntity implements Serializable
 
 
     @NotNull(message = "请选择角色")
-    @LNotTableField
     private String[] roleIds;
 
     /**
@@ -162,9 +158,9 @@ public class User extends BaseEntity implements Serializable
         return roleIds;
     }
 
-    public User setRoleIds(String[] roleIds)
+    public User setRoleIds(String roleIds)
     {
-        this.roleIds = roleIds;
+        this.roleIds = roleIds.split(",");
         return this;
     }
 

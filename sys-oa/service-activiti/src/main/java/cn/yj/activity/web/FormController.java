@@ -5,6 +5,7 @@ import cn.yj.activity.entity.vo.FormVo;
 import cn.yj.activity.service.IFormService;
 import cn.yj.annotation.pagehelper.page.OrderBy;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class FormController extends AbstractController<Form>
         return success(iFormService.findList(params, page(new OrderBy(OrderBy.Direction.DESC, "create_time"))));
     }
 
+    @OperateLog(describe = "新增表单")
     @PostMapping("/save")
     public R save(@RequestBody @Valid Form form)
     {

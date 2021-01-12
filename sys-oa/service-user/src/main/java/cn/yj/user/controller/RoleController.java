@@ -3,6 +3,7 @@ package cn.yj.user.controller;
 
 import cn.yj.annotation.pagehelper.page.OrderBy;
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.Role;
@@ -33,7 +34,7 @@ public class RoleController extends AbstractController<Role>
     @Autowired
     IRoleService thisService;
 
-
+    @OperateLog(describe = "角色列表")
     @RequiresPermissions(value = {"role:list"})
     @GetMapping("/list")
     public R list(@RequestParam Map<String, Object> param)
@@ -47,6 +48,7 @@ public class RoleController extends AbstractController<Role>
         return success(thisService.listIdNameAll());
     }
 
+    @OperateLog(describe = "新增角色")
     @RequiresPermissions(value = {"role:add"})
     @PostMapping("/save")
     public R insertSave(@Valid @RequestBody Role entity)
@@ -55,6 +57,7 @@ public class RoleController extends AbstractController<Role>
     }
 
 
+    @OperateLog(describe = "修改角色")
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @RequiresPermissions(value = {"role:update"})
     @PutMapping("/update")
@@ -75,7 +78,7 @@ public class RoleController extends AbstractController<Role>
     {
         return result(thisService.toRoleAuth(roleId, menuIds));
     }
-
+    @OperateLog(describe = "删除角色")
     @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @DeleteMapping("/remove/{ids}")
     @RequiresPermissions(value = {"role:del"})

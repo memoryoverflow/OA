@@ -4,7 +4,7 @@ import {
 let config = require("@/config.js").config;
 
 
-const menlist = [
+const menuList = [
   {
     id: 1,
     perName: "首页",
@@ -232,15 +232,22 @@ const menlist = [
   },
 ];
 
+// 获取菜单
 export const getMenus = (callback) => {
 
   if (config.useServerMenu) {
+    let list=[config.routerIndex];
     getRequest("/permission/userMenuTree", {}).then((res) => {
       if (res.R) {
-        callback(res.data);
+        let menus=res.data;
+        for (let i = 0; i < menus.length; i++) {
+          let menu = menus[i];
+           list.push(menu);
+        }
+        callback(list);
       }
     });
     return;
   }
-  callback(menlist);
+  callback(menuList);
 }

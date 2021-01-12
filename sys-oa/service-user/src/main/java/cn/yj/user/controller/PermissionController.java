@@ -2,6 +2,7 @@ package cn.yj.user.controller;
 
 
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.ConsVal;
@@ -48,6 +49,7 @@ public class PermissionController extends AbstractController<Permission>
         return success(thisService.selectUserMenuTreeIds(getCurrentUserId()));
     }
 
+    @OperateLog(describe = "菜单列表")
     @GetMapping("/tree/all")
     @RequiresPermissions(value = {"permission:list"})
     public R menuTreeAll(String name)
@@ -116,6 +118,7 @@ public class PermissionController extends AbstractController<Permission>
      * @return
      */
     @PostMapping("/save")
+    @OperateLog(describe = "新增菜单")
     public R insertSave(@Valid @RequestBody Permission entity)
     {
         return result(thisService.insert(entity));
@@ -123,6 +126,7 @@ public class PermissionController extends AbstractController<Permission>
 
 
     @PutMapping("/update")
+    @OperateLog(describe = "修改菜单")
     public R editSave(@Valid @RequestBody Permission entity)
     {
         return result(thisService.updateChange(entity));
@@ -135,7 +139,7 @@ public class PermissionController extends AbstractController<Permission>
         return success(thisService.selectById(id));
     }
 
-
+    @OperateLog(describe = "删除菜单")
     @RequiresPermissions(value = ConsVal.SUPER_ADMIN_CODE)
     @DeleteMapping("/remove/{ids}")
     public R delete(@PathVariable("ids") Serializable[] ids)

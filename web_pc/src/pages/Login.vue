@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       bg: {
-        backgroundImage: "url(" + require("@/assets/18.jpg") + ")",
+        backgroundImage: "url(" + require("@/assets/login-background.jpg") + ")",
       },
 
       loginName: "",

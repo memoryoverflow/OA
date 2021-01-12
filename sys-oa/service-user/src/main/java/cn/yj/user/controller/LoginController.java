@@ -1,6 +1,7 @@
 package cn.yj.user.controller;
 
 import cn.yj.common.AbstractController;
+import cn.yj.common.OperateLog;
 import cn.yj.commons.utils.ValidateCodeUtil;
 import cn.yj.entity.R;
 import cn.yj.user.LoginModel;
@@ -35,6 +36,7 @@ public class LoginController extends AbstractController
     @Autowired
     IUserService iUserService;
 
+    @OperateLog(describe = "用户登陆")
     @PostMapping("/login")
     public R login(@Valid @RequestBody LoginModel loginModel)
     {
@@ -70,6 +72,7 @@ public class LoginController extends AbstractController
     }
 
     @PostMapping("/logout")
+    @OperateLog(describe = "用户退出")
     public R logout()
     {
         SecurityUtils.getSubject().logout();

@@ -40,6 +40,7 @@
         <module>service-user</module>
         <module>service-app</module>
         <module>service-common</module>
+        <module>service-syslog</module>
     </modules>
 
 
@@ -89,11 +90,11 @@
             <version>${service-params-check}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cn.yj</groupId>
-            <artifactId>yj-aop</artifactId>
-            <version>${yj-aop}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.yj</groupId>-->
+<!--            <artifactId>yj-aop</artifactId>-->
+<!--            <version>${yj-aop}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>cn.yj</groupId>
@@ -102,16 +103,15 @@
         </dependency>
 
         <dependency>
-            <groupId>lyj</groupId>
-            <artifactId>forward-generation-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>cn.yj</groupId>
             <artifactId>tools-exception</artifactId>
             <version>${tools-exception}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
         </dependency>
 
 

@@ -2,9 +2,6 @@ package cn.yj.user.entity.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lyj.forward.generation.annotation.LTable;
-import lyj.forward.generation.annotation.LTableId;
-import lyj.forward.generation.enums.Type;
 
 import java.io.Serializable;
 
@@ -16,14 +13,12 @@ import java.io.Serializable;
  * @author 永健
  * @since 2020-04-04 03:15
  */
-@LTable
 public class UserRole implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
 
     @TableId(type = IdType.AUTO)
-    @LTableId(type = Type.AUTO)
     private Integer id;
 
 

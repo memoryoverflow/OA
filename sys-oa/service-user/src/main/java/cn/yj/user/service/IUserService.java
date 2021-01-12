@@ -23,7 +23,6 @@ public interface IUserService extends IService<User>
 
     User selectByLoginName(String loginName);
 
-
     User findByToken(String token);
 
     /**

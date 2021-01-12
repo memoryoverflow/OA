@@ -44,6 +44,12 @@
             <artifactId>service-user</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.yj</groupId>
+            <artifactId>service-syslog</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

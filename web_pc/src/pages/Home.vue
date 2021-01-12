@@ -34,11 +34,11 @@
       <el-row>
         <el-col :span="left_lager_head_span">
           <div v-if="!isCollapse" class="left-lager-head">
-            <img class="logo" src="@/assets/kafei_white.png" />
+            <img class="logo" src="@/assets/kafei_white.png"/>
             <span class="titleMsg">{{ blogName }}</span>
           </div>
           <div v-else class="left-mini-head">
-            <img class="logo" src="@/assets/kafei_white.png" />
+            <img class="logo" src="@/assets/kafei_white.png"/>
           </div>
         </el-col>
         <el-col :span="showBtnSpan">
@@ -68,7 +68,7 @@
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item icon="el-icon-turn-off" @click.native="updatePwd"
-                    >修改密码
+                  >修改密码
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -99,7 +99,7 @@
           <!-- text-color="#fff" -->
           <!-- active-text-color="#409eff" -->
           <template v-if="menuExitRole">
-            <template v-for="(menu, idx) in meuns">
+            <template v-for="(menu, idx) in menus">
               <!-- 第一级菜单，不带第二层的，也带链接的 不是外链-->
               <template
                 v-if="
@@ -192,7 +192,7 @@
           </template>
 
           <template v-else>
-            <template v-for="(menu, idx) in meuns">
+            <template v-for="(menu, idx) in menus">
               <!-- 第一级菜单，不带第二层的，也带链接的 不是外链-->
               <template
                 v-if="
@@ -265,7 +265,7 @@
                       target="_blank"
                       style="color: white"
                       :key="idxx"
-                      :href="chmenu.href"
+                      :href="chmenu.url"
                     >
                       <el-menu-item :index="chmenu.perName">
                         <i :class="chmenu.icon"></i>
@@ -282,7 +282,7 @@
       </el-aside>
       <el-container class="center_first">
         <el-main>
-          <router-view />
+          <router-view/>
         </el-main>
       </el-container>
     </el-container>
@@ -308,8 +308,8 @@ export default {
         visible: false,
         modal: true,
       },
-      left_lager_head_span: 4,
-      showBtnSpan: 4,
+      left_lager_head_span: 3,
+      showBtnSpan: 5,
       user: {
         id: "",
         newPwd: "",
@@ -323,18 +323,18 @@ export default {
       loginUser: "",
       blogName: "办公OA",
 
-      defaultActive: "",
+      defaultActive: config.routerIndex.name,
       defaultOpeneIds: [],
-      meuns: [],
+      menus: [],
       menCookieKey: {
         defaultActive: "meun-default-active",
         defaultOpeneIds: "meun-default-openeds",
         currentPath: "menu-currentPath",
         tab: "tabListEvent",
-        defaultOpeneIdsEvent: "defaultOpeneIdsEvent",
+        defaultOpenIdsEvent: "defaultOpeneIdsEvent",
         menuList: "menuList",
       },
-      menuExitRole: true,
+      menuExitRole: true, // 菜单是否有角色
       URL: {
         menu: "/permission/userMenuTree",
         blog: "http://thisforyou.cn:180/blog/",
@@ -347,37 +347,37 @@ export default {
 
   components: {},
   created() {
-    this.menuExitRole = config.menuExitRole;
     _this = this;
+    this.menuExitRole = config.menuExitRole;
     this.settingMenu();
     this.getLoginUser();
   },
   mounted() {
-    this.getdefaultActive();
+    // 菜单还原
+    this.restoreMenu();
 
-    // 监听tab栏的点击
-    this.$EventBus.$on(this.menCookieKey.defaultOpeneIdsEvent, (defaultOpeneIds) => {
-      this.defaultOpeneIds = defaultOpeneIds;
-      if (defaultOpeneIds.length > 1) {
-        this.defaultActive = defaultOpeneIds[1];
+    // 监听tab栏的点击，更新左侧菜单的展开
+    this.$EventBus.$on(this.menCookieKey.defaultOpenIdsEvent, (defaultOpenIds) => {
+      this.defaultOpeneIds = defaultOpenIds;
+      if (defaultOpenIds.length > 1) {
+        this.defaultActive = defaultOpenIds[1];
       } else {
-        this.defaultActive = defaultOpeneIds[0];
+        this.defaultActive = defaultOpenIds[0];
       }
     });
-
-    // 获取浏览器可视区域高度
-    // let clientHeight = `${document.documentElement.clientHeight}`;
-    // this.mainHeight = clientHeight - 60;
   },
   watch: {
+    // 路由监听，当点击左侧菜单的时候，往tab栏加一个
     $route(to, from) {
-      this.tabPush(to);
+      this.pushTab(to);
       this.$cookies.set(this.menCookieKey.currentPath, to.fullPath, "30d");
     },
   },
   methods: {
-    tabPush(to) {
+    // 发送数据到 菜单tab栏
+    pushTab(to) {
       let tab = this.$cookies.get(this.menCookieKey.tab);
+      // 非空校验
       let arr = [null, undefined, ""];
       let index = arr.indexOf(tab);
       if (index >= 0) {
@@ -385,33 +385,33 @@ export default {
       } else {
         tab = JSON.parse(tab);
       }
-      let newTab=[];
       let isExit = false;
-      for (var i = 0; i < tab.length; i++) {
-        let meun = tab[i];
-        if (meun.name == to.name) {
+
+      // 是否存在
+      for (let i = 0; i < tab.length; i++) {
+        let menu = tab[i];
+        if (menu.name == to.name) {
           isExit = true;
-          meun['path']=to.fullPath;
+          break;
         }
-        newTab.push(meun);
       }
+
       if (!isExit) {
         let m = {
           path: to.fullPath,
           name: to.name,
         };
-        newTab.push(m);
+        tab.push(m);
       }
-      this.$cookies.set(this.menCookieKey.tab, JSON.stringify(newTab), "30d");
-      this.$EventBus.$emit(this.menCookieKey.tab, newTab);
-    },
-    toClient() {
-      this.$router.push({
-        path: "/",
-      });
+      this.$cookies.set(this.menCookieKey.tab, JSON.stringify(tab), "30d");
+      // 通知tab栏更新
+      this.$EventBus.$emit(this.menCookieKey.tab, tab);
     },
     // 展开指定的 sub-menu
-    handOpen() {},
+    handOpen() {
+    },
+
+    // 左侧菜单栏跳转
     jumpTo(menu) {
       if (menu.type == 1) {
         return;
@@ -424,33 +424,14 @@ export default {
         this.$router.push(menu.router);
       }
     },
-    getMeunList(callback) {
+
+    // 获取菜单列表
+    getMenuList(callback) {
       getMenus(callback);
     },
     settingMenu() {
-      this.getMeunList((menus) => {
-        this.meuns=menus;
-        let active = this.$cookies.get(this.menCookieKey.defaultActive);
-        let arr = [undefined, null, "null"];
-        let to = {};
-        if (arr.indexOf(active) >= 0) {
-          let menu = this.meuns[0];
-          if (menu.parentId == 0 && menu.children.length > 0) {
-            this.defaultActive = menu.children[0].perName;
-            this.$router.push(menu.children[0].router);
-            to = {
-              name: menu.children[0].perName,
-              path: menu.children[0].router,
-            };
-          } else {
-            this.defaultActive = menu.perName;
-            to = {
-              name: menu.perName,
-              path: "",
-            };
-          }
-          this.tabPush(to);
-        }
+      this.getMenuList((menus) => {
+        this.menus = menus;
       });
     },
     updatePwd() {
@@ -477,31 +458,54 @@ export default {
         this.showBtnSpan = 1;
         this.asideWidth = "64px";
       } else {
-        this.left_lager_head_span = 4;
-        this.showBtnSpan = 4;
+        this.left_lager_head_span = 3;
+        this.showBtnSpan = 5;
         this.isCollapse = false;
         this.asideWidth = "200px";
       }
     },
     logout() {
       this.$removeToken();
-      //this.$cookies.remove("defaultActive");
-      //this.$cookies.remove("defaultOpenIds");
-      this.$router.push({
-        path: "/login",
+
+      // 移除菜单缓存
+      this.$cookies.remove(this.menCookieKey.defaultActive);
+      this.$cookies.remove(this.menCookieKey.defaultOpeneIds);
+      this.$cookies.remove(this.menCookieKey.currentPath);
+      this.$cookies.remove(this.menCookieKey.tab);
+
+
+      // 发送退出请求
+      this.$post(this.URL.logOut, {}).then((res) => {
       });
-      this.$post(this.URL.logOut, {}).then((res) => {});
+
+
+      // 跳转到登陆页
+      this.$router.push({
+        path: config.loginPage,
+      });
+
     },
+    // 点击菜单
     menuSelect(index, indexPath) {
       this.defaultActive = index;
+
+      this.$EventBus.$emit(this.menCookieKey.defaultActive, index);
+
+      // 选中的菜单
       this.$cookies.set(this.menCookieKey.defaultActive, index, "30d");
+      // 展开的菜单列表
       this.$cookies.set(this.menCookieKey.defaultOpeneIds, indexPath.join(","), "30d");
     },
-    getdefaultActive() {
+
+    // 还原原来展开的菜单
+    restoreMenu() {
+      // 展开的菜单
       let openIds = this.$cookies.get(this.menCookieKey.defaultOpeneIds);
       if (openIds != undefined && openIds != null) {
         this.defaultOpeneIds = openIds.split(",");
       }
+
+      // 当前选中的菜单
       let active = this.$cookies.get(this.menCookieKey.defaultActive);
       if (active != undefined && active != null) {
         this.defaultActive = active;
@@ -509,10 +513,13 @@ export default {
       // 当前路由页面
       let currentPath = this.$cookies.get(this.menCookieKey.currentPath);
       if (currentPath == null || currentPath == undefined || currentPath == "undefined") {
-        return;
+        currentPath = config.routerIndex.path
       }
+      this.pushTab({name: config.routerIndex.name, fullPath: config.routerIndex.path, isHome: true})
+      // 路由
       this.$router.push(currentPath);
     },
+    // 获取用户信息
     getLoginUser() {
       let user = this.$getUser();
       if (user != null && user != undefined && user != "") {
@@ -551,8 +558,8 @@ export default {
   }
 
   .el-header {
-    height: 8vh !important;
-    line-height: 8vh;
+    height: 6vh !important;
+    line-height: 6vh;
     color: white;
     border-bottom: 1px solid #ebebeb;
     background: #1890ff;
@@ -582,12 +589,12 @@ export default {
     .outSys,
     .right_operate {
       padding: 0 10px;
-      height: 8vh;
+      height: 6vh;
     }
 
     .client_link {
       padding: 0 10px;
-      height: 8vh;
+      height: 6vh;
       cursor: pointer;
     }
 
@@ -604,7 +611,7 @@ export default {
 
     .el-dropdown-link {
       color: white;
-      height: 8vh;
+      height: 6vh;
       cursor: pointer;
       width: 100%;
       display: flex;
@@ -630,14 +637,14 @@ export default {
   }
 
   .left-lager-head {
-    line-height: 8vh;
+    line-height: 6vh;
     display: flex;
     align-content: center;
     .logo {
-      width: 50px;
-      height: 50px;
+      width: 18%;
+      height: 18%;
       position: relative;
-      top: 5px;
+      top:4px;
     }
 
     .titleMsg {
@@ -650,13 +657,13 @@ export default {
   }
 
   .left-mini-head {
-    line-height: 8vh;
-
+    line-height: 6vh;
+    align-content: center;
     .logo {
-      width: 50px;
-      height: 50px;
+      width: 50%;
+      height: 50%;
       position: relative;
-      top: 5px;
+      top:4px;
     }
 
     .titleMsg {
