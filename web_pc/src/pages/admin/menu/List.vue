@@ -83,7 +83,7 @@
         </div>
       </div>
     </el-drawer>
-    <main-frame ref="frame" :location="prop.location">
+    <main-frame ref="frame">
       <template slot="mainFrame">
         <div class="top_operate">
           <el-button
@@ -108,6 +108,7 @@
         >
           <el-table-column
             prop="perName"
+            align="center"
             label="菜单名称"
             width="180"
           ></el-table-column>
@@ -116,19 +117,19 @@
               <i :class="scope.row.icon"></i>
             </template>
           </el-table-column>
-          <el-table-column prop="router" label="路由">
+          <el-table-column align="center" prop="router" label="路由">
             <template slot-scope="scope">{{
-                scope.row.router == "" ? "无" : scope.row.router
+              scope.row.router == "" ? "无" : scope.row.router
               }}
             </template>
           </el-table-column>
           <el-table-column prop="code" label="权限码">
             <template slot-scope="scope">{{
-                scope.row.code == "" ? "无" : scope.row.code
+              scope.row.code == "" ? "无" : scope.row.code
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="type" label="类型">
+          <el-table-column prop="type" align="center" label="类型">
             <template slot-scope="scope">
               <el-tag
                 type="primary"
@@ -145,23 +146,24 @@
               </el-tag
               >
               <el-tag type="danger" v-else size="mini">{{
-                  scope.row.type
+                scope.row.type
                 }}
               </el-tag>
             </template>
           </el-table-column>
           <el-table-column
+            align="center"
             prop="sort"
             label="排序"
             width="60"
           ></el-table-column>
-          <el-table-column prop="outJoin" label="是否外链" width="100">
+          <el-table-column align="center" prop="outJoin" label="是否外链" width="100">
             <template slot-scope="obj">{{
-                obj.row.outJoin == true ? "是" : "否"
+              obj.row.outJoin == true ? "是" : "否"
               }}
             </template>
           </el-table-column>
-          <el-table-column prop fixed="right" label="操作">
+          <el-table-column prop fixed="right" align="center" label="操作" width="150">
             <template slot-scope="scope">
               <auth :code="code.update">
                 <template slot="auth">
@@ -203,7 +205,9 @@
       :title="iconDialog.title"
       :dialogVisible="iconDialog.visible">
       <template slot="dialog-content">
-        <el-button @click="iconDialog.visible=false" style="position: relative;top:-20px" type="danger" icon="el-icon-circle-close" size="mini">取消</el-button>
+        <el-button @click="iconDialog.visible=false" style="position: relative;top:-20px" type="danger"
+                   icon="el-icon-circle-close" size="mini">取消
+        </el-button>
         <iframe
           style="width: 100%; height: 600px;border: none"
           ref="iframe"
@@ -259,10 +263,6 @@ export default {
       },
       search: {
         name: "",
-      },
-      prop: {
-        location: " 系统管理 / 权限管理 / 菜单列表",
-        searchModel: searchModel,
       },
       URL: {
         tableData: "/permission/tree/all",

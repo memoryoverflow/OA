@@ -120,11 +120,11 @@
             width="180"
           ></el-table-column>
 
-          <el-table-column prop="deptCode" label="部门编码"/>
-          <el-table-column prop="deptAddress" label="部门地址"/>
-          <el-table-column prop="deptPhone" label="电话" width="180"/>
+          <el-table-column  align="center" prop="deptCode" label="部门编码"/>
+          <el-table-column  align="center" prop="deptAddress" label="部门地址"/>
+          <el-table-column  align="center" prop="deptPhone" label="电话" width="180"/>
 
-          <el-table-column prop="user" label="负责人">
+          <el-table-column  align="center" prop="user" label="负责人">
             <template slot-scope="scope">
               <span v-if="scope.row.user != null && scope.row.user != ''">
                 <el-tag type="primary" size="mini">{{
@@ -137,7 +137,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop fixed="right" label="操作">
+          <el-table-column align="center"  prop fixed="right" label="操作">
             <template slot-scope="scope">
               <auth :code="permission.update">
                 <template slot="auth">

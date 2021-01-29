@@ -132,6 +132,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         entity.setId(UUIdUtils.getUUId32());
         entity.setCreateTime(new Date());
         entity.setUpdateTime(new Date());
+        entity.setDeleted(Permission.DELETED_VAL);
+        entity.setStatus(Permission.STATUS_VAL);
         if (baseMapper.insert(entity) > 0)
         {
             Role role = roleMapper.selectByCode(ConsVal.SUPER_ADMIN_CODE);

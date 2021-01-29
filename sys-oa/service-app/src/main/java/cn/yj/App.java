@@ -28,10 +28,10 @@ import org.springframework.context.annotation.Import;
 // 开启activity
 @Import(value = {DataSourceProcessEngineAutoConfiguration.class, ModelSaveRestResource.class, ModelEditorJsonRestResource.class, StencilsetRestResource.class})
 
-@MapperScan(basePackages = {"cn.yj.**.mapper"})
+@MapperScan(basePackages = {"cn.yj.**.mapper", "cn.yj.core"})
 @EnableReadConfig(classLoader = App.class)
 @EnableCheckMethodParams(targetPackage = "cn.yj.activity")
-//@EnableGlobalException
+// @EnableGlobalException
 public class App
 {
     public static void main(String[] args)

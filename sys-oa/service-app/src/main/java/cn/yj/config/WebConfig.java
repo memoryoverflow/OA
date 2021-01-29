@@ -34,7 +34,7 @@ import java.util.List;
  * @author 永健
  * @since 2020-05-21 22:31:42
  */
-@Configuration
+//@Configuration
 public class WebConfig implements WebMvcConfigurer
 {
     private static final List<String> formarts = new ArrayList<>(4);

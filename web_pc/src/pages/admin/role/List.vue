@@ -51,14 +51,14 @@
       </template>
 
       <template slot="columns">
-        <el-table-column prop="roleName" label="名称"></el-table-column>
-        <el-table-column prop="code" label="编码"/>
-        <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column prop="createTime" sortable label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" sortable label="更新时间"></el-table-column>
+        <el-table-column prop="roleName" align="center" label="名称"></el-table-column>
+        <el-table-column prop="code" align="center" label="编码"/>
+        <el-table-column prop="remark" align="center" label="备注"></el-table-column>
+        <el-table-column prop="createTime" align="center" width="150" sortable label="创建时间"></el-table-column>
+        <el-table-column prop="updateTime" align="center" width="150"  sortable label="更新时间"></el-table-column>
       </template>
       <template slot="operate">
-        <el-table-column fixed="right" label="操作" width="250">
+        <el-table-column fixed="right" align="center" label="操作" width="250">
           <template slot-scope="scope">
             <el-button
               icon="el-icon-setting"

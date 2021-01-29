@@ -1,7 +1,10 @@
 package cn.yj.common;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,8 +13,9 @@ import java.util.Date;
  * @author 永健
  * @since 2020-11-28 21:42
  */
-public class BaseEntity
+public class BaseEntity implements Serializable
 {
+    @TableId(type = IdType.UUID)
     private String id;
 
     @JsonDeserialize(using = StringToDateDeSerializer.class)

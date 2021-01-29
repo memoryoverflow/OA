@@ -232,11 +232,11 @@
                     </el-switch>
                   </template>
                 </el-table-column>
-                <el-table-column prop="loginName" label="登陆账户"></el-table-column>
-                <el-table-column prop="phone" label="电话"></el-table-column>
-                <el-table-column prop="empCode" label="编号"></el-table-column>
-                <el-table-column prop="email" label="邮箱"></el-table-column>
-                <el-table-column prop="dept" label="部门">
+                <el-table-column align="center" prop="loginName" label="登陆账户"></el-table-column>
+                <el-table-column  align="center" show-overflow-tooltip="true" prop="phone" label="电话"></el-table-column>
+                <el-table-column align="center" prop="empCode" label="编号"></el-table-column>
+                <el-table-column  align="center" show-overflow-tooltip="true" prop="email" label="邮箱"></el-table-column>
+                <el-table-column align="center"  prop="dept" label="部门">
                   <template slot-scope="obj">
                     {{ obj.row.dept.name }}
                   </template>
@@ -260,11 +260,13 @@
                   prop="createTime"
                   sortable
                   label="创建时间"
+                  width="150" align="center"
                 ></el-table-column>
                 <el-table-column
                   prop="updateTime"
                   sortable
                   label="更新时间"
+                  width="150" align="center"
                 ></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200">
                   <template slot-scope="scope">

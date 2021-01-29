@@ -14,11 +14,11 @@ function init() {
   const active = CONFIG.active;
   if (active == "dev") {
     server = CONFIG.server.dev.address;
-    contentPath=CONFIG.server.dev.context_path
+    contentPath = CONFIG.server.dev.context_path
     return;
   }
   server = CONFIG.server.prod.address;
-  contentPath=CONFIG.server.prod.context_path
+  contentPath = CONFIG.server.prod.context_path
 }
 
 init();

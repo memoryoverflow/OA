@@ -2,8 +2,8 @@ package cn.yj.common;
 
 import cn.yj.annotation.pagehelper.PageBaseController;
 import cn.yj.entity.BController;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.shiro.SecurityUtils;
+import sun.rmi.runtime.Log;
 
 /**
  * <br>
@@ -16,13 +16,23 @@ public abstract class AbstractController<T> extends BController<T> implements Pa
     @Override
     protected <T1> T1 getCurrentUserId()
     {
-        return (T1)((LoginUser)SecurityUtils.getSubject().getPrincipal()).getId();
+        return (T1)getCurrentUser().getId();
+    }
+
+    @Override
+    protected LoginUser getCurrentUser()
+    {
+        LoginUser loginUser = new LoginUser();
+        loginUser.setLoginName("admin");
+        loginUser.setName("admin");
+        return loginUser;
+        //return ((LoginUser) SecurityUtils.getSubject().getPrincipal());
     }
 
     @Override
     protected <T1> T1 getUserRoles()
     {
-        return (T1)((LoginUser)SecurityUtils.getSubject().getPrincipal()).getRoles();
+        return (T1) ((LoginUser) SecurityUtils.getSubject().getPrincipal()).getRoles();
     }
 
     @Override

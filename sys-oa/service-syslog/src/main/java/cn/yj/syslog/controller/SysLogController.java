@@ -6,6 +6,9 @@ import cn.yj.common.OperateLog;
 import cn.yj.entity.R;
 import cn.yj.syslog.entity.SysLog;
 import cn.yj.syslog.service.ISysLogService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sysLog")
+@Configuration
 public class SysLogController extends AbstractController<SysLog>
 {
 

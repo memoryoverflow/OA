@@ -20,6 +20,9 @@ public class Permission extends BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
+    public static final int DELETED_VAL=0;
+    public static final int STATUS_VAL=0;
+
     private Integer deleted;
 
     @NotBlank(message = "目录名称必填")

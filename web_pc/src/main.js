@@ -59,6 +59,7 @@ Vue.prototype.$warning = warning
 
 Vue.prototype.$doMain = config.domain;
 Vue.prototype.$serverContextPath = config.serverContextPath;
+Vue.prototype.$server = config.domain + config.serverContextPath;
 
 
 Vue.component("table-frame", ListFrame);

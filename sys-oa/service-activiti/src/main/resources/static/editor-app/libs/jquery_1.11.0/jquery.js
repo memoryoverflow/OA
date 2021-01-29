@@ -8823,8 +8823,7 @@ var fxNow, timerId,
 				parts = rfxnum.exec( value ),
 				unit = parts && parts[ 3 ] || ( jQuery.cssNumber[ prop ] ? "" : "px" ),
 
-				// Starting value computation is required for potential unit mismatches
-				start = ( jQuery.cssNumber[ prop ] || unit !== "px" && +target ) &&
+				// Starting value computation is required for potential unit mismatchestart = ( jQuery.cssNumber[ prop ] || unit !== "px" && +target ) &&
 					rfxnum.exec( jQuery.css( tween.elem, prop ) ),
 				scale = 1,
 				maxIterations = 20;

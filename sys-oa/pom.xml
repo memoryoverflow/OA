@@ -23,7 +23,7 @@
     <properties>
         <java.version>1.8</java.version>
         <java.version>1.8</java.version>
-        <tools-utils-v>0.0.3</tools-utils-v>
+        <tools-utils-v>0.0.5</tools-utils-v>
         <annotation-pagehelper>0.0.1-SNAPSHOT</annotation-pagehelper>
         <tools-exception>0.0.1-SNAPSHOT</tools-exception>
         <http-utils>0.0.9</http-utils>
@@ -32,6 +32,8 @@
         <read-config>0.0.1</read-config>
         <redis-client>2.9.0</redis-client>
         <druid.version>1.1.17</druid.version>
+        <mybatis-v>3.1.1</mybatis-v>
+        <druid-v>1.1.10</druid-v>
     </properties>
 
 
@@ -45,6 +47,39 @@
 
 
     <dependencies>
+        <!--阿里连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid-v}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-v}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.csource/fastdfs-client-java -->
+        <dependency>
+            <groupId>org.csource</groupId>
+            <artifactId>fastdfs-client-java</artifactId>
+            <version>1.29-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>3.0.10</version>
+        </dependency>
 
         <!-- druid -->
         <dependency>
@@ -90,11 +125,11 @@
             <version>${service-params-check}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>cn.yj</groupId>-->
-<!--            <artifactId>yj-aop</artifactId>-->
-<!--            <version>${yj-aop}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.yj</groupId>-->
+        <!--            <artifactId>yj-aop</artifactId>-->
+        <!--            <version>${yj-aop}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>cn.yj</groupId>

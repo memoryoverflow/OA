@@ -13,5 +13,4 @@ public class UUIdUtils
     public static String getUUId32(){
         return UUID.randomUUID().toString();
     }
-
 }

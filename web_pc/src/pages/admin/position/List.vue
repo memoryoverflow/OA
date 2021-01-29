@@ -79,22 +79,27 @@
       </template>
 
       <template slot="columns">
-        <el-table-column prop="positionName" label="岗位名称"></el-table-column>
-        <el-table-column prop="positionCode" label="岗位编码"></el-table-column>
-        <el-table-column prop="remark" label="备注说明"></el-table-column>
+        <el-table-column align="center" prop="positionName" label="岗位名称"></el-table-column>
+        <el-table-column align="center" prop="positionCode" label="岗位编码"></el-table-column>
+        <el-table-column align="center" prop="remark" label="备注说明"></el-table-column>
         <el-table-column
+
           prop="createTime"
           sortable
+          width="150"
+          align="center"
           label="创建时间"
         ></el-table-column>
         <el-table-column
           prop="updateTime"
           sortable
+          align="center"
+          width="150"
           label="更新时间"
         ></el-table-column>
       </template>
       <template slot="operate">
-        <el-table-column fixed="right" label="操作" width="300">
+        <el-table-column fixed="right" align="center" label="操作" width="300">
           <template slot-scope="scope">
             <auth :code="permission.update">
               <el-button

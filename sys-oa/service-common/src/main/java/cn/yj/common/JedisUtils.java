@@ -102,7 +102,7 @@ public class JedisUtils
         Jedis jedis = getJedis();
         String value = jedis.get(key);
         jedis.close();
-        return value==null?null:JSON.parseObject(value, tClass);
+        return value == null ? null : JSON.parseObject(value, tClass);
     }
 
 

@@ -57,8 +57,8 @@
             {{JSON.parse(obj.row.metaInfo).description==""?"description":JSON.parse(obj.row.metaInfo).description}}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" sortable label="创建时间"></el-table-column>
-        <el-table-column prop="lastUpdateTime" sortable label="更新时间"></el-table-column>
+        <el-table-column width="150" align="center" prop="createTime" sortable label="创建时间"></el-table-column>
+        <el-table-column width="150" align="center" prop="lastUpdateTime" sortable label="更新时间"></el-table-column>
       </template>
       <template slot="operate">
         <el-table-column fixed="right" label="操作" width="250">

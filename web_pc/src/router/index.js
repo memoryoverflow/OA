@@ -13,6 +13,8 @@ import Form from '@/pages/admin/activiti/form/List'
 import DeployMent from '@/pages/admin/activiti/process/List'
 import NodeSetting from '@/pages/admin/activiti/process/NodeSetting'
 import SysLog from '@/pages/admin/syslog/list'
+import Notice from '@/pages/admin/notice/List'
+import Druid from '@/pages/admin/druid/List'
 
 Vue.use(Router)
 
@@ -88,6 +90,15 @@ export default new Router({
           path: 'admin/syslog/list',
           name: '操作日志',
           component: SysLog
+        },
+        {
+          path: 'admin/notice/list',
+          name: '公告管理',
+          component: Notice
+        }, {
+          path: 'admin/druid',
+          name: '数据源监控',
+          component: Druid
         }
       ]
     },

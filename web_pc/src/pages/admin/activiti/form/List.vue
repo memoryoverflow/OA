@@ -161,11 +161,15 @@
         <el-table-column
           prop="createTime"
           sortable
+          align="center"
+          width="150"
           label="创建时间"
         ></el-table-column>
         <el-table-column
           prop="updateTime"
           sortable
+          width="150"
+          align="center"
           label="更新时间"
         ></el-table-column>
       </template>

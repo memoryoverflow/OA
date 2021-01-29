@@ -28,8 +28,8 @@ public class FilterChainDefinitionMapBuider
         map.put("/login", "anon");
 
 
-        map.put("/**", "authc");
-        map.put("/**", "loginFilter");
+        //map.put("/**", "authc");
+        //map.put("/**", "loginFilter");
         return map;
     }
 }
