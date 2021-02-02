@@ -22,6 +22,8 @@
 <br>
 
 
+## 新版本体验地址：[新版本体验地址](http://thisforyou.cn:180/weboa/#/login)
+
 ### 使用技术
 
 #### 服务端： springboot(2.2.1) + mybatis-push + shiro(1.4.0)  + redis + activiti(5.2.1)
