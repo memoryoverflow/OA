@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Import;
 
 @MapperScan(basePackages = {"cn.yj.**.mapper", "cn.yj.core"})
 @EnableReadConfig(classLoader = App.class)
-@EnableCheckMethodParams(targetPackage = "cn.yj.activity")
+@EnableCheckMethodParams(targetPackage = "cn.yj")
 // @EnableGlobalException
 public class App
 {

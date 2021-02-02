@@ -41,18 +41,18 @@
             <el-input v-model="form.empCode"></el-input>
           </el-form-item>
 
-          <el-form-item prop="deptId" label="选择部门">
+          <el-form-item prop="deptCode" label="选择部门">
 
             <el-select
               size="mini"
-              v-model="form.deptId"
+              v-model="form.deptCode"
               placeholder="请选上级部门"
               style="width: 100%"
               ref="selectDept"
             >
               <el-option
                 :label="form.deptName"
-                :value="form.deptId"
+                :value="form.deptCode"
                 style="width: 100%;height:200px;overflow: auto;background-color:#fff"
               >
 
@@ -63,11 +63,11 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item prop="positionId" label="选择岗位">
+          <el-form-item prop="positionCode" label="选择岗位">
 
             <el-select
               size="mini"
-              v-model="form.positionId"
+              v-model="form.positionCode"
               placeholder="请选择岗位"
               style="width: 100%"
             >
@@ -75,7 +75,7 @@
                 v-for="(post, idx) in positionData"
                 :key="idx"
                 :label="post.name"
-                :value="post.id"
+                :value="post.code"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -108,6 +108,7 @@
         </div>
       </template>
     </yj-dialog>
+
     <main-frame :location="location">
       <template slot="mainFrame">
         <div class="search">
@@ -166,7 +167,7 @@
             <!--            部门列表-->
             <el-col :span="4">
               <div class="treeDept" style="">
-                <h2 style="margin-top:0 "><i class="el-icon-menu"></i>&nbsp;组织机构&nbsp;&nbsp;
+                <h2 style="margin-top:0;margin-bottom: 0;padding: 10px 5px "><i class="el-icon-menu"></i>&nbsp;组织机构&nbsp;&nbsp;
                   <i class="el-icon-edit" style="cursor:pointer" @click="jumpToDeptPage"></i>
                 </h2>
                 <hr style="padding: 0;margin: 0">
@@ -176,7 +177,7 @@
             </el-col>
             <el-col :span="20">
               <div class="top_operate">
-                <auth :code="'user:add'">
+                <auth :code="permission.add">
                   <template slot="auth">
                     <el-button
                       type="primary"
@@ -184,11 +185,10 @@
                       @click="add()"
                       size="mini"
                     >添加
-                    </el-button
-                    >
+                    </el-button>
                   </template>
                 </auth>
-                <auth :code="'user:export'">
+                <auth :code="permission.export">
                   <template slot="auth">
                     <el-button
                       type="success"
@@ -216,7 +216,7 @@
                 ></el-table-column>
 
                 <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="name" label="状态">
+                <el-table-column prop="status" label="状态">
                   <template slot-scope="obj">
                     <el-switch
                       :disabled="obj.row.loginName==user.admin"
@@ -233,10 +233,10 @@
                   </template>
                 </el-table-column>
                 <el-table-column align="center" prop="loginName" label="登陆账户"></el-table-column>
-                <el-table-column  align="center" show-overflow-tooltip="true" prop="phone" label="电话"></el-table-column>
+                <el-table-column align="center" show-overflow-tooltip="true" prop="phone" label="电话"></el-table-column>
                 <el-table-column align="center" prop="empCode" label="编号"></el-table-column>
-                <el-table-column  align="center" show-overflow-tooltip="true" prop="email" label="邮箱"></el-table-column>
-                <el-table-column align="center"  prop="dept" label="部门">
+                <el-table-column align="center" show-overflow-tooltip="true" prop="email" label="邮箱"></el-table-column>
+                <el-table-column align="center" prop="dept" label="部门">
                   <template slot-scope="obj">
                     {{ obj.row.dept.name }}
                   </template>
@@ -271,40 +271,45 @@
                 <el-table-column fixed="right" label="操作" width="200">
                   <template slot-scope="scope">
                     <auth :code="permission.update">
-                      <el-button
-                        icon="el-icon-edit"
-                        type="text"
-                        v-if="scope.row.loginName != user.admin"
-                        @click="edit(scope.row)"
-                        size="mini"
-                        slot="auth"
-                      >修改
-                      </el-button
-                      >
+                      <template slot="auth">
+                        <el-button
+                          icon="el-icon-edit"
+                          type="text"
+                          v-if="scope.row.loginName != user.admin"
+                          @click="edit(scope.row)"
+                          size="mini"
+                          slot="auth"
+                        >修改
+                        </el-button>
+                      </template>
                     </auth>
                     <auth :code="permission.remove">
-                      <el-button
-                        icon="el-icon-delete"
-                        type="text"
-                        v-if="scope.row.loginName != user.admin"
-                        @click="del(scope.row.id)"
-                        size="mini"
-                        slot="auth"
-                      >删除
-                      </el-button
-                      >
+                      <template slot="auth">
+                        <el-button
+                          icon="el-icon-delete"
+                          type="text"
+                          v-if="scope.row.loginName != user.admin"
+                          @click="del(scope.row.id)"
+                          size="mini"
+                          slot="auth"
+                        >删除
+                        </el-button
+                        >
+                      </template>
                     </auth>
-                    <auth :code="'user:reloadPwd'">
-                      <el-button
-                        icon="el-icon-key"
-                        type="text"
-                        v-if="scope.row.loginName != user.admin"
-                        @click="reloadPwdBtn(scope.row.id)"
-                        size="mini"
-                        slot="auth"
-                      >密码重置
-                      </el-button
-                      >
+                    <auth :code="permission.reloadPwd">
+                      <template slot="auth">
+                        <el-button
+                          icon="el-icon-key"
+                          type="text"
+                          v-if="scope.row.loginName != user.admin"
+                          @click="reloadPwdBtn(scope.row.id)"
+                          size="mini"
+                          slot="auth"
+                        >密码重置
+                        </el-button
+                        >
+                      </template>
                     </auth>
                   </template>
                 </el-table-column>
@@ -315,14 +320,18 @@
                 <el-row>
                   <el-col :span="2">
                     <div style="margin-top: 10px">
-                      <el-button
-                        type="danger"
-                        size="small"
-                        :disabled="table.delBtnFlag"
-                        @click="delBatch()"
-                      >删除已选
-                      </el-button
-                      >
+                      <auth :code="permission.remove">
+                        <template slot="auth">
+                          <el-button
+                            type="danger"
+                            size="small"
+                            :disabled="table.delBtnFlag"
+                            @click="delBatch()"
+                          >删除已选
+                          </el-button
+                          >
+                        </template>
+                      </auth>
                     </div>
                   </el-col>
                   <el-col :span="22">
@@ -388,12 +397,12 @@ export default {
         id: "",
         name: "",
         loginName: "",
-        deptId: "",
+        deptCode: "",
         empCode: "",
         deptName: "",
         email: "",
         phone: "",
-        positionId: "",
+        positionCode: "",
         roleIds: [],
       },
 
@@ -411,6 +420,8 @@ export default {
         add: "user:add",
         remove: "user:del",
         update: "user:update",
+        export: "user:export",
+        reloadPwd: 'reloadPwd'
       },
       rules: {
         id: [{required: false}],
@@ -430,10 +441,10 @@ export default {
           message: "长度在 1 到 50 个字符",
           trigger: "blur"
         },],
-        deptId: [
+        deptCode: [
           {required: true, message: "请选择部门", trigger: "blur"},
         ],
-        positionId: [
+        positionCode: [
           {required: true, message: "请选择岗位", trigger: "blur"},
         ],
         roleIds: [
@@ -527,16 +538,16 @@ export default {
     },
     // 点击部门
     treeDataNodeSelect(dept) {
-      this.params['deptId'] = "";
+      this.params['deptCode'] = "";
       if (dept.children == null || dept.children == '' || dept.children.length == 0) {
-        this.params['deptId'] = dept.id;
+        this.params['deptCode'] = dept.deptCode;
       }
       this.initTableData();
     },
     // 下拉框部门点击
     selectTreeDataNodeSelect(dept) {
       if (dept.children == null || dept.children == "" || children.length == 0) {
-        this.form.deptId = dept.id;
+        this.form.deptCode = dept.deptCode;
         this.form.deptName = dept.deptName;
         this.$refs.selectDept.blur()
       }
@@ -617,14 +628,29 @@ export default {
     saveDilogBtn(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
+
+
+          let p = this.form;
+          let params = {};
+
+          for (const key in p) {
+            if (p.hasOwnProperty(key)) {
+              if(key==='roleIds'){
+                params[key]=p[key].join(",")
+              }else {
+                params[key] =  p[key];
+              }
+            }
+          }
+
           if (
             this.form.id != undefined &&
             this.form.id != null &&
             this.form.id != ""
           ) {
-            this.update();
+            this.update(params);
           } else {
-            this.save();
+            this.save(params);
           }
         } else {
           this.$warning("参数必填");
@@ -632,21 +658,14 @@ export default {
         }
       });
     },
-    save() {
-      let params = _this.form;
-      let tempRole = this.form.roleIds;
-      params['roleIds'] = tempRole.toString();
-      debugger
+    save(params) {
       this.$postJson(this.URL.save, params).then((res) => {
         if (res.R) {
           this.reqResult(res);
         }
       });
     },
-    update() {
-      let params = _this.form;
-      let tempRole = this.form.roleIds;
-      params['roleIds'] = tempRole.toString();
+    update(params) {
       this.$put(this.URL.update, params).then((res) => {
         if (res.R) {
           this.reqResult(res);
@@ -796,4 +815,8 @@ export default {
   margin-bottom: 10px;
 }
 
+.treeDept {
+  padding-bottom: 20px;
+  background: white;
+}
 </style>

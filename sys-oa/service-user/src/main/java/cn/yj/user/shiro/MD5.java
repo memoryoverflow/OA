@@ -186,9 +186,7 @@ public class MD5
 
     public static void main(String[] args)
     {
-        String str = MD5.getInstance().getMD5("adminadmin");
-        System.out.println(str);
-        String str1 = MD5.getInstance().getMD5("123456");
+        String str1 = MD5.getInstance().getMD5("123466");
         System.out.println(str1);
     }
 }

@@ -58,4 +58,18 @@ hr{
   background: rgba(240, 240, 240, 0.5) !important;
   cursor: pointer !important;
 }
+.search-btn-class {
+  background: #20b2aa;
+  border: #20b2aa;
+  color: white;
+}
+.search-btn-class:hover{
+  background: #23c4b2;
+  color: white;
+}
+.search-btn-class:visited,.search-btn-class:active{
+  background: #20b2aa;
+  border: #20b2aa;
+  color: white;
+}
 </style>

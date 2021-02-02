@@ -42,8 +42,6 @@ public class PositionController extends AbstractController<Position>
         return success(thisService.findList(param, page(new OrderBy(OrderBy.Direction.ASC, "create_time"))));
     }
 
-
-    @RequiresPermissions(value = {"post:list"})
     @GetMapping("/listIdAndNameCode")
     public R listAnd()
     {
@@ -52,7 +50,6 @@ public class PositionController extends AbstractController<Position>
 
     @OperateLog(describe = "新增岗位")
     @RequiresPermissions(value = {"post:add"})
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PostMapping("/save")
     public R insertSave(@Valid @RequestBody Position entity)
     {
@@ -61,7 +58,6 @@ public class PositionController extends AbstractController<Position>
 
     @OperateLog(describe = "修改岗位")
     @RequiresPermissions(value = {"post:update"})
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/update")
     public R editSave(@Valid @RequestBody Position entity)
     {

@@ -4,6 +4,7 @@ import cn.yj.common.IService;
 import cn.yj.user.LoginModel;
 import cn.yj.common.LoginUser;
 import cn.yj.user.entity.po.User;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -40,4 +41,8 @@ public interface IUserService extends IService<User>
      * @return
      */
     List<Map<String,String>> listIdName();
+
+    List<User> getUserListByEmpCodes(String[] empCodes);
+
+    List<User> getUserListByPositionCode(String empCodes);
 }

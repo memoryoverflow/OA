@@ -9,6 +9,7 @@ import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.Permission;
 import cn.yj.user.service.IPermissionService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class PermissionController extends AbstractController<Permission>
 
     @OperateLog(describe = "菜单列表")
     @GetMapping("/tree/all")
-    @RequiresPermissions(value = {"permission:list"})
+    @RequiresPermissions(value = {"menu:list"})
     public R menuTreeAll(String name)
     {
         return success(thisService.selectAllMenuTree(name));
@@ -119,6 +120,7 @@ public class PermissionController extends AbstractController<Permission>
      */
     @PostMapping("/save")
     @OperateLog(describe = "新增菜单")
+    @RequiresPermissions(value = {"menu:add"})
     public R insertSave(@Valid @RequestBody Permission entity)
     {
         return result(thisService.insert(entity));
@@ -127,6 +129,7 @@ public class PermissionController extends AbstractController<Permission>
 
     @PutMapping("/update")
     @OperateLog(describe = "修改菜单")
+    @RequiresPermissions(value = {"menu:update"})
     public R editSave(@Valid @RequestBody Permission entity)
     {
         return result(thisService.updateChange(entity));
@@ -151,11 +154,19 @@ public class PermissionController extends AbstractController<Permission>
         return result(thisService.removeByIds(ids));
     }
 
-    @PostMapping("/auth/check")
+    @GetMapping("/auth/check")
     public R authCheck(@RequestParam String code)
     {
-        SecurityUtils.getSubject().checkPermission(code);
-        return success();
+        boolean isFlag=true;
+        try
+        {
+            SecurityUtils.getSubject().checkPermission(code);
+        } catch (AuthorizationException e)
+        {
+            e.printStackTrace();
+            isFlag=false;
+        }
+        return success(isFlag);
     }
 }
 

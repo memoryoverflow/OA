@@ -6,6 +6,7 @@ import cn.yj.common.UUIdUtils;
 import cn.yj.commons.utils.StringUtils;
 import cn.yj.params.check.CheckObjectValue;
 import cn.yj.params.check.KeyValue;
+import cn.yj.params.check.Require;
 import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.Role;
@@ -13,10 +14,10 @@ import cn.yj.user.mapper.RoleMapper;
 import cn.yj.user.mapper.RolePermissionMapper;
 import cn.yj.user.mapper.UserRoleMapper;
 import cn.yj.user.service.IRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -35,10 +36,10 @@ import java.util.Map;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService
 {
 
-    @Autowired
+    @Resource
     RolePermissionMapper rolePermissionMapper;
 
-    @Autowired
+    @Resource
     UserRoleMapper userRoleMapper;
 
     @Override
@@ -49,10 +50,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
 
     @Override
-    public boolean toRoleAuth(String roleId, String[] menuIds)
+    public boolean toRoleAuth(@Require String roleId, @Require String[] menuIds)
     {
         // 判断是否是管理的角色，如果是管理员的角色不允许操作
-        if (ConsVal.SUPER_ADMIN_ID.equals(roleId))
+        Role role = baseMapper.selectById(roleId);
+        if (ConsVal.SUPER_ADMIN_CODE.equals(role.getCode()))
         {
             throw new ServiceException("不允许修改超级管理员的权限");
         }
@@ -68,7 +70,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         return true;
     }
 
-    @CheckObjectValue(keyValue = @KeyValue(type = Role.class, name = {"id", "name", "code"}))
+    @CheckObjectValue(keyValue = @KeyValue(type = Role.class, name = {"id", "roleName", "code"}))
     @Override
     public boolean updateById(Role entity)
     {
@@ -94,7 +96,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
 
-    @CheckObjectValue(keyValue = @KeyValue(type = Role.class, name = {"name", "code"}))
+    @CheckObjectValue(keyValue = @KeyValue(type = Role.class, name = {"roleName", "code"}))
     @Override
     public boolean insert(Role role)
     {

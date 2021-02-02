@@ -119,7 +119,7 @@ export default {
 };
 </script>
 <style>
-.el-input {
+.login-box .el-input {
   margin: 10px 0;
 }
 .title {

@@ -86,14 +86,18 @@
     <main-frame ref="frame">
       <template slot="mainFrame">
         <div class="top_operate">
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            @click="add()"
-            size="mini"
-          >添加外链
-          </el-button
-          >
+          <auth :code="permission.add">
+            <template slot="auth">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                @click="add()"
+                size="mini"
+              >添加外链
+              </el-button
+              >
+            </template>
+          </auth>
         </div>
 
         <el-table
@@ -165,7 +169,7 @@
           </el-table-column>
           <el-table-column prop fixed="right" align="center" label="操作" width="150">
             <template slot-scope="scope">
-              <auth :code="code.update">
+              <auth :code="permission.update">
                 <template slot="auth">
                   <el-button
                     type="text"
@@ -179,7 +183,7 @@
                   >
                 </template>
               </auth>
-              <auth :code="code.remove">
+              <auth :code="permission.remove">
                 <template slot="auth">
                   <el-button
                     v-if="scope.row.outJoin"
@@ -263,6 +267,11 @@ export default {
       },
       search: {
         name: "",
+      },
+      permission: {
+        add: "menu:add",
+        remove: "menu:del",
+        update: "menu:update",
       },
       URL: {
         tableData: "/permission/tree/all",

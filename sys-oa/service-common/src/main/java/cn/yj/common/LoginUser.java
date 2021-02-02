@@ -19,6 +19,8 @@ public class LoginUser implements Serializable
 
     private String name;
 
+    private String empCode;
+
     private String token;
 
     private List<Map<String, Object>> roles;
@@ -86,6 +88,28 @@ public class LoginUser implements Serializable
     }
 
     public LoginUser setPermission(Set<String> permissions)
+    {
+        this.permissions = permissions;
+        return this;
+    }
+
+    public String getEmpCode()
+    {
+        return empCode;
+    }
+
+    public LoginUser setEmpCode(String empCode)
+    {
+        this.empCode = empCode;
+        return this;
+    }
+
+    public Set<String> getPermissions()
+    {
+        return permissions;
+    }
+
+    public LoginUser setPermissions(Set<String> permissions)
     {
         this.permissions = permissions;
         return this;

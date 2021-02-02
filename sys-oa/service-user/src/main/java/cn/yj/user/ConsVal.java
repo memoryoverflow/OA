@@ -51,7 +51,6 @@ public interface ConsVal
      * 菜单父级ID 默认为 0
      */
     Integer DEFAULT_PARENT_VAL = 0;
-    Integer SUPER_ADMIN_ID = 1;
 
 
     /**
@@ -59,6 +58,8 @@ public interface ConsVal
      *   超级管理员的Code
      */
     String SUPER_ADMIN_CODE = "superAdmin";
+    int USER_STATUS_DEFAULT = 1;
+    int DELETED_DEFAULT = 0;
 
 
 

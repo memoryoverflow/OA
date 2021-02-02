@@ -19,11 +19,12 @@ export default {
     return {
 
       URL: {
-        druid: this.$server + "/druid",
+        druid: this.$server + "/druid/login.html",
       },
     };
   },
   created() {
+    console.log(this.URL.druid)
   },
   methods: {}
 };

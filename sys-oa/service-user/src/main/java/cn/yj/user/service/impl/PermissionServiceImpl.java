@@ -73,6 +73,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return baseMapper.selectUserMenuTreeIds(userId);
     }
 
+    @Override
     public Set<String> selectMenuIdByRoleId(String roleId)
     {
         Set<String> set = new HashSet<>();
@@ -112,6 +113,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
 
+    @Override
     public Set<String> selectMenuSonIdsByMenId(String menuId)
     {
         Set<String> set = new HashSet<>();

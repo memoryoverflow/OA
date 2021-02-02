@@ -15,6 +15,7 @@ function init() {
   }
   basePath = CONFIG.server.prod.context_path;
 }
+
 init();
 
 
@@ -86,7 +87,7 @@ function checkResult(response) {
   } else if (code == CONFIG.res_success_code) {
     response.data['R'] = true;
   } else {
-    if(CONFIG.autoAlertErrorMsg){
+    if (CONFIG.autoAlertErrorMsg) {
       Notification.error(msg);
     }
     response.data['R'] = false;
@@ -193,10 +194,10 @@ function filterParamsIsEmpty(params) {
   for (const key in params) {
     if (params.hasOwnProperty(key)) {
       const element = params[key];
-      if (element==0){
+      if (element == 0) {
         continue;
       }
-      if (element == "" || element == null) {
+      if (element === "" || element === null || element === undefined) {
         delete params[key];
       }
     }

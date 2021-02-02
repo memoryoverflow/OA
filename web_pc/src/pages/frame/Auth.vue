@@ -10,11 +10,16 @@ export default {
     return {
       show: true,
       url: {
-        checkAuth: "/auth/check",
+        checkAuth: "/permission/auth/check",
       },
     };
   },
-  props: ["code"],
+  props: {
+    code: {  // 必须提供字段
+      required: true,
+      type: Boolean,
+    },
+  },
 
   mounted() {},
   created() {
@@ -29,16 +34,21 @@ export default {
       return;
     }
 
-    // let arr = user.permission;
-    // if (arr.indexOf(this.code) > -1) {
-    //   this.show = true;
-    // }
+    let arr = user.permission;
+    if (arr.indexOf(this.code) > -1) {
+      this.show = true;
+    }
 
-    // this.$post(this.url.checkAuth + "?code=" + this.code, {}).then((res) => {
-    //   if (res.R) {
-    //     this.show = res.data;
-    //   }
-    // });
+    if(this.code==null||this.code==''){
+      this.show = false;
+      return;
+    }
+
+    this.$get(this.url.checkAuth, {code:this.code}).then((res) => {
+      if (res.R) {
+        this.show = res.data;
+      }
+    });
   },
 };
 </script>

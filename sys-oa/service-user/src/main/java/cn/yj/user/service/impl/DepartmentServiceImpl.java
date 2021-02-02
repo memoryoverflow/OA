@@ -7,11 +7,14 @@ import cn.yj.params.check.CheckObjectValue;
 import cn.yj.params.check.KeyValue;
 import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.entity.po.Department;
+import cn.yj.user.entity.po.User;
 import cn.yj.user.mapper.DepartmentMapper;
 import cn.yj.user.service.IDepartmentService;
+import cn.yj.user.service.IUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,10 @@ import java.util.UUID;
 @Transactional
 public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements IDepartmentService
 {
+
+    @Resource
+    IUserService iUserService;
+
 
     @Override
     @CheckObjectValue(keyValue = @KeyValue(type = Department.class, name = {"deptName"}))
@@ -52,6 +59,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     @CheckObjectValue(keyValue = @KeyValue(type = Department.class, name = {"id", "deptName"}))
     public boolean updateById(Department department)
     {
+        Department departmentById = baseMapper.selectById(department.getId());
         Department departmentDb = baseMapper.selectByName(department.getDeptName());
         if (StringUtils.isNotNull(departmentDb) && !departmentDb.getId().equals(department.getId()))
         {
@@ -59,7 +67,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         }
 
         // 上级部门不能是自己
-        departmentDb=selectById(department.getId());
+        departmentDb = selectById(department.getId());
         if (StringUtils.isNotBlank(department.getDeptParentId()) && department.getDeptParentId().equals(departmentDb.getId()))
         {
             throw new ServiceException("上级部门不能是自己");
@@ -75,6 +83,21 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             }
         }
         department.setUpdateTime(new Date());
+
+
+        // 更新用户的部门编码code
+        if (StringUtils.isNotBlank(departmentById.getDeptCode()) && !departmentById.getDeptCode().equals(department.getDeptCode()))
+        {
+            List<User> userListByPositionCode = iUserService.getUserListByPositionCode(departmentById.getDeptCode());
+            if (!userListByPositionCode.isEmpty())
+            {
+                userListByPositionCode.forEach(user -> {
+                    user.setDeptCode(department.getDeptCode());
+                    iUserService.updateUserInfoById(user);
+                });
+            }
+        }
+
         return super.updateById(department);
     }
 

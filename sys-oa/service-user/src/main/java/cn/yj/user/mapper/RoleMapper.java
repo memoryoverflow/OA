@@ -23,7 +23,7 @@ public interface RoleMapper extends BaseMapper<Role>
 
     Role selectByName(String name);
 
-    @Select("select id,role_name as roleName from tb_role")
+    @Select("select id,code as roleCode,role_name as roleName from tb_role")
     List<Map<String, Object>> listIdNameAll();
 
     List<Map<String, Object>> selectRolesNameCodeIdByUserId(String userId);

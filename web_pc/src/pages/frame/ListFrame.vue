@@ -2,77 +2,79 @@
   <main-frame :location="location">
     <template slot="mainFrame">
       <div class="main-frame-content">
-      <!-- 搜索组建 -->
-      <div class="search" v-show="searchShow">
-        <el-form :inline="true">
-          <component ref="searchCom" v-bind:is="searchModel"></component>
-          <el-form-item>
-            <el-button @click="search()" icon="el-icon-search" type="primary" size="mini">搜索</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              @click="resetFormAndTale()"
-              icon="el-icon-refresh"
-              type="default"
-              size="mini"
-            >刷新</el-button>
-          </el-form-item>
-        </el-form>
-        <!-- </el-card> -->
-      </div>
-
-      <!-- 操作栏 -->
-      <div class="top_operate" v-show="operateShow">
-        <slot :slot-scope="resParam" name="top_operate"></slot>
-      </div>
-
-      <div class="list_frame">
-        <!-- <el-card style="height:auto"> -->
-        <el-table
-          :header-cell-style="headerCellStyle"
-          :header-row-style="headerRowCss"
-          :data="dataList"
-          v-loading="tableLoading"
-          body-style="height:100%;"
-          size="mini"
-          border=""
-          @select="select"
-          @select-all="selectAll"
-          @selection-change="selectionChange"
-        >
-          <el-table-column type="selection" align="left" width="50"></el-table-column>
-          <slot name="columns"></slot>
-          <slot name="operate"></slot>
-        </el-table>
-
-        <div class="pageNation">
-          <el-row>
-            <el-col :span="2">
-              <!-- <auth role="admin"> -->
-              <!-- <template slot="auth"> -->
-              <div v-if="showDelBtn" style="margin-top:10px">
-                <el-button type="danger" size="small" :disabled="delBtnFlag" @click="del()">删除已选</el-button>
-              </div>
-              <!-- </template> -->
-              <!-- </auth> -->
-            </el-col>
-            <el-col v-if="tempIsPage" :span="22">
-              <div style="margin-top:10px;text-align:right">
-                <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-sizes="[15, 30, 50, 100]"
-                  :page-size="pageSize"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="total"
-                ></el-pagination>
-              </div>
-            </el-col>
-          </el-row>
+        <!-- 搜索组建 -->
+        <div class="search" v-show="searchShow">
+          <el-form :inline="true">
+            <component ref="searchCom" v-bind:is="searchModel"></component>
+            <el-form-item>
+              <el-button @click="search()" icon="el-icon-search" type="primary" class="search-btn-class" size="mini">
+                搜索
+              </el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                @click="resetFormAndTale()"
+                icon="el-icon-refresh"
+                type="default"
+                size="mini"
+              >刷新
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <!-- </el-card> -->
         </div>
-        <!-- </el-card> -->
-      </div>
+
+        <!-- 操作栏 -->
+        <div class="top_operate" v-show="operateShow">
+          <slot :slot-scope="resParam" name="top_operate"></slot>
+        </div>
+
+        <div class="list_frame">
+          <!-- <el-card style="height:auto"> -->
+          <el-table
+            :header-cell-style="headerCellStyle"
+            :header-row-style="headerRowCss"
+            :data="dataList"
+            v-loading="tableLoading"
+            body-style="height:100%;"
+            size="mini"
+            @select="select"
+            @select-all="selectAll"
+            @selection-change="selectionChange"
+          >
+            <el-table-column type="selection" align="left" width="50"></el-table-column>
+            <slot name="columns"></slot>
+            <slot name="operate"></slot>
+          </el-table>
+
+          <div class="pageNation">
+            <el-row>
+              <el-col :span="2">
+                <!-- <auth role="admin"> -->
+                <!-- <template slot="auth"> -->
+                <div v-if="showDelBtn" style="margin-top:10px">
+                  <el-button type="danger" size="small" :disabled="delBtnFlag" @click="del()">删除已选</el-button>
+                </div>
+                <!-- </template> -->
+                <!-- </auth> -->
+              </el-col>
+              <el-col v-if="tempIsPage" :span="22">
+                <div style="margin-top:10px;text-align:right">
+                  <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[15, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total"
+                  ></el-pagination>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <!-- </el-card> -->
+        </div>
       </div>
     </template>
   </main-frame>
@@ -80,6 +82,7 @@
 <script>
 let _this = {};
 import util from "@/utils/CommonUtils.js";
+
 export default {
   data() {
     return {
@@ -129,7 +132,7 @@ export default {
     searchShow: {   // 可选字段，有默认值
       required: false,
       type: Boolean,
-      default:false,
+      default: false,
     },
     searchModel: {   // 可选字段，有默认值
       required: false,
@@ -139,22 +142,22 @@ export default {
     reloadTable: {   // 可选字段，有默认值
       required: true,
       type: Boolean,
-      default:false,
+      default: false,
     },
     operateShow: {   // 可选字段，有默认值
       required: false,
       type: Boolean,
-      default:true,
+      default: true,
     },
     showDelBtn: {   // 可选字段，有默认值
       required: true,
       type: Boolean,
-      default:false,
+      default: false,
     },
     isPage: {   // 可选字段，有默认值
       required: false,
       type: Boolean,
-      default:true,
+      default: true,
     },
   },
 
@@ -193,10 +196,11 @@ export default {
     // 重置搜索条件，刷新表格
     resetFormAndTale() {
       _this.resParam.searchParam = {};
-       _this.$refs.searchCom.param={}
+      _this.$refs.searchCom.param = {}
       _this.initData({});
     },
-    select(selection, row) {},
+    select(selection, row) {
+    },
     // 全选
     selectAll(selection) {
       //console.log(selection);
@@ -272,10 +276,10 @@ export default {
     },
 
     reqSuccess(res) {
-      if(this.isPage==true){
+      if (this.isPage == true) {
         _this.dataList = res.data.rows;
         _this.setPage(res);
-      }else{
+      } else {
         _this.dataList = res.data;
       }
       _this.loading(false);
@@ -321,8 +325,9 @@ export default {
       this.resParam.searchParam = this.searchParam();
       this.initData(this.searchParam());
     },
-    headerRowCss(rowIndex) {},
-    headerCellStyle({ row, column, rowIndex, columnIndex }) {
+    headerRowCss(rowIndex) {
+    },
+    headerCellStyle({row, column, rowIndex, columnIndex}) {
       let color = "#555E6F";
       let bg = "#F8F8F9";
       let borderTopRightRadius = "0px";
@@ -343,13 +348,13 @@ export default {
       }
     }, // 初始页page、初始每页数据数pagesize和数据data
     // 更换每页列内不同的行数：更新列表数据
-    handleSizeChange: function(pageSize) {
+    handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;
       this.currentPage = 1;
       _this.initData({});
     },
     // 换页：更新列表数据
-    handleCurrentChange: function(currentPage) {
+    handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
       _this.initData({});
     }
@@ -357,16 +362,19 @@ export default {
 };
 </script>
 <style scoped>
-.main-frame-content{
+.main-frame-content {
   background: white;
   padding: 10px 20px 20px 20px;
 }
+
 .pageNation {
   margin: 25px 0;
 }
+
 .el-card {
   padding: 0;
 }
+
 .search {
   text-align: left;
   border-radius: 5px;
@@ -374,17 +382,17 @@ export default {
   width: 100%;
   margin-bottom: 10px;
 }
-.search .el-form,.search div{
+
+.search .el-form, .search div {
   display: flex;
   flex-direction: row;
 }
-.search .el-form--inline .el-form-item{
+
+.search .el-form--inline .el-form-item {
   height: 100%;
   margin-bottom: 10px;
 }
-.search .el-input{
-  margin:0px !important;
-}
+
 .top_operate {
   text-align: left;
   width: 100%;
@@ -396,7 +404,10 @@ export default {
   text-align: center;
   color: #555e6f;
 }
-.search div{
+
+.search div {
   display: inline-block;
 }
+
+
 </style>

@@ -99,30 +99,34 @@
         ></el-table-column>
       </template>
       <template slot="operate">
-        <el-table-column fixed="right" align="center" label="操作" width="300">
+        <el-table-column fixed="right" align="center" label="操作" width="200">
           <template slot-scope="scope">
             <auth :code="permission.update">
-              <el-button
-                icon="el-icon-edit"
-                type="text"
-                @click="edit(scope.row)"
-                size="mini"
-                slot="auth"
-              >修改
-              </el-button
-              >
+              <template slot="auth">
+                <el-button
+                  icon="el-icon-edit"
+                  type="text"
+                  @click="edit(scope.row)"
+                  size="mini"
+                  slot="auth"
+                >修改
+                </el-button
+                >
+              </template>
             </auth>
-            <auth :code="permission.del">
-              <el-button
-                icon="el-icon-delete"
-                type="text"
-                v-if="scope.row.username != 'admin'"
-                @click="del(scope.row.id)"
-                size="mini"
-                slot="auth"
-              >删除
-              </el-button
-              >
+            <auth :code="permission.remove">
+              <template slot="auth">
+                <el-button
+                  icon="el-icon-delete"
+                  type="text"
+                  v-if="scope.row.username != 'admin'"
+                  @click="del(scope.row.id)"
+                  size="mini"
+                  slot="auth"
+                >删除
+                </el-button
+                >
+              </template>
             </auth>
           </template>
         </el-table-column>
@@ -131,35 +135,35 @@
   </div>
 </template>
 <script>
-  let _this = {};
-  import searchModel from "./Search.vue";
+let _this = {};
+import searchModel from "./Search.vue";
 
-  export default {
-    data() {
-      return {
-        dialog: {
-          width: "40%",
-          title: "新增/修改",
-          visible: false,
-          modal: true,
-        },
-        prop: {
-          searchShow: true,
-          operateShow: true,
-          location: " 系统设置 / 岗位管理",
-          getDataUrl: "/post/list",
-          removeUrl: "/post/remove/?",
-          searchModel: searchModel,
-          reloadTable: false,
-          showDelBtn: true,
-          isPage: true,
-        },
-        form: {
-          id: "",
-          positionName: "",
-          positionCode: "",
-          remark: [],
-        },
+export default {
+  data() {
+    return {
+      dialog: {
+        width: "40%",
+        title: "新增/修改",
+        visible: false,
+        modal: true,
+      },
+      prop: {
+        searchShow: true,
+        operateShow: true,
+        location: " 系统设置 / 岗位管理",
+        getDataUrl: "/post/list",
+        removeUrl: "/post/remove/?",
+        searchModel: searchModel,
+        reloadTable: false,
+        showDelBtn: true,
+        isPage: true,
+      },
+      form: {
+        id: "",
+        positionName: "",
+        positionCode: "",
+        remark: '',
+      },
 
         permission: {
           add: "post:add",
@@ -167,125 +171,125 @@
           update: "post:update",
         },
 
-        rules: {
-          id: [{required: false}],
-          positionName: [
-            {required: true, message: "请输入用户名", trigger: "blur"}
-          ],
-          positionCode: [
-            {required: true, message: "请输入登陆名", trigger: "blur"},
-          ],
-          remark: [{required: false}],
-        },
-        URL: {
-          list: "/post/list",
-          save: "/post/save",
-          update: "/post/update",
-          remove: "/post/remove/?",
-        },
-      };
+      rules: {
+        id: [{required: false}],
+        positionName: [
+          {required: true, message: "请输入用户名", trigger: "blur"}
+        ],
+        positionCode: [
+          {required: true, message: "请输入登陆名", trigger: "blur"},
+        ],
+        remark: [{required: false}],
+      },
+      URL: {
+        list: "/post/list",
+        save: "/post/save",
+        update: "/post/update",
+        remove: "/post/remove/?",
+      },
+    };
+  },
+  created() {
+  },
+  methods: {
+    // 添加
+    add() {
+      this.dialog.visible = true;
+      this.setDataToForm(null);
     },
-    created() {
+    // 编辑
+    edit(row) {
+      this.setDataToForm(row);
+      this.dialog.visible = true;
     },
-    methods: {
-      // 添加
-      add() {
-        this.dialog.visible = true;
-        this.setDataToForm(null);
-      },
-      // 编辑
-      edit(row) {
-        this.setDataToForm(row);
-        this.dialog.visible = true;
-      },
-      // 取消
-      cancelDilogBtn(userForm) {
-        this.dialog.visible = false;
-        this.setDataToForm(null);
-        this.$refs[userForm].resetFields();
-      },
+    // 取消
+    cancelDilogBtn(userForm) {
+      this.dialog.visible = false;
+      this.setDataToForm(null);
+      this.$refs[userForm].resetFields();
+    },
 
-      closeDialog() {
-        this.$emit("closeModal", false);
-      },
+    closeDialog() {
+      this.$emit("closeModal", false);
+    },
 
-      saveDilogBtn(form) {
-        this.$refs[form].validate((valid) => {
-          if (valid) {
-            if (
-              this.form.id != undefined &&
-              this.form.id != null &&
-              this.form.id != ""
-            ) {
-              this.update();
-            } else {
-              this.save();
-            }
+    saveDilogBtn(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          if (
+            this.form.id != undefined &&
+            this.form.id != null &&
+            this.form.id != ""
+          ) {
+            this.update();
           } else {
-            this.$warning("缺少必填数据");
-            return false;
-          }
-        });
-      },
-      save() {
-        this.$postJson(this.URL.save, this.form).then((res) => {
-          this.reqResult(res);
-        });
-      },
-      update() {
-        this.$put(this.URL.update, this.form).then((res) => {
-          this.reqResult(res);
-        });
-      },
-      del(id) {
-        this.$confirm("此操作将永久删除已选数据, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }).then(() => {
-          this.$del(this.URL.remove.replace("?",id),{}).then((res) => {
-            if (res.R) {
-              this.$success("已删除");
-              this.reloadTable();
-            }
-          });
-        });
-      },
-      reqResult(res) {
-        if (res.R) {
-          this.$success("操作成功");
-          this.dialog.visible = false;
-          this.setDataToForm(null);
-          this.reloadTable();
-        }
-      },
-      setDataToForm(row) {
-        if (row != null) {
-          for (const key in row) {
-            if (row.hasOwnProperty(key)) {
-              const element = row[key];
-              if (this.form.hasOwnProperty(key)) {
-                this.form[key] = element;
-              }
-            }
+            this.save();
           }
         } else {
-          for (const key in this.form) {
+          this.$warning("缺少必填数据");
+          return false;
+        }
+      });
+    },
+    save() {
+      this.$postJson(this.URL.save, this.form).then((res) => {
+        this.reqResult(res);
+      });
+    },
+    update() {
+      this.$put(this.URL.update, this.form).then((res) => {
+        this.reqResult(res);
+      });
+    },
+    del(id) {
+      this.$confirm("此操作将永久删除已选数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$del(this.URL.remove.replace("?", id), {}).then((res) => {
+          if (res.R) {
+            this.$success("已删除");
+            this.reloadTable();
+          }
+        });
+      });
+    },
+    reqResult(res) {
+      if (res.R) {
+        this.$success("操作成功");
+        this.dialog.visible = false;
+        this.setDataToForm(null);
+        this.reloadTable();
+      }
+    },
+    setDataToForm(row) {
+      if (row != null) {
+        for (const key in row) {
+          if (row.hasOwnProperty(key)) {
+            const element = row[key];
             if (this.form.hasOwnProperty(key)) {
-              this.form[key] = "";
+              this.form[key] = element;
             }
           }
         }
-      },
-      reloadTable() {
-        _this = this;
-        this.prop.reloadTable = true;
-        setTimeout(() => {
-          _this.prop.reloadTable = false;
-        }, 1000);
-      },
+      } else {
+        for (const key in this.form) {
+          if (this.form.hasOwnProperty(key)) {
+            this.form[key] = "";
+          }
+        }
+      }
     },
-  };
+    reloadTable() {
+      _this = this;
+      this.prop.reloadTable = true;
+      setTimeout(() => {
+        _this.prop.reloadTable = false;
+      }, 1000);
+    },
+  },
+};
 </script>
 <style>
 </style>

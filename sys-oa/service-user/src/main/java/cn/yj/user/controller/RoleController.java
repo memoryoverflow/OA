@@ -58,7 +58,6 @@ public class RoleController extends AbstractController<Role>
 
 
     @OperateLog(describe = "修改角色")
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @RequiresPermissions(value = {"role:update"})
     @PutMapping("/update")
     public R editSave(@Valid @RequestBody Role entity)
@@ -74,12 +73,12 @@ public class RoleController extends AbstractController<Role>
      * @return
      */
     @PutMapping("/{roleId}/toRoleAuth/{menuIds}")
+    @RequiresPermissions(value = {"role:toAuth"})
     public R toRoleAuth(@PathVariable("roleId") String roleId, @PathVariable("menuIds") String[] menuIds)
     {
         return result(thisService.toRoleAuth(roleId, menuIds));
     }
     @OperateLog(describe = "删除角色")
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @DeleteMapping("/remove/{ids}")
     @RequiresPermissions(value = {"role:del"})
     public R removeByIds(@PathVariable("ids") Serializable[] ids)

@@ -1,5 +1,5 @@
 <template slot="search">
-  <div>
+  <div class="searchItem">
     <el-form-item label="姓名">
       <el-input
         size="mini"

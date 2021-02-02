@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author 永健
@@ -20,7 +20,6 @@ public interface UserMapper extends BaseMapper<User>
 {
 
     /**
-     *
      * @param loginName
      * @return
      */
@@ -34,13 +33,18 @@ public interface UserMapper extends BaseMapper<User>
     User selectByToken(String token);
 
 
-    @Select("select id,name,login_name,password,token,status from tb_user where login_name=#{loginName}")
+    @Select("select id,name,login_name,password,token,status,emp_code from tb_user where login_name=#{loginName}")
     User selectByLoginName(String loginName);
 
     @Select("select id,name,emp_code,login_name,password,token,status from tb_user where emp_code=#{empCode}")
     User selectByEmpCode(String empCode);
 
+    List<User> selectByEmpCodes(String[] empCode);
+
 
     @Select("select id,name as userName,emp_code as empCode from tb_user")
     List<Map<String, String>> listIdName();
+
+    @Select("select id,position_code from tb_user where position_code=#{positionCode}")
+    List<User> selectUserListByPositionCode(String positionCode);
 }

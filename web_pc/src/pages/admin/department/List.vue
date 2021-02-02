@@ -61,6 +61,7 @@
           <el-form-item label="部门负责人">
             <el-select
               size="mini"
+              clearable
               v-model="form.userId"
               placeholder="请选上级部门"
             >
@@ -91,7 +92,7 @@
 
 
         <div class="top_operate">
-          <auth :code="permission.addPlus">
+          <auth :code="permission.add">
             <template slot="auth">
               <el-button
                 type="primary"
@@ -183,9 +184,7 @@
           visible: false,
         },
         tableData: [],
-        colunmsCount: 7,
         tableLoading: false,
-
         // 添加表单
         form: {
           id: "",
@@ -219,7 +218,7 @@
         permission: {
           update: "dept:update",
           remove: "dept:del",
-          addPlus: "dept:add",
+          add: "dept:add",
         },
 
         // 搜索参数

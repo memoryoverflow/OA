@@ -71,9 +71,9 @@ public class User extends BaseEntity implements Serializable
      */
     private Integer status;
 
-    private String deptId;
+    private String deptCode;
 
-    private String positionId;
+    private String positionCode;
 
 
     public Integer getDeleted()
@@ -174,26 +174,14 @@ public class User extends BaseEntity implements Serializable
         this.status = status;
         return this;
     }
-
-    public String getDeptId()
+    public String getPositionCode()
     {
-        return deptId;
+        return positionCode;
     }
 
-    public User setDeptId(String deptId)
+    public User setPositionCode(String positionCode)
     {
-        this.deptId = deptId;
-        return this;
-    }
-
-    public String getPositionId()
-    {
-        return positionId;
-    }
-
-    public User setPositionId(String positionId)
-    {
-        this.positionId = positionId;
+        this.positionCode = positionCode;
         return this;
     }
 
@@ -205,6 +193,23 @@ public class User extends BaseEntity implements Serializable
     public User setEmpCode(String empCode)
     {
         this.empCode = empCode;
+        return this;
+    }
+
+    public String getDeptCode()
+    {
+        return deptCode;
+    }
+
+    public User setDeptCode(String deptCode)
+    {
+        this.deptCode = deptCode;
+        return this;
+    }
+
+    public User setRoleIds(String[] roleIds)
+    {
+        this.roleIds = roleIds;
         return this;
     }
 }

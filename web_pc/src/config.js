@@ -22,7 +22,6 @@ const config = {
   no_login_code: 9,
   // 访问服务端 错误url 响应的状态码
   no_page: 404,
-  active: "dev",
   autoAlertErrorMsg: true,
   // 响应参数字段
   responseConfig: {
@@ -49,6 +48,7 @@ const config = {
     href: '',
     children: []
   },
+  active: "prod",
   server: {
     dev: {
       context_path: '/oa',
@@ -56,7 +56,7 @@ const config = {
     },
     prod: {
       context_path: '/oa',
-      address: "http://127.0.0.1:8081",
+      address: "http://thisforyou.cn:180",
     }
   },
 };

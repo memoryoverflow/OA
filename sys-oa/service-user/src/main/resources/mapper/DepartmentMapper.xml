@@ -206,7 +206,7 @@
     <sql id="Base_Column_List">
      d.id,
      dept_name,
-     dept_code,
+     d.dept_code,
      dept_phone,
      dept_parent_id,
      dept_address,

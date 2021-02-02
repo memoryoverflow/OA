@@ -13,7 +13,7 @@ import java.util.Map;
  * @author 永健
  * @since 2020-11-30 11:54
  */
-public interface PositionMapper<T extends Position> extends BaseMapper<T>
+public interface PositionMapper extends BaseMapper<Position>
 {
     @Select("select * from tb_position where position_name=#{name}")
     Position selectByName(String name);

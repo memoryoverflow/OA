@@ -33,7 +33,7 @@ public class ShiroConfig
 {
 
     @Bean("securityManager")
-    public SecurityManager securityManager(ShiroRealm shiroRealm,DefaultWebSessionManager defaultWebSessionManager)
+    public SecurityManager securityManager(ShiroRealm shiroRealm, DefaultWebSessionManager defaultWebSessionManager)
     {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(defaultWebSessionManager);
@@ -43,12 +43,12 @@ public class ShiroConfig
 
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(ShiroRealm shiroRealm, IUserService userService,DefaultWebSessionManager defaultWebSessionManager)
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(ShiroRealm shiroRealm, IUserService userService, DefaultWebSessionManager defaultWebSessionManager)
     {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
         //设置安全管理器
-        shiroFilterFactoryBean.setSecurityManager(securityManager(shiroRealm,defaultWebSessionManager));
+        shiroFilterFactoryBean.setSecurityManager(securityManager(shiroRealm, defaultWebSessionManager));
 
 
         // 注意 这个自定义filter 不要放到Spring管理 否则会在在拦截连中拦截所有， login anon 配置了不起作用的
@@ -64,7 +64,7 @@ public class ShiroConfig
 
 
     @Bean("sessionManager")
-    public DefaultWebSessionManager defaultWebSessionManager(RedisCacheManager redisCacheManager,RedisSessionDAO redisSessionDAO)
+    public DefaultWebSessionManager defaultWebSessionManager(RedisCacheManager redisCacheManager, RedisSessionDAO redisSessionDAO)
     {
         DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
         defaultWebSessionManager.setSessionDAO(redisSessionDAO);
@@ -99,7 +99,7 @@ public class ShiroConfig
      * @param securityManager
      * @return
      */
-    //@Bean
+    @Bean
     public StaticMethodMatcherPointcutAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager") SecurityManager securityManager)
     {
         MyAuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new MyAuthorizationAttributeSourceAdvisor();
@@ -107,7 +107,7 @@ public class ShiroConfig
         return authorizationAttributeSourceAdvisor;
     }
 
-    // @Bean
+    @Bean
     public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor()
     {
         return new LifecycleBeanPostProcessor();

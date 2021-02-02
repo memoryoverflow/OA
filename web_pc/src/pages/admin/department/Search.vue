@@ -1,6 +1,7 @@
 <template slot="search">
   <el-form-item label="姓名">
     <el-input
+      clearable
       size="mini"
       clearable
       v-model="params.name"

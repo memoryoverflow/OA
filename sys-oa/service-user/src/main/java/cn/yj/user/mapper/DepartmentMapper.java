@@ -15,7 +15,7 @@ import java.util.Map;
  * @author 永健
  * @since 2020-11-30 11:54
  */
-public interface DepartmentMapper<T extends Department> extends BaseMapper<T>
+public interface DepartmentMapper extends BaseMapper<Department>
 {
     Department selectByName(String name);
 

@@ -16,17 +16,17 @@ public abstract class AbstractController<T> extends BController<T> implements Pa
     @Override
     protected <T1> T1 getCurrentUserId()
     {
-        return (T1)getCurrentUser().getId();
+        return (T1) getCurrentUser().getId();
     }
 
     @Override
     protected LoginUser getCurrentUser()
     {
-        LoginUser loginUser = new LoginUser();
-        loginUser.setLoginName("admin");
-        loginUser.setName("admin");
-        return loginUser;
-        //return ((LoginUser) SecurityUtils.getSubject().getPrincipal());
+        //        LoginUser loginUser = new LoginUser();
+        //        loginUser.setLoginName("admin");
+        //        loginUser.setName("admin");
+        //        return loginUser;
+        return ((LoginUser) SecurityUtils.getSubject().getPrincipal());
     }
 
     @Override

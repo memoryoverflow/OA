@@ -12,6 +12,7 @@ import cn.yj.entity.R;
 import cn.yj.tools.exception.ServiceException;
 import io.minio.errors.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.csource.common.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -51,11 +52,11 @@ public class NoticeController extends AbstractController<Notice>
     @GetMapping("/list")
     public R listPage(@RequestParam Map<String, Object> params) throws Exception
     {
-        FileUploadHandler.getInstant().base64ToByte("");
-        return success(iNoticeService.findList(params, page(new OrderBy(OrderBy.Direction.DESC, "update_time"))));
+        return success(iNoticeService.findList(params, page(new OrderBy(OrderBy.Direction.DESC, "create_time")), getCurrentUser()));
     }
 
     @PostMapping("/save")
+    @RequiresPermissions(value = {"notice:add"})
     @OperateLog(describe = "添加公告")
     public R add(@RequestBody @Valid Notice notice)
     {
@@ -63,6 +64,8 @@ public class NoticeController extends AbstractController<Notice>
         return success(iNoticeService.save(notice));
     }
 
+
+    @RequiresPermissions(value = {"notice:update"})
     @PutMapping("/update")
     @OperateLog(describe = "更新公告")
     public R update(@RequestBody @Valid Notice notice)
@@ -72,6 +75,7 @@ public class NoticeController extends AbstractController<Notice>
 
 
     @DeleteMapping("/remove/{ids}")
+    @RequiresPermissions(value = {"notice:del"})
     @OperateLog(describe = "删除公告")
     public R update(@PathVariable("ids") List<String> ids)
     {
@@ -87,6 +91,7 @@ public class NoticeController extends AbstractController<Notice>
         }
         return R.success(FileUploadHandler.getInstant().upload(file));
     }
+
 
     @DeleteMapping("/deleteImgFile")
     public R deleteImgFile(String url) throws IOException, InvalidKeyException, NoSuchAlgorithmException, XmlPullParserException, MyException, InvalidArgumentException, InternalException, NoResponseException, InvalidBucketNameException, InsufficientDataException, ErrorResponseException

@@ -11,6 +11,8 @@
         <result column="content" property="content"/>
         <result column="create_by" property="createBy"/>
         <result column="type" property="type"/>
+        <result column="power_type" property="powerType"/>
+        <result column="power_codes" property="powerCodes"/>
         <result column="enclosure" property="enclosure"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
@@ -25,6 +27,8 @@
         content,
         create_by,
         type,
+    power_type,
+    power_codes,
         enclosure,
         update_time,
         create_time

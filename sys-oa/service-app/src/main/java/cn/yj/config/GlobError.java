@@ -33,4 +33,11 @@ public class GlobError extends GlobalExceptionHandler
         e.printStackTrace();
         return R.error(e.getLocalizedMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public R IllegalArgumentException(IllegalArgumentException e)
+    {
+        e.printStackTrace();
+        return R.error("请求参数有误");
+    }
 }

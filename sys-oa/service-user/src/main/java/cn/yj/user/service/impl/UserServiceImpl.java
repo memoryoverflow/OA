@@ -11,6 +11,7 @@ import cn.yj.params.check.CheckObjectValue;
 import cn.yj.params.check.KeyValue;
 import cn.yj.params.check.Require;
 import cn.yj.tools.exception.ServiceException;
+import cn.yj.user.ConsVal;
 import cn.yj.user.LoginModel;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.mapper.UserMapper;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final UserRoleMapper userRoleMapper;
 
-    private static final String DEFAULT_PASSWORD = "123466";
+    private static final String DEFAULT_PASSWORD = "123456";
 
     @Autowired
     public UserServiceImpl(UserRoleMapper userRoleMapper)
@@ -129,6 +131,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         entity.setId(userId);
         entity.setCreateTime(new Date());
         entity.setUpdateTime(new Date());
+        entity.setStatus(ConsVal.USER_STATUS_DEFAULT);
+        entity.setDeleted(ConsVal.DELETED_DEFAULT);
         super.insert(entity);
 
         String[] roleIds = entity.getRoleIds();
@@ -142,6 +146,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
 
+    /**
+     * 用户修改编辑
+     * @param entity
+     * @return
+     */
     @CheckObjectValue(keyValue = {@KeyValue(type = User.class, name = {"id", "loginName", "name", "deptId", "positionId", "roleIds"})})
     @Override
     public boolean updateById(User entity)
@@ -153,9 +162,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         {
             throw new ServiceException("该登陆名已经存在");
         }
+
+        entity.setPassword(MD5.getInstance().getMD5(loginName.concat(DEFAULT_PASSWORD)));
+
         User user1 = baseMapper.selectByEmpCode(entity.getEmpCode());
-
-
         if (StringUtils.isNotNull(user1) && !user1.getId().equals(entity.getId()))
         {
             throw new ServiceException("该用户编码已经存在");
@@ -218,5 +228,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<Map<String, String>> listIdName()
     {
         return baseMapper.listIdName();
+    }
+
+    @Override
+    public List<User> getUserListByEmpCodes(String[] empCodes)
+    {
+        if (!StringUtils.isEmpty(empCodes))
+        {
+            return baseMapper.selectByEmpCodes(empCodes);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<User> getUserListByPositionCode(String empCodes)
+    {
+        return baseMapper.selectUserListByPositionCode(empCodes);
     }
 }

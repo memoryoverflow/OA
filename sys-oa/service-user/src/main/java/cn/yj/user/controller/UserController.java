@@ -12,6 +12,7 @@ import cn.yj.tools.exception.ServiceException;
 import cn.yj.user.ConsVal;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.service.IUserService;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,13 @@ public class UserController extends AbstractController<User>
         return success(thisService.findList(param, page(new OrderBy(OrderBy.Direction.ASC, "create_time"))));
     }
 
+
+    @GetMapping("/getUserListByEmpCodes")
+    public R getUserListByEmpCodes(String[] empCodes)
+    {
+        return success(thisService.getUserListByEmpCodes(empCodes));
+    }
+
     /**
      * 下拉列表 字段：id name
      *
@@ -58,8 +66,7 @@ public class UserController extends AbstractController<User>
     }
 
     @OperateLog(describe = "新增用户")
-    @RequiresPermissions(value = {"user:save"})
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
+    @RequiresPermissions(value = {"user:add"})
     @PostMapping("/save")
     public R insertSave(@Valid @RequestBody User entity)
     {
@@ -69,7 +76,6 @@ public class UserController extends AbstractController<User>
 
     @OperateLog(describe = "修改用户")
     @RequiresPermissions(value = {"user:update"})
-    @RequiresRoles(value = {ConsVal.SUPER_ADMIN_CODE})
     @PutMapping("/update")
     public R editSave(@Valid @RequestBody User entity)
     {
@@ -84,6 +90,7 @@ public class UserController extends AbstractController<User>
      */
     @OperateLog(describe = "重置密码")
     @PutMapping("/reloadPwd")
+    @RequiresPermissions(value = {"user:reloadPwd"})
     public R reloadPwd(@RequestBody Map<String, Object> param)
     {
         String[] keys = {"id", "password"};

@@ -2,6 +2,7 @@ package cn.yj.user.shiro;
 
 import cn.yj.common.LoginUser;
 import cn.yj.common.Status;
+import cn.yj.commons.utils.StringUtils;
 import cn.yj.user.entity.po.User;
 import cn.yj.user.service.IPermissionService;
 import cn.yj.user.service.IRoleService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -61,8 +63,9 @@ public class ShiroRealm extends AuthorizingRealm
     {
         LoginUser principal = (LoginUser) principals.getPrimaryPrincipal();
         List<Map<String, Object>> rolesList = principal.getRoles();
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(rolesList.stream().map(role -> (String) role.get("code")).collect(Collectors.toSet()));
-        authorizationInfo.setStringPermissions(principal.getPermission());
+        Set<String> code = rolesList.stream().map(role -> (String) role.get("code")).collect(Collectors.toSet());
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(code.stream().filter(a-> !StringUtils.isBlank(a)).collect(Collectors.toSet()));
+        authorizationInfo.setStringPermissions(principal.getPermission().stream().filter(a->!StringUtils.isBlank(a)).collect(Collectors.toSet()));
         return authorizationInfo;
     }
 
@@ -93,6 +96,7 @@ public class ShiroRealm extends AuthorizingRealm
         loginUser.setName(user.getName());
         loginUser.setLoginName(user.getLoginName());
         loginUser.setToken(UUID.randomUUID().toString());
+        loginUser.setEmpCode(user.getEmpCode());
         loginUser.setRoles(roleService.selectRolesNameCodeIdByUserId(user.getId()));
 
         // 权限

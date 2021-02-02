@@ -2,7 +2,7 @@
   <div class="demo-input-size">
     <label>
       模糊搜索
-      <el-input size="mini" placeholder="请输入内容" v-model="params.name"></el-input>
+      <el-input size="mini" clearable="true" placeholder="请输入内容" v-model="params.name"></el-input>
     </label>
   </div>
 </template>

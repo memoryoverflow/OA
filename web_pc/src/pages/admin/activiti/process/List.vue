@@ -499,12 +499,12 @@
       // - ----------------------------
 
       getRoles(callback) {
-        this.roleList = [];
+        this.role.roleList = [];
         this.$get(this.URL.roles, {}).then((res) => {
           if (res.R) {
             for (var i = 0; i < res.data.length; i++) {
               var roleObj = new Object();
-              roleObj.key = res.data[i].id;
+              roleObj.key = res.data[i].roleCode;
               roleObj.value = res.data[i].roleName;
               this.roleList.push(roleObj);
             }

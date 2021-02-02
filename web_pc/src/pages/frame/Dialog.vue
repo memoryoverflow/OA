@@ -3,7 +3,7 @@
     :title="title"
     :show-close="showClose"
     :close-on-press-escape="true"
-    :close-on-click-modal="true"
+    :close-on-click-modal="false"
     :visible.sync="dialogVisible"
     :modal="modal"
     :width="width"

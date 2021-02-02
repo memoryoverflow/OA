@@ -1,8 +1,8 @@
 mysql:
   # memoryoverflow.cn
-  url: jdbc:mysql://127.0.0.1:3306/activiti_db?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+  url: jdbc:mysql://thisforyou.cn:3307/oa_db?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
   username: root
-  password: tiger
+  password: tiger@9527!..
   driver-class-name: com.mysql.jdbc.Driver
 
 
