@@ -23,6 +23,8 @@ public class LoginUser implements Serializable
 
     private String token;
 
+    private boolean admin;
+
     private List<Map<String, Object>> roles;
 
     private Set<String> permissions;
@@ -112,6 +114,15 @@ public class LoginUser implements Serializable
     public LoginUser setPermissions(Set<String> permissions)
     {
         this.permissions = permissions;
+        return this;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public LoginUser setAdmin(boolean admin) {
+        this.admin = admin;
         return this;
     }
 }

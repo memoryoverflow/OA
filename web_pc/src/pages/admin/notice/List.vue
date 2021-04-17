@@ -36,8 +36,6 @@
                 :value="status.一般"
               ></el-option>
             </el-select>
-
-
           </el-form-item>
 
           <el-form-item label="权限" prop="powerType">
@@ -220,7 +218,7 @@
       </template>
 
       <template slot="columns">
-        <el-table-column prop="title" show-overflow-tooltip="true" align="center" label="title"></el-table-column>
+        <el-table-column prop="title" show-overflow-tooltip="true" align="center" label="标题"></el-table-column>
         <el-table-column prop="content" align="center" show-overflow-tooltip="true" label="内容"></el-table-column>
 
         <el-table-column align="center" prop="createBy" label="发布人"/>
@@ -229,7 +227,7 @@
           <template slot-scope="obj">
             <span v-if="obj.row.enclosure == null ">无</span>
             <span v-else-if="obj.row.enclosure == '' ">无</span>
-            <el-link size="mini" :under-line="false" type="primary" v-else @click="downFile(obj.row.enclosure)">下载附件
+            <el-link size="mini" :under-line="false" type="primary" v-else @click="downFile(obj.row.id)">下载附件
             </el-link>
           </template>
         </el-table-column>
@@ -280,7 +278,6 @@
               size="mini"
             >查看
             </el-button>
-
 
             <auth :code="permission.update">
               <template slot="auth">
@@ -334,7 +331,7 @@
                 由 {{drawer.content.createBy}} 发布于：{{drawer.content.createTime}}
               </p>
               <p v-if="drawer.content.enclosure!=null&&drawer.content.enclosure!=''"><span
-                style="cursor: pointer;color: #0e9aef" @click="downFile(drawer.content.enclosure)">附件下载</span></p>
+                style="cursor: pointer;color: #0e9aef" @click="downFile(drawer.content.id)">附件下载</span></p>
               <p>
                 <mavon-editor
                   :ishljs="true"
@@ -677,8 +674,6 @@ export default {
 
     // 删除公告
     deleteNotice(row) {
-
-
       this.$confirm("此操作将永久删除已选数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -695,8 +690,8 @@ export default {
     },
 
     // 附件下载
-    downFile(url) {
-      window.open(this.URL.downloadEnclosure + "?url=" + url, "_blank");
+    downFile(id) {
+      window.open(this.URL.downloadEnclosure + "/" + id, "_blank");
     },
 
 
@@ -803,6 +798,7 @@ export default {
           this.role.selectCodes = row.powerCodes.split(",");
         }
         this.powerTypeChange(row.powerType);
+        this.fileList=[{name:row.enclosure,url:row.enclosure}];
       } else {
         for (const key in this.applyform) {
           if (this.applyform.hasOwnProperty(key)) {
@@ -811,8 +807,8 @@ export default {
         }
         this.applyform['powerType'] = this.powerType.无;
         this.applyform['powerCodes'] = [];
+        this.fileList=[];
       }
-
       this.applyform['enclosure'] = "";
     },
     // 刷新表格

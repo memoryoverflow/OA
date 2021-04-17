@@ -47,13 +47,14 @@ import java.util.Map;
  * @author 永健
  * @since 2020-12-08 16:23
  */
-@RestController
+//@RestController
 public class ModelSaveRestResource implements ModelDataJsonConstants
 {
     protected static final Logger LOGGER = LoggerFactory.getLogger(ModelSaveRestResource.class);
 
     @Autowired
     private RepositoryService repositoryService;
+
     @Autowired
     private ObjectMapper objectMapper;
 

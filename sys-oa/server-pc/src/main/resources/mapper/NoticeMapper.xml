@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.core.notice.NoticeMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yj.core.notice.Notice">
+        <id column="id" property="id"/>
+
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="create_by" property="createBy"/>
+        <result column="type" property="type"/>
+        <result column="power_type" property="powerType"/>
+        <result column="power_codes" property="powerCodes"/>
+        <result column="enclosure" property="enclosure"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <!-- 通用查询结果列   -->
+    <sql id="Base_Column_List">
+        id
+        ,
+        title,
+        content,
+        create_by,
+        type,
+        power_type,
+        power_codes,
+        enclosure,
+        update_time,
+        create_time
+    </sql>
+
+
+    <select id="findList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_notice
+        <where>
+            <if test="map.id !=null and map.id !=''">
+                AND id=#{map.id}
+            </if>
+            <if test="map.title !=null and map.title !=''">
+                AND title like concat('%',#{map.title},'%')
+            </if>
+            <if test="map.createBy !=null and map.createBy !=''">
+                AND create_by like concat('%',#{map.createBy},'%')
+            </if>
+            <if test="map.updateTime !=null">
+                <![CDATA[   and DATE_FORMAT(updateTime, '%Y-%m-%d') =  DATE_FORMAT(#{updateTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="map.createTime !=null ">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d') =  DATE_FORMAT(#{createTime}, '%Y-%m-%d')   ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

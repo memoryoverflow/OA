@@ -30,9 +30,9 @@
               <span v-html="scope.row.descr"></span>
               <span slot="reference">
                 {{
-                  scope.row.descr.length > 7
-                    ? scope.row.descr.substring(0, 7) + "..."
-                    : scope.row.descr
+                scope.row.descr.length > 7
+                  ? scope.row.descr.substring(0, 7) + "..."
+                  : scope.row.descr
                 }}
               </span>
             </el-popover>
@@ -41,39 +41,32 @@
 
         <el-table-column prop="operUser" align="center" label="操作用户"/>
         <el-table-column prop="host" width="150" align="center" label="主机"/>
+        <el-table-column prop="ipAddress" width="150" align="center" label="所在地"/>
         <el-table-column prop="url" width="200" align="center" label="URL"/>
 
-        <el-table-column prop="params" width="150" align="center" label="参数">
+        <el-table-column prop="params" show-overflow-tooltip="true" align="center" label="参数">
           <template slot-scope="scope">
-            <el-popover placement="top-start" trigger="hover">
-              <span v-html="scope.row.params"></span>
-              <span slot="reference">
-                {{
-                  scope.row.params.length > 7
-                    ? scope.row.params.substring(0, 7) + "..."
-                    : scope.row.params
-                }}
-              </span>
-            </el-popover>
+            <!--            <el-popover placement="top-start" trigger="hover">-->
+            <span v-html="scope.row.params"></span>
+            <!--              <span slot="reference">-->
+            <!--                {{-->
+            <!--                  scope.row.params.length > 7-->
+            <!--                    ? scope.row.params.substring(0, 7) + "..."-->
+            <!--                    : scope.row.params-->
+            <!--                }}-->
+            <!--              </span>-->
+            <!--            </el-popover>-->
           </template>
         </el-table-column>
 
-        <el-table-column prop="method" width="200" align="center" label="操作方法">
+        <el-table-column prop="method" width="100px" show-overflow-tooltip="true" align="center" label="操作方法">
           <template slot-scope="scope">
-            <el-popover placement="top-start" trigger="hover">
-              <span v-html="scope.row.method"></span>
-              <span slot="reference">
-                {{
-                  scope.row.method.length > 25
-                    ? scope.row.method.substring(0, 25) + "..."
-                    : scope.row.method
-                }}
-              </span>
-            </el-popover>
+            <span v-html="scope.row.method"></span>
+
           </template>
         </el-table-column>
 
-        <el-table-column prop="sys" align="center" label="操作系统"/>
+        <el-table-column prop="sys" width="100px" align="center" label="操作系统"/>
         <el-table-column prop="browser" align="center" label="浏览器"/>
 
 
@@ -85,31 +78,12 @@
         </el-table-column>
 
 
-        <el-table-column width="150" prop="createTime" align="center" label="操作时间"/>
+        <el-table-column show-overflow-tooltip="true" sortable width="100px" prop="createTime" align="center" label="操作时间"/>
 
-        <el-table-column prop="errorMsg" width="100" align="center" label="异常信息">
-          <template slot-scope="scope">
-            <el-popover placement="top-start" trigger="hover">
-              <span v-html="scope.row.errorMsg"></span>
-
-              <span v-if="scope.row.errorMsg!=null" slot="reference">
-                {{
-                  scope.row.errorMsg.length > 20
-                    ? scope.row.errorMsg.substring(0, 20) + "..."
-                    : scope.row.errorMsg
-                }}
-              </span>
-            </el-popover>
-          </template>
-        </el-table-column>
-
+        <el-table-column show-overflow-tooltip="true" width="100px" prop="errorMsg" align="center" label="异常信息"/>
 
       </template>
 
-
-      <template slot="operate">
-
-      </template>
     </table-frame>
   </div>
 </template>

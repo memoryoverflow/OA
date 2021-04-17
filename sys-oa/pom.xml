@@ -12,7 +12,7 @@
 
 
     <groupId>cn.yj</groupId>
-    <artifactId>ao</artifactId>
+    <artifactId>sys-oa</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sys-oa</name>
 
@@ -28,7 +28,7 @@
         <tools-exception>0.0.1-SNAPSHOT</tools-exception>
         <http-utils>0.0.9</http-utils>
         <yj-aop>0.0.1-SNAPSHOT</yj-aop>
-        <service-params-check>0.0.1-SNAPSHOT</service-params-check>
+        <service-params-check>0.0.2-SNAPSHOT</service-params-check>
         <read-config>0.0.1</read-config>
         <redis-client>2.9.0</redis-client>
         <druid.version>1.1.17</druid.version>
@@ -39,8 +39,8 @@
 
     <modules>
         <module>service-activiti</module>
-        <module>service-user</module>
-        <module>service-app</module>
+        <module>service-admin</module>
+        <module>server-pc</module>
         <module>service-common</module>
         <module>service-syslog</module>
     </modules>
@@ -125,11 +125,6 @@
             <version>${service-params-check}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>cn.yj</groupId>-->
-        <!--            <artifactId>yj-aop</artifactId>-->
-        <!--            <version>${yj-aop}</version>-->
-        <!--        </dependency>-->
 
         <dependency>
             <groupId>cn.yj</groupId>
@@ -181,7 +176,6 @@
 
 
     </dependencies>
-
 
 
 </project>

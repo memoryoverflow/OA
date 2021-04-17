@@ -408,8 +408,12 @@ export default {
         }
       );
     },
-    checkProcess(row) {},
-    cancelForm(row) {},
+    checkProcess(row) {
+      this.$warning("开发君，💪努力开发中");
+    },
+    cancelForm(row) {
+      this.$warning("开发君，💪努力开发中");
+    },
     timeChange(date) {
       this.applyform.startTime = date[0];
       this.applyform.endTime = date[1];

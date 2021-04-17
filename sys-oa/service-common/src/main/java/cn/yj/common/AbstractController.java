@@ -3,7 +3,6 @@ package cn.yj.common;
 import cn.yj.annotation.pagehelper.PageBaseController;
 import cn.yj.entity.BController;
 import org.apache.shiro.SecurityUtils;
-import sun.rmi.runtime.Log;
 
 /**
  * <br>

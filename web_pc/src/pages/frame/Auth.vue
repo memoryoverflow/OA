@@ -21,34 +21,36 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() {
+  },
   created() {
     console.log(this.code)
-    let user = this.$getUser();
-    if (
-      user == null ||
-      user == undefined ||
-      user == "null" ||
-      user == "undefined"
-    ) {
+    if (this.code == "none") {
       return;
     }
 
-    let arr = user.permission;
-    if (arr.indexOf(this.code) > -1) {
-      this.show = true;
-    }
-
-    if(this.code==null||this.code==''){
+    if (this.code == null || this.code == '') {
       this.show = false;
       return;
     }
 
-    this.$get(this.url.checkAuth, {code:this.code}).then((res) => {
-      if (res.R) {
-        this.show = res.data;
-      }
-    });
+    // 从本地缓存拿
+    let userNullArr = [null, undefined, "null", "undefined"]
+    let user = this.$getUser();
+    if (userNullArr.indexOf(user) > -1) {
+      this.$get(this.url.checkAuth, {code: this.code}).then((res) => {
+        if (res.R) {
+          this.show = res.data;
+        }
+      });
+      return;
+    }
+
+    let arr = user.permission;
+    if (arr.indexOf("*:*:*") > -1 || arr.indexOf(this.code) > -1) {
+      this.show = true;
+      return;
+    }
   },
 };
 </script>

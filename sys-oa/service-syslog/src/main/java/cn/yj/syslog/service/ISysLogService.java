@@ -1,6 +1,6 @@
 package cn.yj.syslog.service;
 
-import cn.yj.common.IService;
+import cn.yj.common.baseDao.IService;
 import cn.yj.syslog.entity.SysLog;
 
 

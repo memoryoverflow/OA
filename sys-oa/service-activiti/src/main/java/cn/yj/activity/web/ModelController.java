@@ -23,8 +23,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/activity/model")
-public class ModelController extends AbstractController
-{
+public class ModelController extends AbstractController{
 
     @Autowired
     private IModelService modelService;
@@ -37,8 +36,7 @@ public class ModelController extends AbstractController
      * @return
      */
     @GetMapping("/list")
-    public R list(String modelName)
-    {
+    public R list(String modelName) {
         return success(modelService.getListPageModel(modelName, page()));
     }
 
@@ -51,8 +49,7 @@ public class ModelController extends AbstractController
      */
     @PostMapping("/create")
     @OperateLog(describe = "创建模型")
-    public R create(@RequestBody @Valid ModelVo modelVo)
-    {
+    public R create(@RequestBody @Valid ModelVo modelVo) {
         return success(modelService.crateModel(modelVo));
     }
 
@@ -64,8 +61,7 @@ public class ModelController extends AbstractController
      */
     @DeleteMapping("/delete/{modelId}")
     @OperateLog(describe = "删除模型")
-    public R create(@PathVariable("modelId") String modelId)
-    {
+    public R create(@PathVariable("modelId") String modelId) {
         modelService.deleteByModelId(modelId);
         return success();
     }
@@ -78,8 +74,7 @@ public class ModelController extends AbstractController
      */
     @PostMapping("/deploy/{modelId}")
     @OperateLog(describe = "部署模型")
-    public R modelDeploy(@PathVariable("modelId") String modelId) throws IOException
-    {
+    public R modelDeploy(@PathVariable("modelId") String modelId) throws IOException {
         modelService.modelDeploy(modelId);
         return success();
     }

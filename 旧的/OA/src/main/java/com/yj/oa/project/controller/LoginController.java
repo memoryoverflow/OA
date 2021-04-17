@@ -66,7 +66,7 @@ public class LoginController extends BaseController{
         //验证用户名和密码 验证码的问题
         try
         {
-            loginService.checkLogin(user.getName(), user.getPwd(), validateCode);
+            loginService.checkLogin(user.getName(), user.getPwd(), validateCode,request);
         }
         catch (Exception e)
         {

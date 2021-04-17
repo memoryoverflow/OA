@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.admin.mapper.PermissionMapper">
+
+
+    <!-- 通用查询结果列   -->
+    <sql id="Base_Column_List">
+        m.id,
+        per_name,
+        parent_id,
+        parent_name,
+        m.type,
+        url,
+        m.code,
+        icon,
+        m.create_time,
+        m.update_time,
+        m.deleted,
+        m.status,
+        m.router,
+        m.sort,
+        out_join
+    </sql>
+    <insert id="insert" parameterType="cn.yj.admin.entity.po.Permission">
+
+        insert into tb_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                id,
+            </if>
+
+            <if test="perName !=null and perName !=''">
+                per_name,
+            </if>
+
+            <if test="type !=null and type !=''">
+                `type`,
+            </if>
+
+            <if test="url !=null and url !=''">
+                url,
+            </if>
+
+            <if test="code !=null and code !=''">
+                code,
+            </if>
+
+            <if test="icon !=null and icon !=''">
+                icon,
+            </if>
+
+
+            <if test="createTime !=null">
+                create_time,
+            </if>
+
+            <if test="updateTime !=null">
+                update_time,
+            </if>
+
+            <if test="deleted !=null">
+                deleted,
+            </if>
+
+            <if test="status !=null">
+                status,
+            </if>
+
+            <if test="sort !=null">
+                sort,
+            </if>
+
+            <if test="parentId !=null and parentId!=''">
+                parent_id,
+            </if>
+
+
+            <if test="outJoin !=null">
+                out_join
+            </if>
+
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                #{id},
+            </if>
+
+            <if test="perName !=null and perName !=''">
+                #{perName},
+            </if>
+
+            <if test="type !=null and type !=''">
+                #{type},
+            </if>
+
+            <if test="url !=null and url !=''">
+                #{url},
+            </if>
+
+            <if test="code !=null and code !=''">
+                #{code},
+            </if>
+
+            <if test="icon !=null and icon !=''">
+                #{icon},
+            </if>
+
+
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+
+            <if test="updateTime !=null">
+                #{updateTime},
+            </if>
+
+            <if test="deleted !=null">
+                #{deleted},
+            </if>
+
+            <if test="status !=null">
+                #{status},
+            </if>
+
+            <if test="sort !=null">
+                #{sort},
+            </if>
+
+            <if test="parentId !=null and parentId!=''">
+                #{parentId},
+            </if>
+            <if test="outJoin !=null">
+                #{outJoin}
+            </if>
+
+        </trim>
+
+    </insert>
+
+
+    <!--   -->
+    <update id="updateById" parameterType="cn.yj.admin.entity.po.Permission">
+        update tb_permission m
+
+        <trim prefix="set" suffixOverrides=",">
+            <if test="perName !=null and perName !=''">
+                per_name = #{perName},
+            </if>
+
+            <if test="parentId !=null and parentId !=''">
+                parent_id = #{parentName},
+            </if>
+
+            <if test="parentName !=null and parentName !=''">
+                parent_name = #{parentName},
+            </if>
+
+            <if test="type !=null and type !=''">
+                m.type = #{type},
+            </if>
+
+            <if test="url !=null and url !=''">
+                url = #{url},
+            </if>
+
+            <if test="code !=null and code !=''">
+                code = #{code},
+            </if>
+
+            <if test="status !=null and status !=''">
+                status = #{status},
+            </if>
+
+            <if test="icon !=null and icon !=''">
+                icon = #{icon},
+            </if>
+
+            <if test="deleted !=null and deleted !=''">
+                deleted = #{deleted},
+            </if>
+
+            <if test="sort !=null and sort !=''">
+                sort = #{sort},
+            </if>
+
+            <if test="outJoin !=null">
+                out_join = #{outJoin}
+            </if>
+
+        </trim>
+            where id=#{id}
+    </update>
+    <update id="removeByIds" parameterType="arraylist">
+        update tb_permission set deleted=1 where id in
+        <foreach collection="list" separator="," open="(" close=")" item="id" index="idx">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <delete id="removeByParentId">
+        delete from tb_permission where parent_id=#{parentIds}
+    </delete>
+
+
+    <!--
+
+    根据用户查询出所拥有的菜单列表[嵌套查询]
+     MenuTreeResultMap
+     -->
+    <resultMap id="MenuTreeResultMap" type="cn.yj.admin.entity.vo.MenuTree">
+        <id column="id" property="id"/>
+        <result column="per_name" property="perName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="type" property="type"/>
+        <result column="url" property="url"/>
+        <result column="router" property="router"/>
+        <result column="code" property="code"/>
+        <result column="icon" property="icon"/>
+        <result column="type" property="type"/>
+        <result column="sort" property="sort"/>
+        <result column="out_join" property="outJoin"/>
+        <collection column="{permissionId=id,userId=user_id}" property="children"
+                    ofType="cn.yj.admin.entity.vo.MenuTree" select="personMenuTree"></collection>
+    </resultMap>
+
+
+    <select id="personMenuTree" resultMap="MenuTreeResultMap">
+        select
+        <include refid="Base_Column_List2"/>
+        ,u.id as user_id,u.name as user_name,r.role_name as role_name
+        from
+        tb_user u,
+        tb_role r,
+        tb_role_permission mr,
+        tb_permission m,
+        tb_user_role ur
+        <where>
+            u.id=ur.user_id
+            and r.id = ur.role_id
+            and r.id = mr.role_id
+            and m.id = mr.permission_id
+            and m.parent_id=#{permissionId}
+            and m.type!=1
+            and m.deleted=0
+            <if test="userId !=null and userId !=''">
+                and u.id = #{userId}
+            </if>
+        </where>
+        ORDER BY m.id,m.sort ASC
+    </select>
+
+
+    <!--  查询用户的菜单 树类型   -->
+    <select id="selectUserMenuTree" resultMap="MenuTreeResultMap" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        ,u.id as user_id,u.name as user_name,r.role_name as role_name
+        from
+        tb_user u,
+        tb_role r,
+        tb_role_permission mr,
+        tb_permission m,
+        tb_user_role ur
+        <where>
+            u.id=ur.user_id
+            and r.id = ur.role_id
+            and r.id = mr.role_id
+            and m.id = mr.permission_id
+            and m.type!=3
+            and m.deleted=0
+            and m.parent_id='0'
+            <if test="userId !=null and userId !=''">
+                and u.id = #{userId}
+            </if>
+        </where>
+
+        ORDER BY m.sort ASC
+    </select>
+
+
+    <resultMap id="BaseResultMap" type="cn.yj.admin.entity.vo.PermissionVo">
+
+    </resultMap>
+
+
+    <!--  查询用户的菜单Ids 用于修改权限的时候  -->
+    <select id="selectUserMenuTreeIds" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select
+        distinct m.id
+        from
+        tb_user u,
+        tb_role r,
+        tb_role_permission mr,
+        tb_permission m,
+        tb_user_role ur
+        where
+            u.id=ur.user_id
+            and r.id = ur.role_id
+            and r.id = mr.role_id
+            and r.id = mr.role_id
+            and m.id = mr.permission_id
+            and m.deleted=0
+        and u.id = #{userId}
+        ORDER BY m.create_time ASC
+    </select>
+
+
+    <select id="selectUserPermissionCodes" parameterType="java.lang.String" resultType="string">
+        select
+        distinct m.code
+        from
+        tb_user u,
+        tb_role r,
+        tb_role_permission mr,
+        tb_permission m,
+        tb_user_role ur
+        where
+            u.id=ur.user_id
+            and r.id = ur.role_id
+            and r.id = mr.role_id
+            and r.id = mr.role_id
+            and m.id = mr.permission_id
+            and m.deleted=0
+        and u.id = #{userId}
+        and m.code is not null
+    </select>
+
+
+    <!--  web树形表格数据  -->
+    <sql id="Base_Column_List2">
+        m.id,
+        per_name,
+        parent_id,
+        parent_name,
+        url,
+        m.code,
+        icon,
+        m.create_time,
+        m.update_time,
+        m.deleted,
+        m.router,
+        m.status,
+        out_join,
+        sort,
+        CASE m.type
+
+        	WHEN 1 THEN
+	                '目录'
+	        WHEN 2 THEN
+	                '菜单'
+	        ELSE '按钮'
+        END
+
+        type
+
+    </sql>
+    <resultMap id="MenuTreeAllResultMap" type="cn.yj.admin.entity.vo.MenuTreeData">
+        <id column="id" property="id"/>
+        <result column="per_name" property="perName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="type" property="type"/>
+        <result column="url" property="url"/>
+        <result column="code" property="code"/>
+        <result column="icon" property="icon"/>
+        <result column="router" property="router"/>
+        <result column="out_join" property="outJoin"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time;" property="createTime"/>
+        <result column="update_time;" property="updateTime"/>
+        <collection column="{id=id}" property="children"
+                    ofType="cn.yj.admin.entity.vo.MenuTreeData" select="getChildrenTable"></collection>
+    </resultMap>
+
+    <select id="selectAllMenuTree" resultMap="MenuTreeAllResultMap">
+        select
+        <include refid="Base_Column_List2"/>
+        from
+        tb_permission m
+        where
+        m.parent_id = '0'
+        and m.deleted=0
+        ORDER BY sort ASC
+    </select>
+
+    <select id="getChildrenTable" resultMap="MenuTreeAllResultMap">
+        select
+        <include refid="Base_Column_List2"/>
+        from
+        tb_permission m
+        where
+        parent_id=#{id}
+        and m.deleted=0
+        ORDER BY sort ASC
+    </select>
+
+
+    <select id="findList" parameterType="map" resultType="cn.yj.admin.entity.po.Permission">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_permission m
+        <where>
+            <if test="map.id !=null and map.id !=''">
+                AND id=#{map.id}
+            </if>
+            <if test="map.perName !=null and map.perName !=''">
+                AND per_name like concat('%',#{map.perName},'%')
+            </if>
+            <if test="map.parenId !=null and map.parenId !=''">
+                AND paren_id=#{map.parenId}
+            </if>
+            <if test="map.parentName !=null and map.parentName !=''">
+                AND parent_name like concat('%',#{map.parentName},'%')
+            </if>
+            <if test="map.type !=null and map.type !=''">
+                AND type=#{map.type}
+            </if>
+            <if test="map.url !=null and map.url !=''">
+                AND url like concat('%',#{map.url},'%')
+            </if>
+            <if test="map.code !=null and map.code !=''">
+                AND code like concat('%',#{map.code},'%')
+            </if>
+            <if test="map.icon !=null and map.icon !=''">
+                AND icon like concat('%',#{map.icon},'%')
+            </if>
+            <if test="map.createTime !=null and map.createTime !=''">
+                <![CDATA[   and DATE_FORMAT(cc.date, '%Y-%m-%d') =  DATE_FORMAT(#{map.beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="map.updateTime !=null and map.updateTime !=''">
+                <![CDATA[   and DATE_FORMAT(cc.date, '%Y-%m-%d') =  DATE_FORMAT(#{map.beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="map.deleted !=null and map.deleted !=''">
+                AND deleted=#{map.deleted}
+            </if>
+            <if test="map.status !=null and map.status !=''">
+                AND status=#{map.status}
+            </if>
+        </where>
+    </select>
+
+
+    <!--    -->
+    <select id="selectByName" resultType="cn.yj.admin.entity.po.Permission">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_permission m where per_name=#{name}
+    </select>
+
+
+    <select id="listByParentId" resultType="cn.yj.admin.entity.po.Permission">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_permission m where parent_id=#{parentId}
+    </select>
+
+
+    <select id="selectById" resultType="cn.yj.admin.entity.po.Permission">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_permission m where id=#{id}
+    </select>
+</mapper>

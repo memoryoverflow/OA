@@ -35,9 +35,8 @@ public class LoginService{
      *
      * @date: 2018/9/29 21:47
      */
-    public void checkLogin(String loginName, String pwd,String validateCode) throws Exception
+    public void checkLogin(String loginName, String pwd,String validateCode,HttpServletRequest request) throws Exception
     {
-        HttpServletRequest request = ServletUtils.getRequest();
         HttpSession session = request.getSession();
         String code = (String) session.getAttribute(RANDOMCODEKEY);
         String inputCode = validateCode.toUpperCase();

@@ -21,11 +21,10 @@ import java.net.URL;
  * @author 永健
  * @since 2021-01-12 16:46
  */
-public class HttpHeaderUtil
-{
+public class HttpHeaderUtil{
     private static Logger logger = LoggerFactory.getLogger(HttpHeaderUtil.class);
 
-    public static final String IP_URL = "http://ip.taobao.com/service/getIpInfo.php";
+    public static final String IP_URL = "http://whois.pconline.com.cn/ipJson.jsp"; //"http://ip.taobao.com/service/getIpInfo.php";
 
 
     //    引入依赖
@@ -39,8 +38,7 @@ public class HttpHeaderUtil
     /**
      * 从请求头中获取 操作系统
      */
-    public static String getSys(String USER_AGENT)
-    {
+    public static String getSys(String USER_AGENT) {
         UserAgent agent = UserAgent.parseUserAgentString(USER_AGENT);
         OperatingSystem sys = agent.getOperatingSystem();
         return sys.getName();
@@ -49,8 +47,7 @@ public class HttpHeaderUtil
     /**
      * 从请求头中获取 浏览器类型
      */
-    public static String getBrowser(String USER_AGENT)
-    {
+    public static String getBrowser(String USER_AGENT) {
         UserAgent agent = UserAgent.parseUserAgentString(USER_AGENT);
         Browser browser = agent.getBrowser();
         return browser.getName();
@@ -58,46 +55,36 @@ public class HttpHeaderUtil
 
 
     /**
-     *
      * @描述 获取请求头
-     *
      * @date 2018/9/20 0:12
      */
-    public static String getUserAgent(HttpServletRequest request)
-    {
+    public static String getUserAgent(HttpServletRequest request) {
         return request.getHeader("User-Agent");
     }
 
 
     /**
-     *  获取Ip
+     * 获取Ip
      */
-    public static String getIpAddr(HttpServletRequest request)
-    {
-        if (request == null)
-        {
+    public static String getIpAddr(HttpServletRequest request) {
+        if (request == null) {
             return "unknown";
         }
         String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-        {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-        {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-        {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-        {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
 
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-        {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
@@ -106,12 +93,10 @@ public class HttpHeaderUtil
     /**
      * 获取查询结果
      */
-    private static String sendPost(String content, String encoding)
-    {
+    private static String sendPost(String content, String encoding) {
         URL url;
         HttpURLConnection connection = null;
-        try
-        {
+        try {
             url = new URL(IP_URL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
@@ -128,22 +113,16 @@ public class HttpHeaderUtil
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));
             StringBuffer buffer = new StringBuffer();
             String line = "";
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
             reader.close();
             return buffer.toString();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println("温馨提醒：您的主机已经断网，请您检查主机的网络连接");
             System.out.println("根据IP获取所在位置----------错误消息：" + e.getMessage());
-        }
-        finally
-        {
-            if (connection != null)
-            {
+        } finally {
+            if (connection != null) {
                 connection.disconnect();
             }
         }
@@ -153,24 +132,22 @@ public class HttpHeaderUtil
     /**
      * 获取ip所在地
      */
-    public static String getAddress(String ip)
-    {
+    public static String getAddress(String ip) {
         String address = "";
-        try
-        {
-            address = sendPost("ip=" + ip, "UTF-8");
+        try {
+            address = sendPost("json=true&ip=" + ip, "GBK");
+            //            JSONObject json = JSONObject.parseObject(address);
+            //            JSONObject object = json.getObject("data", JSONObject.class);
+            //            String region = object.getString("region");
+            //            String country = object.getString("country");
+            //            String city = object.getString("city");
+            //            address =country+" "+ region + " " + city;
+            JSONObject obj = JSONObject.parseObject(address);
+            return obj.getString("addr");
 
-            JSONObject json = JSONObject.parseObject(address);
-            JSONObject object = json.getObject("data", JSONObject.class);
-            String region = object.getString("region");
-            String country = object.getString("country");
-            String city = object.getString("city");
-            address =country+" "+ region + " " + city;
+        } catch (Exception e) {
+            logger.error("根据IP获取所在位置----------错误消息：[{}]", e.getMessage());
         }
-        catch (Exception e)
-        {
-            logger.error("根据IP获取所在位置----------错误消息：[{}]" , e.getMessage());
-        }
-        return address==null?"获取地址失败":address;
+        return address == null ? "获取地址失败" : address;
     }
 }

@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-  name: 'App'
+  name: 'cn.yj.cloud.App'
 }
 </script>
 

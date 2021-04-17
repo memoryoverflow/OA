@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.admin.mapper.PositionMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yj.admin.entity.po.Position">
+        <id column="id" property="id"/>
+        <result column="position_name" property="positionName"/>
+        <result column="position_code" property="positionCode"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        insert into tb_position
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                id,
+            </if>
+            <if test="positionName !=null and positionName !=''">
+                position_name,
+            </if>
+
+            <if test="positionCode !=null and positionCode !=''">
+                position_code,
+            </if>
+
+
+            <if test="updateTime !=null">
+                update_time,
+            </if>
+
+            <if test="createTime !=null ">
+                create_time,
+            </if>
+
+
+            <if test="remark !=null and remark !=''">
+                remark
+            </if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                #{id},
+            </if>
+            <if test="positionName !=null and positionName !=''">
+                #{positionName},
+            </if>
+
+            <if test="positionCode !=null and positionCode !=''">
+                #{positionCode},
+            </if>
+
+
+            <if test="updateTime !=null">
+                #{updateTime},
+            </if>
+
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+
+            <if test="remark !=null and remark !=''">
+                #{remark}
+            </if>
+        </trim>
+
+    </insert>
+
+    <select id="selectById" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_position
+        where id =#{id}
+    </select>
+
+    <update id="updateById">
+        update tb_position
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="positionName !=null and positionName !=''">
+                position_name=#{positionName},
+            </if>
+
+            <if test="positionCode !=null and positionCode !=''">
+                position_Code=#{positionCode},
+            </if>
+
+            <if test="updateTime !=null">
+                update_time=#{updateTime},
+            </if>
+
+            <if test="remark !=null and remark !=''">
+                remark=#{remark}
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+
+    <update id="removeByIds">
+        delete from tb_position where id in
+        <foreach collection="array" index="isx" item="id" close=")" open="(" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+     id,
+     position_name,
+     position_code,
+     update_time,
+     create_time,
+     remark
+    </sql>
+
+    <select id="findList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_position
+        <where>
+            <if test="map.id !=null and map.id !=''">
+                AND id=#{map.id}
+            </if>
+            <if test="map.positionName !=null and map.positionName !=''">
+                AND position_name like concat('%',#{map.positionName},'%')
+            </if>
+            <if test="map.positionCode !=null and map.positionCode !=''">
+                AND position_code like concat('%',#{map.positionCode},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

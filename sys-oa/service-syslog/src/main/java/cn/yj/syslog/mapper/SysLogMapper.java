@@ -1,7 +1,7 @@
 package cn.yj.syslog.mapper;
 
 
-import cn.yj.common.BaseMapper;
+import cn.yj.common.baseDao.BaseMapper;
 import cn.yj.syslog.entity.SysLog;
 
 /**

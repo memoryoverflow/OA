@@ -1,11 +1,10 @@
 package com.yj.oa.common.utils.file;
 
-import javax.mail.Multipart;
 import java.text.DecimalFormat;
 
 /**
- * @author 永健
  *  文件工具类
+ * @author 永健
  */
 public class FileUtil{
     private final static String prfiex = "office/";

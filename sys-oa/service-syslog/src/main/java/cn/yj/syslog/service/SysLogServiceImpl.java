@@ -1,6 +1,6 @@
 package cn.yj.syslog.service;
 
-import cn.yj.common.ServiceImpl;
+import cn.yj.common.baseDao.ServiceImpl;
 import cn.yj.syslog.entity.SysLog;
 import cn.yj.syslog.mapper.SysLogMapper;
 import org.springframework.stereotype.Service;

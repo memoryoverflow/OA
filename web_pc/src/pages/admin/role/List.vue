@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <!--    添加角色-->
     <yj-dialog
       :modal="dialog.modal"
@@ -38,6 +37,7 @@
       :reloadTable="prop.reloadTable"
       :colunmsCount="prop.colunmsCount"
       :showDelBtn="prop.showDelBtn"
+      :delBtnPermission="prop.delBtnPermission"
     >
       <template slot="top_operate" slot-scope="currentRow">
         <auth :code="permission.add">
@@ -123,16 +123,18 @@
         <div class="roleName">角色名称：{{form.roleName}} &nbsp;&nbsp; &nbsp;角色编码：{{form.roleCode}}</div>
         <span>操作权限</span>
         <el-tree
+          v-loading="dialogRole.drawerLoading"
           :data="treeData"
           show-checkbox
+          check-strictly
           ref="tree"
           node-key="id"
-          check-strictly
           highlight-current
           :default-expanded-keys="roleMenuTreeIds"
           :default-checked-keys="roleMenuTreeIds"
           :props="defaultProps"
-          @check-change="check"
+          @check-change="checkChange"
+          @check="check"
           default-expand-all
         ></el-tree>
         <div slot="footer" style="text-align:center;margin-top:20px" class="dialog-footer">
@@ -155,7 +157,6 @@ export default {
       treeData: [],
       // 默认展开选中的
       roleMenuTreeIds: [],
-      selectedMenIds: {},
       defaultProps: {
         children: "children",
         label: "perName"
@@ -172,7 +173,8 @@ export default {
         title: "角色授权",
         visible: false,
         modal: true,
-        loading: false
+        loading: false,
+        drawerLoading: false,
       },
       prop: {
         searchShow: true,
@@ -182,9 +184,9 @@ export default {
         removeUrl: "/role/remove/?",
         searchModel: searchModel,
         reloadTable: false,
-        colunmsCount: 7,
         showDelBtn: true,
-        isPage: true
+        isPage: true,
+        delBtnPermission: "role:del"
       },
 
       form: {
@@ -365,84 +367,107 @@ export default {
 
     // 根据角色id获取权限菜单的所有Id
     getRoleMenuTreeIds(roleId) {
-      this.selectedMenIds = {};
       this.$refs.tree.setCheckedKeys([], true);
+      this.dialogRole.drawerLoading = true
       this.$get(this.URL.roleMenuTreeIds.replace("?", roleId), {}).then(
         res => {
           if (res.R) {
-            this.roleMenuTreeIds = res.data;
-            this.roleMenuTreeIds.forEach(ele => {
-              this.selectedMenIds[ele] = ele;
-            });
+            // 复选框回显
+            this.setCheckedIds(res.data);
+            console.log(this.roleMenuTreeIds)
+            this.dialogRole.drawerLoading = false
           }
         }
       );
 
     },
 
-    // 获取权限菜单
+    // 获取所有权限菜单
     getMenuTree(callback) {
+      this.dialogRole.drawerLoading = true
       this.$get(this.URL.menuTreeAll, {}).then(res => {
         //console.log(res);
         this.treeData = res.data;
+        this.dialogRole.drawerLoading = false
         callback()
       });
     },
-    check(data, checked, d) {
-      // 不选中父元素的时候，子元素也不选中
-      if (!checked) {
-        console.log("cancel");
-        this.filterExcludeChildrenIds(data);
+    // 节点选中状态发生变化时的回调
+    checkChange(data, checked, d) {
+
+      // 勾选
+      if (checked) {
+        if (data.type === "按钮") {
+          this.toBackCheckParent(data);
+          return;
+        }
+
+        // 选中的是菜单
+        if (data.type === "菜单") {
+          this.toBackCheckParent(data);
+          return;
+        }
       } else {
-        // 获取它的的上级id,一同选上
-        this.filterIncludeParenIds(data);
+        // 勾选复选框
+        if (data.type === "菜单" || data.type === "目录") {
+          this.cancelCheckedIds(data);
+          return;
+        }
+
       }
     },
-    filterExcludeChildrenIds(data) {
-      // 如果不是按钮 就取消所有的子节点 选中状态
-      if (data.type != "按钮") {
-        delete this.selectedMenIds[data.id];
-        this.$get(this.URL.getMenuSonIdsByMenId.replace("?", data.id), {}).then(
-          res => {
-            res.data.forEach(id => {
-              delete this.selectedMenIds[id];
-            });
-            this.changRoleMenuIds();
-          }
-        );
-      } else {
-        delete this.selectedMenIds[data.id];
-        this.changRoleMenuIds();
-      }
-    },
-    filterIncludeParenIds(data) {
-      console.log("选中" + data.perName + " " + data.id);
-      this.selectedMenIds[data.id] = data.id;
-      if (data.parentId != 0) {
-        this.$get(
-          this.URL.getMenIdsByParentId.replace("?", data.parentId),
-          {}
-        ).then(res => {
-          res.data.forEach(e => {
-            this.selectedMenIds[e] = e;
+    cancelCheckedIds(currentData) {
+      // 获取所有子节点id
+      this.dialogRole.drawerLoading = true
+      this.$get(this.URL.getMenuSonIdsByMenId.replace("?", currentData.id), {}).then(
+        res => {
+          let sonIds = res.data;
+          this.dialogRole.drawerLoading = false
+          sonIds.forEach(id => {
+            let index = this.roleMenuTreeIds.indexOf(id);
+            if (index >= 0) {
+              this.roleMenuTreeIds.splice(index, 1);
+            }
           });
-          this.changRoleMenuIds();
-        });
-      } else {
-        this.selectedMenIds[data.id] = data.id;
-        this.changRoleMenuIds();
-      }
+          this.setCheckedIds(this.roleMenuTreeIds);
+        }
+      );
     },
-    changRoleMenuIds() {
-      let newRoleMenuIds = [];
-      for (const key in this.selectedMenIds) {
-        if (this.selectedMenIds.hasOwnProperty(key)) {
-          const element = this.selectedMenIds[key];
-          newRoleMenuIds.push(element);
+
+    toBackCheckParent(currentData) {
+      let parentId = currentData.parentId;
+      if (parentId != 0) {
+        // 判断父id是已经勾选
+        if (this.roleMenuTreeIds.indexOf(parentId) < 0) {
+          // 未勾选，获取当前节点的所有上级id
+          this.roleMenuTreeIds.push(parentId);
+          this.dialogRole.drawerLoading = true
+          this.$get(
+            this.URL.getMenIdsByParentId.replace("?", parentId),
+            {}
+          ).then(res => {
+            this.dialogRole.drawerLoading = false
+            res.data.forEach(e => {
+              // 勾选上上级节点
+              if (this.roleMenuTreeIds.indexOf(parentId) < 0) {
+                this.roleMenuTreeIds.push(e);
+              }
+            });
+            this.setCheckedIds(this.roleMenuTreeIds);
+          });
         }
       }
-      this.$refs.tree.setCheckedKeys(newRoleMenuIds, true);
-      this.roleMenuTreeIds = newRoleMenuIds;
+    },
+
+    // 当复选框被点击的时候触发
+    check(data, checked, d) {
+      let selectedKeys = this.$refs.tree.getCheckedKeys();
+      this.roleMenuTreeIds = selectedKeys;
+    },
+
+    setCheckedIds(ids) {
+      this.roleMenuTreeIds = ids;
+      this.$refs.tree.setCheckedKeys(ids, true);
     },
 
     cancelCargoRoleBtn() {

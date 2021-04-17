@@ -11,8 +11,9 @@
       :before-close="handleClose"
       :show-close="false"
       :wrapperClosable="false"
+
     >
-      <div class="drawer_content">
+      <div v-loading="drawerLoading" class="drawer_content">
         <div class="title">添加目录/外部链接</div>
 
         <el-form :model="form" ref="form" size="mini" label-width="80px">
@@ -106,7 +107,6 @@
           size="mini"
           :data="tableData"
           row-key="id"
-          :default-expand-all="true"
           :tree-props="{ children: 'children' }"
           :header-cell-style="headerCellStyle"
         >
@@ -167,7 +167,7 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop fixed="right" align="center" label="操作" width="150">
+          <el-table-column v-if="showColum" prop fixed="right" align="center" label="操作" width="150">
             <template slot-scope="scope">
               <auth :code="permission.update">
                 <template slot="auth">
@@ -228,6 +228,8 @@ let _this = {};
 export default {
   data() {
     return {
+      showColum: true,
+      drawerLoading: false,
       iconUrl: "https://element.eleme.cn/#/zh-CN/component/icon",
       iconDialog: {
         modal: true,
@@ -247,7 +249,6 @@ export default {
       },
 
       tableData: [],
-      colunmsCount: 7,
       tableLoading: false,
       form: {
         id: "",
@@ -261,9 +262,9 @@ export default {
       },
       parentMenu: [],
       code: {
-        update: this.$reqUserService + "/permission/update",
-        remove: this.$reqUserService + "/permission/remove",
-        add: this.$reqUserService + "/permission/save",
+        update: "/permission/update",
+        remove:  "/permission/remove",
+        add: "/permission/save",
       },
       search: {
         name: "",
@@ -294,13 +295,13 @@ export default {
       this.iconDialog.visible = true;
     },
     outJoinChange(val) {
-      if (val == 2) {
+      if (val === 2) {
         // 添加 二级外链
         this.dialog.showParent = true;
         this.dialog.showHref = true;
         this.form.type = 2;
         this.form.outJoin = true;
-      } else if (val == 1) {
+      } else if (val === 1) {
         // 添加一级外链
         this.form.type = 2;
         this.form.outJoin = true;
@@ -309,7 +310,7 @@ export default {
       } else {
         // 添加目录
         this.form.type = 1;
-        this.form.outJoin = false;
+        this.form.outJoin = true;
         this.dialog.showParent = false;
         this.dialog.showHref = false;
       }
@@ -346,16 +347,19 @@ export default {
         this.form.id != "" &&
         this.form.id != undefined
       ) {
+        this.drawerLoading = true
         this.$put(this.URL.update, this.form).then((res) => {
           this.reqResult(res);
         });
       } else {
+        this.drawerLoading = true
         this.$postJson(this.URL.save, this.form).then((res) => {
           this.reqResult(res);
         });
       }
     },
     reqResult(res) {
+      this.drawerLoading = false
       if (res.R) {
         this.$success("操作成功");
         this.dialog.visible = false;

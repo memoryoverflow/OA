@@ -1,14 +1,13 @@
 package cn.yj.activity.service.impl;
 
-import cn.yj.activity.entity.ModelVo;
 import cn.yj.activity.entity.po.Form;
 import cn.yj.activity.mapper.FormMapper;
 import cn.yj.activity.service.IFormService;
-import cn.yj.common.ServiceImpl;
 import cn.yj.common.UUIdUtils;
-import cn.yj.params.check.CheckObjectValue;
-import cn.yj.params.check.KeyValue;
-import cn.yj.params.check.Require;
+import cn.yj.common.baseDao.ServiceImpl;
+import cn.yj.params.check.annotation.CheckObjectValue;
+import cn.yj.params.check.annotation.KeyValue;
+import cn.yj.params.check.annotation.Require;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

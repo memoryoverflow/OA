@@ -11,23 +11,28 @@ import org.apache.shiro.subject.Subject;
  */
 public class ShiroUtils
 {
-
-
     public static <T> T getCurrentUser()
     {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject == null)
+        Subject subject;
+        try
         {
-            return null;
+            subject = SecurityUtils.getSubject();
+            if (subject == null)
+            {
+                return null;
+            }
+
+            Object principal = subject.getPrincipal();
+            if (principal == null)
+            {
+                return null;
+            }
+            return (T) principal;
+        } catch (Exception e)
+        {
+            System.out.println("用户未登陆");
         }
 
-        Object principal = subject.getPrincipal();
-        if (principal == null)
-        {
-            return null;
-        }
-        return (T) principal;
+        return null;
     }
-
-
 }

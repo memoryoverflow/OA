@@ -21,22 +21,24 @@
             placeholder="请输入密码"
           />
 
-          <!-- <div class="login-code">
+          <div class="login-code">
             <el-input
               prefix-icon="el-icon-picture-outline"
-              id="qrcode"
+              id="qrcodeInput"
               v-model="code"
               placeholder="请输入验证码"
             />
-            <img class="qrCode" @click="changImgCode" :src="codeUrl" />
-          </div> -->
+            <img class="qrCode" @click="changImgCode" :src="codeUrl"/>
+          </div>
           <div>
             <el-button
               id="login"
+              v-loading="btnLoading"
               @click="LoginBtn"
               style="width: 100%"
               type="primary"
-              >登录</el-button
+            >登录
+            </el-button
             >
           </div>
         </el-form>
@@ -45,7 +47,7 @@
   </div>
 </template>
 <script type="text/javascript">
-import { token } from "@/token";
+
 export default {
   data() {
     return {
@@ -56,8 +58,8 @@ export default {
       loginName: "",
       code: "",
       password: "",
-
-      codeUrl: "/getVerify",
+      btnLoading:false,
+      codeUrl: this.$server + "/getVerify",
       url: {
         login: "/login",
         loginRedirectPage: "/",
@@ -66,7 +68,7 @@ export default {
   },
   methods: {
     changImgCode() {
-      this.codeUrl = this.$reqUserService + "/getVerify?=time" + new Date();
+      this.codeUrl = this.$server + "/getVerify?=time" + new Date();
     },
     LoginBtn() {
       var _this = this;
@@ -83,27 +85,25 @@ export default {
         return;
       }
 
-      // if (code == "") {
-      //   this.$error("请输入验证码");
-      //   return;
-      // }
-
-      // 测试下需要设置token 否则路由处会拦截掉
-      // _this.$router.push({
-      //   path: _this.url.loginRedirectPage
-      // });
+      if (code == "") {
+        this.$error("请输入验证码");
+        return;
+      }
 
       this.login();
     },
     login() {
       var _this = this;
+      this.btnLoading=true;
       _this
         .$postJson(this.url.login, {
           loginName: this.loginName,
           password: this.password,
+          code: this.code,
         })
         .then((res) => {
-          // _this.changImgCode()
+          this.btnLoading=false;
+          _this.changImgCode()
           if (res.R) {
             this.$success("登陆成功");
             this.$saveToken(res.data.token);
@@ -122,41 +122,57 @@ export default {
 .login-box .el-input {
   margin: 10px 0;
 }
+
 .title {
   text-align: center;
 }
+
 .title h3 {
   padding: 0;
   margin: 0;
   margin-bottom: 10px;
   color: #555e6f;
 }
+
 .main-content {
   height: 100vh;
   background-size: 100% 100%;
 }
+
 .login-box {
-  width: 400px !important;
+  width: 300px !important;
   height: 300px;
-  margin: 0 auto;
   padding-top: 15%;
   padding-right: 25px;
   padding-left: 25px;
+  position: absolute;
+  right: 200px;
+  top: -100px;
+
 }
+.login-box .el-card{
+  background-color: rgba(255, 255, 255,0.2);
+}
+
 .login-code {
   display: flex;
   align-items: center;
 }
-#qrcode {
-  width: 240px;
+
+
+#qrcodeInput {
+  width: 160px;
 }
+
 .qrCode {
   width: 100px;
   height: 40px;
 }
+
 #login {
   margin-top: 20px;
 }
+
 img {
   cursor: pointer;
 }

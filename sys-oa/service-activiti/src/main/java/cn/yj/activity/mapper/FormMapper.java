@@ -1,7 +1,7 @@
 package cn.yj.activity.mapper;
 
 import cn.yj.activity.entity.po.Form;
-import cn.yj.common.BaseMapper;
+import cn.yj.common.baseDao.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.io.Serializable;

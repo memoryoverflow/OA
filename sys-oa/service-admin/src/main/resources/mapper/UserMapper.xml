@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yj.admin.mapper.UserMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.yj.admin.entity.vo.UserVo">
+        <id column="id" property="id"/>
+
+        <result column="name" property="name"/>
+        <result column="login_name" property="loginName"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="status" property="status"/>
+        <result column="emp_code" property="empCode"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="email" property="email"/>
+        <result column="token" property="token"/>
+        <result column="dept_code" property="deptCode"/>
+        <result column="position_code" property="positionCode"/>
+        <association property="dept" javaType="map">
+            <id column="deptId" property="id"/>
+            <result column="deptName" property="name"/>
+        </association>
+
+        <association property="position" javaType="map">
+            <id column="postId" property="id"/>
+            <result column="postName" property="name"/>
+            <result column="postCode" property="postCode"/>
+        </association>
+
+        <collection column="{userId=id}" property="roles" ofType="map" select="selectRolesByUserId">
+        </collection>
+
+        <collection column="{userId=id}" property="roleIds" ofType="string" select="selectRolesIdsByUserId">
+            <id column="r_id" property="id"/>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="BaseResultMapROLE" type="map">
+        <id column="r_id" property="id"/>
+        <result column="roleName" property="roleName"/>
+        <result column="roleCode" property="roleCode"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        insert into tb_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id !=null and id !=''">
+                id,
+            </if>
+            <if test="name !=null and name !=''">
+                name,
+            </if>
+            <if test="empCode !=null and empCode !=''">
+                emp_code,
+            </if>
+
+            <if test="loginName !=null and loginName !=''">
+                login_name,
+            </if>
+
+            <if test="password !=null and password !=''">
+                password,
+            </if>
+
+            <if test="phone !=null and phone !=''">
+                phone,
+            </if>
+
+            <if test="status !=null">
+                status,
+            </if>
+            <if test="deleted !=null">
+                deleted,
+            </if>
+            <if test="updateTime !=null">
+                update_time,
+            </if>
+
+            <if test="createTime !=null ">
+                create_time,
+            </if>
+
+            <if test="email !=null and email !=''">
+                email,
+            </if>
+
+            <if test="token !=null and token !=''">
+                token,
+            </if>
+            <if test="deptCode !=null and deptCode !=''">
+                dept_code,
+            </if>
+            <if test="positionCode !=null and positionCode !=''">
+                position_code
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="id !=null and id !=''">
+                #{id},
+            </if>
+
+            <if test="name !=null and name !=''">
+                #{name},
+            </if>
+
+            <if test="empCode !=null and empCode !=''">
+                #{empCode},
+            </if>
+
+            <if test="loginName !=null and loginName !=''">
+                #{loginName},
+            </if>
+
+            <if test="password !=null and password !=''">
+                #{password},
+            </if>
+
+            <if test="phone !=null and phone !=''">
+                #{phone},
+            </if>
+
+            <if test="status !=null ">
+                #{status},
+            </if>
+
+            <if test="deleted !=null ">
+                #{deleted},
+            </if>
+
+            <if test="updateTime !=null">
+                #{updateTime},
+            </if>
+
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+
+            <if test="email !=null and email !=''">
+                #{email},
+            </if>
+
+            <if test="token !=null and token !=''">
+                #{token},
+            </if>
+            <if test="deptCode !=null and deptCode !=''">
+                #{deptCode},
+            </if>
+            <if test="positionCode !=null and positionCode !=''">
+                #{positionCode}
+            </if>
+        </trim>
+
+    </insert>
+
+
+    <update id="updateById">
+        update tb_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name !=null and name !=''">
+                name=#{name},
+            </if>
+
+            <if test="loginName !=null and loginName !=''">
+                login_name=#{loginName},
+            </if>
+
+            <if test="empCode !=null and empCode !=''">
+                emp_code=#{empCode},
+            </if>
+
+
+            <if test="password !=null and password !=''">
+                password=#{password},
+            </if>
+
+            <if test="phone !=null and phone !=''">
+                phone=#{phone},
+            </if>
+
+            <if test="status !=null">
+                status=#{status},
+            </if>
+
+            <if test="updateTime !=null">
+                update_time=#{updateTime},
+            </if>
+
+            <if test="createTime !=null">
+                create_time=#{createTime},
+            </if>
+
+            <if test="email !=null and email !=''">
+                email=#{email},
+            </if>
+
+            <if test="token !=null and token !=''">
+
+                token=#{token},
+            </if>
+            <if test="deptCode !=null">
+                dept_code=#{deptCode},
+            </if>
+            <if test="positionCode !=null">
+                position_code=#{positionCode}
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <update id="removeByIds">
+        delete from tb_user where id in
+        <foreach collection="array" index="isx" item="id" close=")" open="(" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectRolesIdsByUserId" resultType="string">
+        select r.id as r_id
+        from tb_role r,
+             tb_user u,
+             tb_user_role ur
+        where r.id = ur.role_id
+          and u.id = ur.user_id
+          and u.id = #{userId}
+    </select>
+
+
+    <select id="selectRolesByUserId" resultMap="BaseResultMapROLE">
+        select r.id        as r_id,
+               r.code      as roleCode,
+               r.role_name as roleName
+        from tb_role r,
+             tb_user u,
+             tb_user_role ur
+        where r.id = ur.role_id
+          and u.id = ur.user_id
+          and u.id = #{userId}
+    </select>
+
+
+    <!-- 通用查询结果列   -->
+    <sql id="Base_Column_List">
+        u
+        .
+        id
+        ,
+        u.name,
+        u.login_name,
+        u.password,
+        u.phone,
+        u.status,
+        u.update_time,
+        u.create_time,
+        u.deleted,
+        u.email,
+        u.dept_code,
+        u.position_code,
+        u.token,
+        u.emp_code
+    </sql>
+
+    <select id="login" resultType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_user u where login_name=#{loginName}
+    </select>
+
+
+    <select id="selectByEmpCodes" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,d.id as deptCode,d.dept_name as deptName
+        from tb_user u inner join tb_department d on u.dept_code=d.dept_code where emp_code in
+        <foreach collection="array" index="i" close=")" open="(" item="code" separator=",">
+            #{code}
+        </foreach>
+    </select>
+
+
+    <select id="findList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,d.id as deptCode,d.dept_name as deptName,p.id as postId,p.position_name as
+        postName,p.position_code as postCode
+        from (tb_user u inner join tb_department d on u.dept_code=d.dept_code) inner join tb_position p ON p.position_code =
+        u.position_code
+        <where>
+            deleted=0
+            <if test="map.id !=null and map.id !=''">
+                AND id=#{map.id}
+            </if>
+            <if test="map.name !=null and map.name !=''">
+                AND u.name like concat('%',#{map.name},'%')
+            </if>
+            <if test="map.empCode !=null and map.empCode !=''">
+                AND u.emp_code like concat('%',#{map.empCode},'%')
+            </if>
+            <if test="map.loginName !=null and map.loginName !=''">
+                AND login_name like concat('%',#{map.loginName},'%')
+            </if>
+            <if test="map.password !=null and map.password !=''">
+                AND password like concat('%',#{map.password},'%')
+            </if>
+            <if test="map.phone !=null and map.phone !=''">
+                AND phone like concat('%',#{map.phone},'%')
+            </if>
+            <if test="map.deptCode !=null and map.deptCode !=''">
+                AND u.dept_code =#{map.deptCode}
+            </if>
+            <if test="map.status !=null and map.status !=''">
+                AND status=#{map.status}
+            </if>
+            <if test="map.updateTime !=null">
+                <![CDATA[   and DATE_FORMAT(cc.date, '%Y-%m-%d') =  DATE_FORMAT(#{map.beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="map.createTime !=null ">
+                <![CDATA[   and DATE_FORMAT(cc.date, '%Y-%m-%d') =  DATE_FORMAT(#{map.beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

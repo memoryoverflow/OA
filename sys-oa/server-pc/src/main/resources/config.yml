@@ -1,0 +1,23 @@
+##############  mino分布式图片存储 ####################
+file:
+  upload-type: LOCAL # MINIO、LOCAL
+  local:
+    path: /Users/yongjian/work/file/ # 本地上传文件到目录
+  minio:
+    end:
+      point: http://thisforyou.cn:9004
+    accessKey: minioadmin
+    secretKey: root
+    bucket: oafile
+
+
+
+##############  fastdfs 配置  ####################
+fastdfs:
+  connect_timeout_in_seconds: 60
+  network_timeout_in_seconds: 60
+  charset: UTF-8
+  http_tracker_http_port: 80
+  http_anti_steal_token: false
+  http_secret_key: 123456
+  tracker_servers: memoryoverflow.cn\:22122

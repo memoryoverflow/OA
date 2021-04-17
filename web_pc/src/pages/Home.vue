@@ -31,14 +31,26 @@
       </template>
     </yj-dialog>
     <el-header :style="bg">
-      <el-row>
-        <el-col :span="left_lager_head_span">
+      <el-row class="header-row">
+        <el-col :style="{'width':asideWidth}" :span="left_lager_head_span">
           <div v-if="!isCollapse" class="left-lager-head">
-            <img class="logo" src="@/assets/kafei_white.png"/>
-            <span class="titleMsg">{{ blogName }}</span>
+            <el-row>
+<!--              <el-col :span="4">-->
+<!--                <div style="position: relative;overflow: hidden;">-->
+<!--                  <div style="color:rgb(34,106,227);" hidden="hidden">.</div>-->
+<!--                  <el-image style="position: absolute;top:0;left: 0;width: 100%;height: 100%" class="logo"-->
+<!--                            :src="leftLogo" fit="contain"/>-->
+<!--                </div>-->
+<!--              </el-col>-->
+              <el-col style="overflow: hidden;white-space: nowrap;text-align: center !important;" :span="24">
+                <span class="title_msg">{{ blogName }}</span>
+              </el-col>
+            </el-row>
           </div>
-          <div v-else class="left-mini-head">
-            <img class="logo" src="@/assets/kafei_white.png"/>
+          <div v-else class="left-mini-head" style="text-align: center;position: relative;">
+            <div style="color:rgb(34,106,227);">.</div>
+            <el-image style="position: absolute;top:5px;left: 0;width: 80%;height: 80%" class="logo"
+                      :src="leftLogo" fit="contain"/>
           </div>
         </el-col>
         <el-col :span="showBtnSpan">
@@ -57,12 +69,12 @@
             ></i>
           </div>
         </el-col>
-        <el-col style="text-align: right" :span="24 - left_lager_head_span - showBtnSpan">
+        <el-col style="text-align: right" :span="rightMeun">
           <div class="right_operate_main">
             <div class="right_operate">
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
-                  <div class="user"></div>
+                    <img class="user" :src="userLogo"/>
                   <span class="userName">欢迎您，{{ loginUser }}</span>
                   <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
@@ -298,6 +310,8 @@ let config = require("@/config.js").config;
 export default {
   data() {
     return {
+      leftLogo:require('@/assets/avear.gif'),
+      userLogo:require('@/assets/avear.gif'),
       bg: {
         backgroundImage: "url(" + require("@/assets/nav-bg.png") + ")",
       },
@@ -308,8 +322,9 @@ export default {
         visible: false,
         modal: true,
       },
-      left_lager_head_span: 3,
-      showBtnSpan: 5,
+      left_lager_head_span: 6,
+      showBtnSpan: 3,
+      rightMeun: 17,
       user: {
         id: "",
         newPwd: "",
@@ -321,7 +336,7 @@ export default {
       asideWidth: "200px",
       loginUserRole: "",
       loginUser: "",
-      blogName: "办公OA",
+      blogName: config.sysName,
 
       defaultActive: config.routerIndex.name,
       defaultOpeneIds: [],
@@ -413,11 +428,11 @@ export default {
 
     // 左侧菜单栏跳转
     jumpTo(menu) {
-      if (menu.type == 1) {
+      if (menu.type === 1) {
         return;
       }
       if (!menu.outJoin) {
-        if (menu.router == "") {
+        if (menu.router === "") {
           this.$warning("💪 开发中");
           return;
         }
@@ -453,15 +468,21 @@ export default {
     },
     showHide() {
       if (!this.isCollapse) {
-        this.isCollapse = true;
-        this.left_lager_head_span = 1;
+        this.left_lager_head_span = 2;
         this.showBtnSpan = 1;
+        this.rightMeun = 24 - this.left_lager_head_span - this.showBtnSpan ;
         this.asideWidth = "64px";
+        setTimeout(() => {
+          this.isCollapse = true;
+        }, 1)
       } else {
-        this.left_lager_head_span = 3;
-        this.showBtnSpan = 5;
-        this.isCollapse = false;
+        this.left_lager_head_span = 6;
+        this.showBtnSpan = 3;
+        this.rightMeun = 24 - this.left_lager_head_span - this.showBtnSpan + 2;
         this.asideWidth = "200px";
+        setTimeout(() => {
+          this.isCollapse = false;
+        }, 1)
       }
     },
     logout() {
@@ -472,7 +493,6 @@ export default {
       this.$cookies.remove(this.menCookieKey.defaultOpeneIds);
       this.$cookies.remove(this.menCookieKey.currentPath);
       this.$cookies.remove(this.menCookieKey.tab);
-
 
       // 发送退出请求
       this.$post(this.URL.logOut, {}).then((res) => {
@@ -501,18 +521,18 @@ export default {
     restoreMenu() {
       // 展开的菜单
       let openIds = this.$cookies.get(this.menCookieKey.defaultOpeneIds);
-      if (openIds != undefined && openIds != null) {
+      if (openIds !== undefined && openIds !== null) {
         this.defaultOpeneIds = openIds.split(",");
       }
 
       // 当前选中的菜单
       let active = this.$cookies.get(this.menCookieKey.defaultActive);
-      if (active != undefined && active != null) {
+      if (active !== undefined && active !== null) {
         this.defaultActive = active;
       }
       // 当前路由页面
       let currentPath = this.$cookies.get(this.menCookieKey.currentPath);
-      if (currentPath == null || currentPath == undefined || currentPath == "undefined") {
+      if (currentPath === null || currentPath === undefined || currentPath === "undefined") {
         currentPath = config.routerIndex.path
       }
       this.pushTab({name: config.routerIndex.name, fullPath: config.routerIndex.path, isHome: true})
@@ -522,7 +542,7 @@ export default {
     // 获取用户信息
     getLoginUser() {
       let user = this.$getUser();
-      if (user != null && user != undefined && user != "") {
+      if (user != null && user !== undefined && user !== "") {
         this.loginUser = user.loginName;
         this.role = user.role;
       }
@@ -537,8 +557,6 @@ export default {
   .main_container,
   .center_first {
     height: 92vh !important;
-    // display: flex;
-    // flex-direction: column;
   }
 
   .el-submenu__icon-arrow {
@@ -563,6 +581,7 @@ export default {
     color: white;
     border-bottom: 1px solid #ebebeb;
     background: #1890ff;
+    padding-left: 0px !important;
   }
 
   .el-menu-vertical-demo {
@@ -607,6 +626,7 @@ export default {
     .outSys .el-button {
       color: white;
       font-size: 15px;
+      padding: 0px !important;
     }
 
     .el-dropdown-link {
@@ -617,9 +637,9 @@ export default {
       display: flex;
       align-items: center;
 
-      .user {
-        width: 25px;
-        height: 25px;
+      .user{
+        width: 30px;
+        height: 30px;
         border-radius: 30px;
         position: relative;
         background: white;
@@ -638,112 +658,32 @@ export default {
 
   .left-lager-head {
     line-height: 6vh;
-    display: flex;
-    align-content: center;
+    text-align: center;
     .logo {
-      width: 18%;
-      height: 18%;
-      position: relative;
-      top:4px;
     }
 
-    .titleMsg {
-      font-size: 18px;
+    .title_msg {
       font-weight: 500;
+      font-size: 18px;
+      text-align: center;
       color: #fff !important;
-      position: relative;
-      padding-left: 10px;
     }
   }
 
   .left-mini-head {
     line-height: 6vh;
-    align-content: center;
+
     .logo {
-      width: 50%;
-      height: 50%;
-      position: relative;
-      top:4px;
     }
 
-    .titleMsg {
+    .title_msg {
       color: #fff !important;
-      position: relative;
       padding-left: 10px;
     }
   }
-
-  // 7----------------------------------------------------
-  // 左侧菜单栏的 一整块背景颜色
-  .el-menu-vertical-demo,
-  .el-aside {
-    //background-color: #409EFF;//rgb(37, 49, 68);
-    box-shadow: 0 10px 8px rgba(0, 0, 0, 0.15);
-    transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
-  }
-
-  .ul li.el-menu-item {
-    color: black;
-    //background-color: rgb(23, 33, 49);
-  }
-
-  //   // 展开的二级菜单背景色
-  //   .el-menu--inline li.el-menu-item {
-  //     padding-left: 40px !important;
-  //     //background-color: #409EFF;// rgb(23, 33, 49);
-  //   }
-
-  // 被选中的菜单颜色
-  .el-menu--inline li.is-active,
-  .el-menu-item.is-active {
-    border-right: 2px solid #1890ff;
-    color: #1890ff; //#409eff;
-    background-color: rgb(231, 247, 255);
-  }
-
-  // .el-submenu__title {
-  // border-right: none !important;
-  //background-color: rgb(37, 49, 68) !important;
-  // }
-
-  //   // 鼠标悬停颜色 一级菜单：有二级菜单的
-  //   .el-submenu__title:hover {
-  //     background-color: rgb(37, 49, 68);
-  //   }
-
-  //   // 二级菜单悬停颜色
-  //   .el-menu--inline li.el-menu-item:hover {
-  //     background-color: rgb(12, 14, 19); // 深
-  //     border-right: 4px solid #409eff;
-  //     color: #409eff !important;
-  //   }
-
-  //   // 一级菜单悬停颜色 就是没有二级菜单的一级连接菜单
-  //   .el-menu-item:hover {
-  //     background-color: rgb(12, 14, 19); // 深
-  //     border-right: 4px solid #409eff;
-  //     color: #409eff !important;
-  //   }
-  // }
-
-  // // 这个是菜单缩小后的
-  // .el-menu--vertical {
-  //   .el-menu--popup {
-  //     background-color: rgb(37, 49, 68) !important;
-  //   }
-  //   .el-menu-item.is-active {
-  //     border-right: 4px solid #409eff;
-  //     color: #409eff;
-  //     background-color: rgb(12, 14, 19);
-  //   }
-  //   li.el-menu-item:hover {
-  //     background-color: rgb(12, 14, 19); // 深
-  //     border-right: 4px solid #409eff;
-  //     color: #409eff !important;
-  //   }
 }
 
-// .el-link--inner {
-//   width: 100%;
-// }
+.header-row.el-row {
+  line-height: 6vh;
+}
 </style>

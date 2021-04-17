@@ -50,13 +50,13 @@
           <div class="pageNation">
             <el-row>
               <el-col :span="2">
-                <!-- <auth role="admin"> -->
-                <!-- <template slot="auth"> -->
-                <div v-if="showDelBtn" style="margin-top:10px">
-                  <el-button type="danger" size="small" :disabled="delBtnFlag" @click="del()">删除已选</el-button>
-                </div>
-                <!-- </template> -->
-                <!-- </auth> -->
+                <auth :code="delBtnPermission">
+                  <template slot="auth">
+                    <div v-if="showDelBtn" style="margin-top:10px">
+                      <el-button type="danger" size="small" :disabled="delBtnFlag" @click="del()">删除已选</el-button>
+                    </div>
+                  </template>
+                </auth>
               </el-col>
               <el-col v-if="tempIsPage" :span="22">
                 <div style="margin-top:10px;text-align:right">
@@ -83,6 +83,8 @@
 let _this = {};
 import util from "@/utils/CommonUtils.js";
 
+let config = require("@/config.js").config;
+
 export default {
   data() {
     return {
@@ -102,6 +104,31 @@ export default {
         searchParam: {}
       },
       initSearchParam: {} // 初始化的搜索条件
+      , NULL_ARR: [null, undefined, "null", "undefined"]
+      , RESPONSE_CODE: {
+        response_code: 'code',
+        response_msg: 'msg',
+        response_data: 'data',
+
+        pageNum: 'current',
+        pageSize: 'pageSize',
+        pages: 'pages',
+        rows: 'rows',
+        size: 'size',
+        total: "total"
+      },
+      CODE_ENUM_KEY: {
+        response_code: 'response_code',
+        response_msg: 'response_msg',
+        response_data: 'response_data',
+
+        pageNum: 'pageNum',
+        pageSize: 'pageSize',
+        pages: 'pages',
+        rows: 'rows',
+        size: 'size',
+        total: "total"
+      }
     };
   },
   // 数据列表，位置，是否显示搜索模块，搜索组建，刷新列表（修改或者删除时候） 是否显示 表格上面的操作栏 ,是否显示删除按钮
@@ -154,6 +181,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    delBtnPermission: {
+      required: false,
+      default: 'none',
+      type: String
+    },
     isPage: {   // 可选字段，有默认值
       required: false,
       type: Boolean,
@@ -199,12 +231,6 @@ export default {
       _this.$refs.searchCom.param = {}
       _this.initData({});
     },
-    select(selection, row) {
-    },
-    // 全选
-    selectAll(selection) {
-      //console.log(selection);
-    },
     // 改变复选框状态触发
     selectionChange(selection) {
       _this.resParam.rows = [];
@@ -223,11 +249,7 @@ export default {
 
     // 删除操作
     del() {
-      if (
-        this.removeUrl == undefined ||
-        this.removeUrl == null ||
-        this.removeUrl == ""
-      ) {
+      if (this.NULL_ARR.indexOf(this.removeUrl) > -1) {
         this.$warning("请配置删除数据地址");
         return;
       }
@@ -248,55 +270,71 @@ export default {
     },
     setPageParams(param) {
       if (this.tempIsPage) {
-        param["pageNum"] = this.currentPage > 0 ? this.currentPage : 1;
-        param["pageSize"] = this.pageSize;
+        param[this.getResponseCode(this.CODE_ENUM_KEY.pageNum)] = this.currentPage > 0 ? this.currentPage : 1;
+        param[this.getResponseCode(this.CODE_ENUM_KEY.pageSize)] = this.pageSize;
+      }
+    },
+    // 获取自定义配置参数
+    getResponseCode(code) {
+      let val = code;
+      if (config.responseConfig === null) {
+        console.log("封装的数据表格默认读取响应字段:", this.RESPONSE_CODE)
+        val = this.RESPONSE_CODE[code];
+      } else {
+        if (this.NULL_ARR.indexOf(config.responseConfig[code]) < 0) {
+          val = this.RESPONSE_CODE[code]
+        } else {
+          val = config.responseConfig[code];
+        }
+        console.log(val);
+        return val;
       }
     },
     // 获取表格数据
     initData(param) {
-      if (param == null || param == undefined) {
+      if (param === null || param === undefined) {
         param = {};
       }
       this.loading(true);
       let dataUrl = this.getDataUrl;
       this.setPageParams(param);
-      this.fileterParams(param);
+      this.filterParams(param);
       this.$get(dataUrl, param).then(res => {
         _this.reqSuccess(res);
       });
     },
 
-    fileterParams(param) {
+    filterParams(param) {
       for (let key in param) {
         let val = param[key];
-        if (val == undefined || val == null || val == "") {
+        if (this.NULL_ARR.indexOf(val)>-1) {
           delete param[key];
         }
       }
     },
 
     reqSuccess(res) {
-      if (this.isPage == true) {
-        _this.dataList = res.data.rows;
+      if (this.isPage === true) {
+        _this.dataList = res[this.getResponseCode(this.CODE_ENUM_KEY.response_data)][this.getResponseCode(this.CODE_ENUM_KEY.rows)];
         _this.setPage(res);
       } else {
-        _this.dataList = res.data;
+        _this.dataList = res[this.getResponseCode(this.CODE_ENUM_KEY.response_data)];
       }
       _this.loading(false);
     },
     // 设置分页参数
     setPage(res) {
-      if (res.code == 1) {
-        this.pageSize = res.data.pageSize;
-        this.total = res.data.total;
-        this.currentPage = res.data.pageNum;
+      if (res[this.getResponseCode(this.CODE_ENUM_KEY.response_code)] === config.res_success_code) {
+        this.pageSize = res[this.getResponseCode(this.CODE_ENUM_KEY.response_data)][this.getResponseCode(this.CODE_ENUM_KEY.pageSize)];
+        this.total = res[this.getResponseCode(this.CODE_ENUM_KEY.response_data)][this.getResponseCode(this.CODE_ENUM_KEY.total)];
+        this.currentPage = res[this.getResponseCode(this.CODE_ENUM_KEY.response_data)][this.getResponseCode(this.CODE_ENUM_KEY.pageNum)];
       }
     },
     // 关闭加载
     loading(flag) {
-      _this.tableLoading = flag;
+      this.tableLoading = flag;
     },
-    // 获取搜索餐素
+    // 获取搜索参数
     searchParam() {
       let param = _this.$refs.searchCom.params;
       let obj = {};

@@ -80,7 +80,7 @@ public class ValidateCodeUtil{
             randomString = drowString(g, randomString, i);
         }
         //将生成的随机字符串保存到session中
-        session.removeAttribute(RANDOMCODEKEY);
+        //session.removeAttribute(RANDOMCODEKEY);
         session.setAttribute(RANDOMCODEKEY, randomString);
         g.dispose();
         try {

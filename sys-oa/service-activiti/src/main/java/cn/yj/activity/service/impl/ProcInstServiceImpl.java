@@ -5,24 +5,18 @@ import cn.yj.activity.service.IFormService;
 import cn.yj.activity.service.IProcInstService;
 import cn.yj.activity.service.IProcessDef;
 import cn.yj.commons.utils.StringUtils;
-import cn.yj.params.check.Require;
+import cn.yj.params.check.annotation.Require;
 import cn.yj.tools.exception.ServiceException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
