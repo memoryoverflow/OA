@@ -24,7 +24,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**.xml
-  typeAliasesPackage: cn.yj.user.entity.po,cn.yj.core
+  typeAliasesPackage: cn.yj.admin.entity.po,cn.yj.core
   global-config:
     db-config:
       #  logic-delete-value: 1       # 逻辑已删除值(默认为 1)
